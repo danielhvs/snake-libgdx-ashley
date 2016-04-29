@@ -22,6 +22,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -31,9 +32,8 @@ import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
 public class RenderingSystem extends IteratingSystem {
-	static final float FRUSTUM_WIDTH = 10;
-	static final float FRUSTUM_HEIGHT = 15;
-	static final float PIXELS_TO_METRES = 1.0f / 32.0f;
+	static final float PIXELS_TO_METER = 1.0f / 32.0f;
+	static final float PIXELS_PER_METER = 32f;
 
 	private SpriteBatch batch;
 	private Array<Entity> renderQueue;
@@ -59,9 +59,11 @@ public class RenderingSystem extends IteratingSystem {
 		};
 
 		this.batch = batch;
+		float w = Gdx.graphics.getWidth() / PIXELS_PER_METER;
+		float h = Gdx.graphics.getHeight() / PIXELS_PER_METER;
 
-		cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
-		cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
+		cam = new OrthographicCamera(w, h);
+		cam.position.set(w / 2, h / 2, 0);
 	}
 
 	@Override
@@ -89,8 +91,7 @@ public class RenderingSystem extends IteratingSystem {
 			float originY = height * 0.5f;
 
 			batch.draw(tex.region, t.pos.x - originX, t.pos.y - originY, originX, originY, width, height,
-					t.scale.x * PIXELS_TO_METRES, t.scale.y * PIXELS_TO_METRES,
-					MathUtils.radiansToDegrees * t.rotation);
+					t.scale.x * PIXELS_TO_METER, t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
 		}
 
 		batch.end();
