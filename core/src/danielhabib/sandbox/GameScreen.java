@@ -6,11 +6,18 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
+import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CollisionSystem;
+import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
+import danielhabib.sandbox.systems.SnakeSystem;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -26,29 +33,46 @@ public class GameScreen extends ScreenAdapter {
 
 		// World
 		Entity entity1 = createEntity(0, 1, 1, 0);
-		Entity entity2 = createEntity(0, 2, 1, 0);
+		entity1.add(new SnakeComponent());
+		Entity entity2 = createEntity(3, 1, 0, 0);
+		entity2.add(new PlatformComponent());
 		engine.addEntity(entity1);
 		engine.addEntity(entity2);
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
+		engine.addSystem(new BoundsSystem());
+		engine.addSystem(new CollisionSystem(new CollisionListener() {
+			@Override
+			public void hit() {
+				System.out.println("HIT!!!");
+			}
+		}));
+		engine.addSystem(new SnakeSystem());
 	}
 
 	// World
 	private Entity createEntity(float xPos, float yPos, float xVel, float yVel) {
 		entity = engine.createEntity();
 		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		MovementComponent velocity = engine.createComponent(MovementComponent.class);
+		MovementComponent movement = engine.createComponent(MovementComponent.class);
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
 		texture.region = new TextureRegion(Assets.img);
 		transform.pos.x = xPos;
 		transform.pos.y = yPos;
-		velocity.velocity.x = xVel;
-		velocity.velocity.y = yVel;
+		movement.velocity.x = xVel;
+		movement.velocity.y = yVel;
+
+		bounds.bounds.width = texture.region.getRegionWidth() * 0.03125f;
+		bounds.bounds.height = texture.region.getRegionHeight() * 0.03125f;
+		bounds.bounds.x = transform.pos.x;
+		bounds.bounds.y = transform.pos.y;
 
 		entity.add(transform);
-		entity.add(velocity);
+		entity.add(movement);
 		entity.add(texture);
+		entity.add(bounds);
 		return entity;
 	}
 
