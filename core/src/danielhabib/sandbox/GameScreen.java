@@ -49,7 +49,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addSystem(new CollisionSystem(new CollisionListener() {
 			@Override
 			public void hit() {
-				System.out.println("HIT!!!");
+				Assets.playSound(Assets.hitSound);
 			}
 		}));
 		engine.addSystem(new SnakeSystem());

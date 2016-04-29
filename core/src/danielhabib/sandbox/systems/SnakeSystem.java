@@ -19,16 +19,17 @@ public class SnakeSystem extends IteratingSystem {
 		sc = ComponentMapper.getFor(SnakeComponent.class);
 	}
 
-	@Override
-	protected void processEntity(Entity entity, float deltaTime) {
-	}
-
 	public void revert() {
 		ImmutableArray<Entity> snakes = getEngine().getEntitiesFor(getFamily());
 		for (Entity snake : snakes) {
 			MovementComponent movement = snake.getComponent(MovementComponent.class);
 			movement.velocity.scl(-1);
 		}
+	}
+
+	@Override
+	protected void processEntity(Entity entity, float deltaTime) {
+
 	}
 
 }
