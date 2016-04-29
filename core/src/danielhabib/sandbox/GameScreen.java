@@ -32,12 +32,17 @@ public class GameScreen extends ScreenAdapter {
 		engine = new PooledEngine();
 
 		// World
-		Entity entity1 = createEntity(0, 1, 1, 0);
+		Entity entity1 = createEntity(3, 1, 2, 0);
 		entity1.add(new SnakeComponent());
-		Entity entity2 = createEntity(3, 1, 0, 0);
+
+		Entity entity2 = createEntity(5, 1, 0, 0);
+		Entity entity3 = createEntity(1, 1, 0, 0);
 		entity2.add(new PlatformComponent());
+		entity3.add(new PlatformComponent());
 		engine.addEntity(entity1);
 		engine.addEntity(entity2);
+		engine.addEntity(entity3);
+
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
 		engine.addSystem(new BoundsSystem());

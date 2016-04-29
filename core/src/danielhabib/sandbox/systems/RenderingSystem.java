@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright 2014 See AUTHORS file.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
 
 package danielhabib.sandbox.systems;
 
@@ -87,11 +72,14 @@ public class RenderingSystem extends IteratingSystem {
 
 			float width = tex.region.getRegionWidth();
 			float height = tex.region.getRegionHeight();
+			// center
 			float originX = width * 0.5f;
 			float originY = height * 0.5f;
 
-			batch.draw(tex.region, t.pos.x - originX, t.pos.y - originY, originX, originY, width, height,
-					t.scale.x * PIXELS_TO_METER, t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
+			float x = t.pos.x - originX;
+			float y = t.pos.y - originY;
+			batch.draw(tex.region, x, y, originX, originY, width, height, t.scale.x * PIXELS_TO_METER,
+					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
 		}
 
 		batch.end();
