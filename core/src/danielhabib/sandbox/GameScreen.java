@@ -3,61 +3,58 @@ package danielhabib.sandbox;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import danielhabib.sandbox.components.PositionComponent;
-import danielhabib.sandbox.components.VelocityComponent;
+import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.TextureComponent;
+import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.MovementSystem;
+import danielhabib.sandbox.systems.RenderingSystem;
 
 public class GameScreen extends ScreenAdapter {
 
 	private SandboxGame game;
-	private OrthographicCamera guiCam;
 	private PooledEngine engine;
 	private Entity entity;
+	private SpriteBatch batch;
 
 	public GameScreen(SandboxGame game) {
 		this.game = game;
-		guiCam = new OrthographicCamera(320, 480);
+		batch = new SpriteBatch();
 		engine = new PooledEngine();
 
 		// World
-		Entity entity = createEntity();
-		engine.addEntity(entity);
+		Entity entity1 = createEntity(0, 1, 1, 0);
+		Entity entity2 = createEntity(0, 2, 1, 0);
+		engine.addEntity(entity1);
+		engine.addEntity(entity2);
 		engine.addSystem(new MovementSystem());
+		engine.addSystem(new RenderingSystem(batch));
 	}
 
 	// World
-	private Entity createEntity() {
+	private Entity createEntity(float xPos, float yPos, float xVel, float yVel) {
 		entity = engine.createEntity();
-		PositionComponent position = engine.createComponent(PositionComponent.class);
-		VelocityComponent velocity = engine.createComponent(VelocityComponent.class);
+		TransformComponent transform = engine.createComponent(TransformComponent.class);
+		MovementComponent velocity = engine.createComponent(MovementComponent.class);
+		TextureComponent texture = engine.createComponent(TextureComponent.class);
 
-		velocity.x = 5;
+		texture.region = new TextureRegion(Assets.img);
+		transform.pos.x = xPos;
+		transform.pos.y = yPos;
+		velocity.velocity.x = xVel;
+		velocity.velocity.y = yVel;
 
-		entity.add(position);
+		entity.add(transform);
 		entity.add(velocity);
+		entity.add(texture);
 		return entity;
-	}
-
-	private void update(float delta) {
-		engine.update(delta);
-	}
-
-	private void drawUI() {
-		guiCam.update();
-		game.batch.setProjectionMatrix(guiCam.combined);
-		game.batch.begin();
-
-		PositionComponent position = entity.getComponent(PositionComponent.class);
-		game.batch.draw(game.img, position.x, position.y);
-		game.batch.end();
 	}
 
 	@Override
 	public void render(float delta) {
-		update(delta);
-		drawUI();
+		engine.update(delta);
 	}
 
 }

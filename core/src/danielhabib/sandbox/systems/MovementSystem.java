@@ -1,38 +1,36 @@
 package danielhabib.sandbox.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
 
-import danielhabib.sandbox.components.PositionComponent;
-import danielhabib.sandbox.components.VelocityComponent;
+import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.TransformComponent;
 
-public class MovementSystem extends EntitySystem {
-	private ImmutableArray<Entity> entities;
+public class MovementSystem extends IteratingSystem {
+	private Vector2 tmp = new Vector2();
 
-	private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
-	private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
+	private ComponentMapper<TransformComponent> tm;
+	private ComponentMapper<MovementComponent> mm;
 
 	public MovementSystem() {
+		super(Family.all(TransformComponent.class, MovementComponent.class).get());
+
+		tm = ComponentMapper.getFor(TransformComponent.class);
+		mm = ComponentMapper.getFor(MovementComponent.class);
 	}
 
 	@Override
-	public void addedToEngine(Engine engine) {
-		entities = engine.getEntitiesFor(Family.all(PositionComponent.class, VelocityComponent.class).get());
-	}
+	public void processEntity(Entity entity, float deltaTime) {
+		TransformComponent pos = tm.get(entity);
+		MovementComponent mov = mm.get(entity);
 
-	@Override
-	public void update(float deltaTime) {
-		for (int i = 0; i < entities.size(); ++i) {
-			Entity entity = entities.get(i);
-			PositionComponent position = pm.get(entity);
-			VelocityComponent velocity = vm.get(entity);
+		tmp.set(mov.accel).scl(deltaTime);
+		mov.velocity.add(tmp);
 
-			position.x += velocity.x * deltaTime;
-			position.y += velocity.y * deltaTime;
-		}
+		tmp.set(mov.velocity).scl(deltaTime);
+		pos.pos.add(tmp.x, tmp.y, 0.0f);
 	}
 }
