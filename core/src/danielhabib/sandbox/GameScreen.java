@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.MovementComponent;
@@ -18,7 +19,6 @@ import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
-import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
@@ -39,7 +39,26 @@ public class GameScreen extends ScreenAdapter {
 		Entity entity1 = createEntity(3, 1, 2, 0);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeComponent.STATE_MOVING);
-		entity1.add(new SnakeComponent());
+
+		SnakeComponent snakeComponent = new SnakeComponent();
+		snakeComponent.parts = new Array<Entity>();
+		snakeComponent.parts.add(newEntityPiece(newPiece(3, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(2, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		for (Entity part : snakeComponent.parts) {
+			engine.addEntity(part);
+		}
+		entity1.remove(TransformComponent.class);
+		entity1.add(snakeComponent.parts.get(0).getComponent(TransformComponent.class));
+		entity1.add(snakeComponent);
 		entity1.add(state);
 
 		Entity entity2 = createEntity(5, 1, 0, 0);
@@ -51,7 +70,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addEntity(entity3);
 
 		engine.addSystem(new PlatformSystem());
-		engine.addSystem(new MovementSystem());
+		// engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new CollisionSystem(new CollisionListener() {
@@ -61,6 +80,22 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}));
 		engine.addSystem(new SnakeSystem());
+	}
+
+	private Entity newEntityPiece(TransformComponent piece) {
+		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		texture.region = new TextureRegion(Assets.img);
+		Entity pieceEntity = engine.createEntity();
+		pieceEntity.add(texture);
+		pieceEntity.add(piece);
+		return pieceEntity;
+	}
+
+	private TransformComponent newPiece(int x, int y) {
+		TransformComponent piece = engine.createComponent(TransformComponent.class);
+		piece.pos.x = x;
+		piece.pos.y = y;
+		return piece;
 	}
 
 	// World
@@ -92,20 +127,16 @@ public class GameScreen extends ScreenAdapter {
 	@Override
 	public void render(float delta) {
 
-		float accelY = 0;
-		float accelX = 0;
+		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
+		float speed = SnakeComponent.SPEED;
 		if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
-			accelY = 1f;
-			engine.getSystem(SnakeSystem.class).setY(accelY);
+			snakeSystem.setYVel(speed);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
-			accelY = -1f;
-			engine.getSystem(SnakeSystem.class).setY(accelY);
+			snakeSystem.setYVel(-speed);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
-			accelX = -1f;
-			engine.getSystem(SnakeSystem.class).setX(accelX);
+			snakeSystem.setXVel(-speed);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
-			accelX = 1f;
-			engine.getSystem(SnakeSystem.class).setX(accelX);
+			snakeSystem.setXVel(speed);
 		}
 
 		engine.update(delta);
