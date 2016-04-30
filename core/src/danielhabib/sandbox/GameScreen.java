@@ -31,37 +31,23 @@ public class GameScreen extends ScreenAdapter {
 	private PooledEngine engine;
 	private Entity entity;
 	private SpriteBatch batch;
+	private Entity snakeEntity;
 
 	public GameScreen(SandboxGame game) {
 		this.game = game;
 		batch = new SpriteBatch();
 		engine = new PooledEngine();
 
-		// World
-		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0);
-		StateComponent state = engine.createComponent(StateComponent.class);
-		state.set(SnakeComponent.STATE_MOVING);
-
-		SnakeComponent snakeComponent = new SnakeComponent();
-		snakeComponent.parts = new Array<Entity>();
-		for (int i = 0; i < 32; i++) {
-			snakeComponent.parts.add(newEntityPiece(newPiece(0, 3)));
-		}
-		for (Entity part : snakeComponent.parts) {
-			engine.addEntity(part);
-		}
-		entity1.remove(TransformComponent.class);
-		entity1.add(snakeComponent.parts.get(0).getComponent(TransformComponent.class));
-		entity1.add(snakeComponent);
-		entity1.add(state);
-
-		Entity entity2 = createEntity(5, 1, 0, 0);
-		Entity entity3 = createEntity(1, 1, 0, 0);
+		snakeEntity = playerSnake(0, 10);
+		ai = playerSnake(5, 5);
+		Entity entity2 = createEntity(5, 6, 0, 0);
+		Entity entity3 = createEntity(1, 4, 0, 0);
 		entity2.add(new PlatformComponent(.1f));
 		entity3.add(new PlatformComponent(-.5f));
-		engine.addEntity(entity1);
+		engine.addEntity(snakeEntity);
 		engine.addEntity(entity2);
 		engine.addEntity(entity3);
+		engine.addEntity(ai);
 
 		engine.addSystem(new PlatformSystem());
 		// engine.addSystem(new MovementSystem());
@@ -74,6 +60,28 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}));
 		engine.addSystem(new SnakeSystem());
+	}
+
+	private Entity playerSnake(int x, int y) {
+		// World
+		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0);
+		entity1.remove(TransformComponent.class);
+		StateComponent state = engine.createComponent(StateComponent.class);
+		state.set(SnakeComponent.STATE_MOVING);
+
+		SnakeComponent snakeComponent = new SnakeComponent();
+		snakeComponent.parts = new Array<Entity>();
+		for (int i = 0; i < 32; i++) {
+			snakeComponent.parts.add(newEntityPiece(newPiece(x, y)));
+		}
+		for (Entity part : snakeComponent.parts) {
+			engine.addEntity(part);
+		}
+		// for collision
+		entity1.add(snakeComponent.parts.get(0).getComponent(TransformComponent.class));
+		entity1.add(snakeComponent);
+		entity1.add(state);
+		return entity1;
 	}
 
 	private Entity newEntityPiece(TransformComponent piece) {
@@ -128,13 +136,13 @@ public class GameScreen extends ScreenAdapter {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		float speed = SnakeComponent.SPEED;
 		if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
-			snakeSystem.setYVel(speed);
+			snakeSystem.setYVel(speed, snakeEntity);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
-			snakeSystem.setYVel(-speed);
+			snakeSystem.setYVel(-speed, snakeEntity);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
-			snakeSystem.setXVel(-speed);
+			snakeSystem.setXVel(-speed, snakeEntity);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
-			snakeSystem.setXVel(speed);
+			snakeSystem.setXVel(speed, snakeEntity);
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -143,7 +151,48 @@ public class GameScreen extends ScreenAdapter {
 			engine.getSystem(SnakeSystem.class).setProcessing(true);
 		}
 
+		updateAi(delta);
 		engine.update(delta);
+	}
+
+	private void updateAi(float delta) {
+		Random random = new Random();
+		float nextFloat = random.nextFloat();
+		float limit;
+		if (nextFloat < .3f) {
+			limit = .5f;
+		} else if (nextFloat < .7f) {
+			limit = 1f;
+		} else {
+			limit = 3f;
+		}
+		aiMove(delta, limit);
+	}
+
+	private float time;
+	private Entity ai;
+
+	private void aiMove(float delta, float limit) {
+		time += delta;
+		if (time < limit) {
+			return;
+		}
+
+		time = 0;
+		Random random = new Random();
+		float nextFloat = random.nextFloat();
+		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
+		float speed = SnakeComponent.SPEED;
+		if (nextFloat < .25f) {
+			snakeSystem.setXVel(speed, ai);
+		} else if (nextFloat < .5f) {
+			snakeSystem.setXVel(-speed, ai);
+		} else if (nextFloat < .75f) {
+			snakeSystem.setYVel(-speed, ai);
+		} else {
+			snakeSystem.setYVel(speed, ai);
+		}
+
 	}
 
 }

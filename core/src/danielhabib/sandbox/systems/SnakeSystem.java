@@ -17,8 +17,6 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<StateComponent> states;
 	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeComponent> snakes;
-	private float xVel;
-	private float yVel;
 
 	public SnakeSystem() {
 		super(Family.all(SnakeComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
@@ -26,12 +24,15 @@ public class SnakeSystem extends IteratingSystem {
 		states = ComponentMapper.getFor(StateComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
 		snakes = ComponentMapper.getFor(SnakeComponent.class);
-		xVel = SnakeComponent.SPEED;
 	}
 
 	public void revert(Entity entity) {
-		StateComponent state = states.get(entity);
-		state.set(SnakeComponent.STATE_HIT);
+		SnakeComponent component = entity.getComponent(SnakeComponent.class);
+		SnakeComponent snakeComponent = snakes.get(entity);
+		if (snakeComponent.equals(component)) {
+			StateComponent state = states.get(entity);
+			state.set(SnakeComponent.STATE_HIT);
+		}
 	}
 
 	@Override
@@ -45,12 +46,7 @@ public class SnakeSystem extends IteratingSystem {
 		MovementComponent movement = movements.get(entity);
 		if (state.get() == SnakeComponent.STATE_HIT) {
 			movement.velocity.scl(-1);
-			xVel = movement.velocity.x;
-			yVel = movement.velocity.y;
 			state.set(SnakeComponent.STATE_MOVING);
-		} else {
-			movement.velocity.x = xVel;
-			movement.velocity.y = yVel;
 		}
 		moveSnake(snakes.get(entity), movement, deltaTime);
 	}
@@ -73,14 +69,14 @@ public class SnakeSystem extends IteratingSystem {
 		headPos.pos.add(tmp.x, tmp.y, 0);
 	}
 
-	public void setYVel(float yVel) {
-		this.xVel = 0;
-		this.yVel = yVel;
+	public void setYVel(float yVel, Entity snakeEntity) {
+		snakeEntity.getComponent(MovementComponent.class).velocity.x = 0;
+		snakeEntity.getComponent(MovementComponent.class).velocity.y = yVel;
 	}
 
-	public void setXVel(float xVel) {
-		this.xVel = xVel;
-		this.yVel = 0;
+	public void setXVel(float xVel, Entity snakeEntity) {
+		snakeEntity.getComponent(MovementComponent.class).velocity.x = xVel;
+		snakeEntity.getComponent(MovementComponent.class).velocity.y = 0;
 	}
 
 }
