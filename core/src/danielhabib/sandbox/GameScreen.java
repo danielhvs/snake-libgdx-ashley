@@ -1,5 +1,7 @@
 package danielhabib.sandbox;
 
+import java.util.Random;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -36,23 +38,15 @@ public class GameScreen extends ScreenAdapter {
 		engine = new PooledEngine();
 
 		// World
-		Entity entity1 = createEntity(3, 1, 2, 0);
+		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeComponent.STATE_MOVING);
 
 		SnakeComponent snakeComponent = new SnakeComponent();
 		snakeComponent.parts = new Array<Entity>();
-		snakeComponent.parts.add(newEntityPiece(newPiece(3, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(2, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
-		snakeComponent.parts.add(newEntityPiece(newPiece(1, 3)));
+		for (int i = 0; i < 32; i++) {
+			snakeComponent.parts.add(newEntityPiece(newPiece(0, 3)));
+		}
 		for (Entity part : snakeComponent.parts) {
 			engine.addEntity(part);
 		}
@@ -63,8 +57,8 @@ public class GameScreen extends ScreenAdapter {
 
 		Entity entity2 = createEntity(5, 1, 0, 0);
 		Entity entity3 = createEntity(1, 1, 0, 0);
-		entity2.add(new PlatformComponent());
-		entity3.add(new PlatformComponent());
+		entity2.add(new PlatformComponent(.1f));
+		entity3.add(new PlatformComponent(-.5f));
 		engine.addEntity(entity1);
 		engine.addEntity(entity2);
 		engine.addEntity(entity3);
@@ -88,6 +82,10 @@ public class GameScreen extends ScreenAdapter {
 		Entity pieceEntity = engine.createEntity();
 		pieceEntity.add(texture);
 		pieceEntity.add(piece);
+		Random random = new Random();
+		float nextFloat = random.nextFloat();
+		int factor = nextFloat < .5 ? -1 : 1;
+		pieceEntity.add(new PlatformComponent(random.nextFloat() * factor));
 		return pieceEntity;
 	}
 
@@ -137,6 +135,12 @@ public class GameScreen extends ScreenAdapter {
 			snakeSystem.setXVel(-speed);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
 			snakeSystem.setXVel(speed);
+		}
+
+		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			engine.getSystem(SnakeSystem.class).setProcessing(false);
+		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
+			engine.getSystem(SnakeSystem.class).setProcessing(true);
 		}
 
 		engine.update(delta);

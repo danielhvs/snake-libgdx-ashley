@@ -52,13 +52,10 @@ public class SnakeSystem extends IteratingSystem {
 			movement.velocity.x = xVel;
 			movement.velocity.y = yVel;
 		}
-		// moveHead(head, movement, deltaTime);
-		followHead(snakes.get(entity), movement, deltaTime);
+		moveSnake(snakes.get(entity), movement, deltaTime);
 	}
 
-	static final float PIXELS_TO_METER = 1.0f / 32.0f;
-
-	private void followHead(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
+	private void moveSnake(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
 		Entity head = snakeComponent.parts.get(0);
 		int len = snakeComponent.parts.size - 1;
 
@@ -69,7 +66,7 @@ public class SnakeSystem extends IteratingSystem {
 			part.y = before.y;
 		}
 
-		// move move head
+		// move head
 		Vector2 tmp = new Vector2();
 		tmp.set(movement.velocity).scl(deltaTime);
 		TransformComponent headPos = head.getComponent(TransformComponent.class);

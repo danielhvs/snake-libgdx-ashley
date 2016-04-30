@@ -8,6 +8,6 @@ public class SnakeComponent implements Component {
 
 	public static final int STATE_MOVING = 0;
 	public static final int STATE_HIT = 1;
-	public static final float SPEED = 8f;
+	public static final float SPEED = 10f;
 	public Array<Entity> parts;
 }
