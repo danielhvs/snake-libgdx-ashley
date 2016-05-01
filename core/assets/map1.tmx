@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="wall" tilewidth="32" tileheight="32">
+  <image source="box32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="identityRule"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="2" name="boing" tilewidth="32" tileheight="32">
+  <image source="boing32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="boingRule"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="3" name="tail" tilewidth="32" tileheight="32">
+  <image source="tail5032.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="tail"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="4" name="head" tilewidth="32" tileheight="32">
+  <image source="head.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="head"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="5" name="piece" tilewidth="32" tileheight="32">
+  <image source="circle32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="piece"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="6" name="apple" tilewidth="32" tileheight="32">
+  <image source="apple32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="fruit"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="7" name="poison" tilewidth="32" tileheight="32">
+  <image source="poison32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="poison"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="8" name="run32" tilewidth="32" tileheight="32">
+  <image source="run32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="speed"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="25" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzFld0OgCAIhbE/e/8nLrfcGDsiEtbZzk1An6BZIqIUaK5MbcncGeKMLNzTAZ6hujd9IAaK/cFYmEnktWKjjBpvrRHFTgcjQtocv1bv27Oc76qyh7w3rZbvt4VRc7wMizjDKi9j5O7TzgviW+Y5s0dLnVxjBEO+U5vDent/vDnZPcZMRf5n0T1X+roAjVcBWw==
+  </data>
+ </layer>
+</map>

@@ -7,8 +7,14 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.BoundsComponent;
@@ -40,8 +46,8 @@ public class GameScreen extends ScreenAdapter {
 
 		snakeEntity = playerSnake(0, 10);
 		ai = playerSnake(5, 5);
-		Entity entity2 = createEntity(5, 6, 0, 0);
-		Entity entity3 = createEntity(1, 4, 0, 0);
+		Entity entity2 = createEntity(5, 6, 0, 0, Assets.img);
+		Entity entity3 = createEntity(1, 4, 0, 0, Assets.img);
 		entity2.add(new PlatformComponent(.1f));
 		entity3.add(new PlatformComponent(-.5f));
 		engine.addEntity(snakeEntity);
@@ -60,11 +66,45 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}));
 		engine.addSystem(new SnakeSystem());
+		parseMap();
+	}
+
+	private void parseMap() {
+		TiledMap map = new TmxMapLoader().load("map1.tmx");
+		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+
+		Texture texture;
+		for (int x = 0; x < layer.getWidth(); x++) {
+			for (int y = 0; y < layer.getHeight(); y++) {
+				Cell cell = layer.getCell(x, y);
+				if (cell != null) {
+					TiledMapTile tile = cell.getTile();
+					Object rule = tile.getProperties().get("rule");
+					texture = tile.getTextureRegion().getTexture();
+					if ("fruit".equals(rule.toString())) {
+					} else if ("poison".equals(rule.toString())) {
+					} else if ("speed".equals(rule.toString())) {
+					} else if ("identityRule".equals(rule.toString())) {
+					} else if ("boingRule".equals(rule.toString())) {
+						addBoing(x, y, texture);
+					} else if ("head".equals(rule.toString())) {
+					} else if ("piece".equals(rule.toString())) {
+					} else if ("tail".equals(rule.toString())) {
+					}
+				}
+			}
+		}
+	}
+
+	private void addBoing(int x, int y, Texture texture) {
+		Entity boing = createEntity(x, y, 0, 0, texture);
+		boing.add(new PlatformComponent(0f));
+		engine.addEntity(boing);
 	}
 
 	private Entity playerSnake(int x, int y) {
 		// World
-		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0);
+		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0, Assets.img);
 		entity1.remove(TransformComponent.class);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeComponent.STATE_MOVING);
@@ -105,27 +145,27 @@ public class GameScreen extends ScreenAdapter {
 	}
 
 	// World
-	private Entity createEntity(float xPos, float yPos, float xVel, float yVel) {
+	private Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
 		entity = engine.createEntity();
 		TransformComponent transform = engine.createComponent(TransformComponent.class);
 		MovementComponent movement = engine.createComponent(MovementComponent.class);
-		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
 		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
-		texture.region = new TextureRegion(Assets.img);
+		textureComponent.region = new TextureRegion(texture);
 		transform.pos.x = xPos;
 		transform.pos.y = yPos;
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
-		bounds.bounds.width = texture.region.getRegionWidth() * 0.03125f;
-		bounds.bounds.height = texture.region.getRegionHeight() * 0.03125f;
+		bounds.bounds.width = textureComponent.region.getRegionWidth() * 0.03125f;
+		bounds.bounds.height = textureComponent.region.getRegionHeight() * 0.03125f;
 		bounds.bounds.x = transform.pos.x;
 		bounds.bounds.y = transform.pos.y;
 
 		entity.add(transform);
 		entity.add(movement);
-		entity.add(texture);
+		entity.add(textureComponent);
 		entity.add(bounds);
 		return entity;
 	}

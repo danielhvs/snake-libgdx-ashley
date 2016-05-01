@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="wall" tilewidth="32" tileheight="32">
+  <image source="box32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="identityRule"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="2" name="boing" tilewidth="32" tileheight="32">
+  <image source="boing32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="boingRule"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="3" name="tail" tilewidth="32" tileheight="32">
+  <image source="tail5032.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="tail"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="4" name="head" tilewidth="32" tileheight="32">
+  <image source="head.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="head"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="5" name="piece" tilewidth="32" tileheight="32">
+  <image source="circle32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="piece"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="6" name="apple" tilewidth="32" tileheight="32">
+  <image source="apple32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="fruit"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="7" name="poison" tilewidth="32" tileheight="32">
+  <image source="poison32.png" width="32" height="32"/>
+  <tile id="0">
+   <properties>
+    <property name="rule" value="poison"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIwEwAzErELMMtENGwSigAAAAJdwADQ==
+  </data>
+ </layer>
+ <objectgroup name="Camada de Objetos 1" width="20" height="15">
+  <object name="init1" x="64" y="64" width="32" height="32"/>
+  <object name="end1" x="224" y="416" width="32" height="32"/>
+  <object name="init0" x="512" y="64" width="32" height="32"/>
+  <object name="end0" x="352" y="224" width="32" height="32"/>
+ </objectgroup>
+</map>

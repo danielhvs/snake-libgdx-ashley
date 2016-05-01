@@ -1,0 +1,31 @@
+dialog.png
+size: 256,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+background
+  rotate: false
+  xy: 2, 2
+  size: 100, 100
+  split: 22, 22, 25, 23
+  pad: 22, 22, 25, 22
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 104, 57
+  size: 118, 45
+  split: 14, 14, 13, 12
+  pad: 14, 14, 14, 12
+  orig: 118, 45
+  offset: 0, 0
+  index: -1
+touched-button
+  rotate: false
+  xy: 104, 10
+  size: 118, 45
+  split: 13, 14, 13, 13
+  orig: 118, 45
+  offset: 0, 0
+  index: -1
