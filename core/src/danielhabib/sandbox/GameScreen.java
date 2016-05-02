@@ -20,6 +20,7 @@ import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
+import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
@@ -46,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addEntity(ai);
 
 		engine.addSystem(new PlatformSystem());
-		// engine.addSystem(new MovementSystem());
+		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new CollisionSystem(new CollisionListener() {
@@ -110,8 +111,10 @@ public class GameScreen extends ScreenAdapter {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(false);
+			engine.getSystem(MovementSystem.class).setProcessing(false);
 		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(true);
+			engine.getSystem(MovementSystem.class).setProcessing(true);
 		}
 
 		updateAi(delta);

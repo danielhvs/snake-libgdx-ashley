@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import danielhabib.factory.World;
@@ -52,12 +51,11 @@ public class SnakeSystem extends IteratingSystem {
 		}
 
 		if (state.get() != SnakeComponent.STATE_STOP) {
-			moveSnake(snakes.get(entity), movement, deltaTime);
+			movePartsToFollowHead(snakes.get(entity), movement, deltaTime);
 		}
 	}
 
-	private void moveSnake(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
-		Entity head = snakeComponent.parts.get(0);
+	private void movePartsToFollowHead(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
 		int len = snakeComponent.parts.size - 1;
 
 		for (int i = len; i > 0; i--) {
@@ -66,12 +64,6 @@ public class SnakeSystem extends IteratingSystem {
 			part.x = before.x;
 			part.y = before.y;
 		}
-
-		// move head
-		Vector2 tmp = new Vector2();
-		tmp.set(movement.velocity).scl(deltaTime);
-		TransformComponent headPos = head.getComponent(TransformComponent.class);
-		headPos.pos.add(tmp.x, tmp.y, 0);
 	}
 
 	public void setYVel(float yVel, Entity snake) {
