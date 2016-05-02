@@ -52,7 +52,7 @@ public class CollisionSystem extends EntitySystem {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
 			StateComponent state = states.get(snake);
-			if (state.get() != SnakeComponent.STATE_HIT) {
+			if (state.get() != SnakeComponent.STATE_REVERTING && state.get() != SnakeComponent.STATE_STOP) {
 				checkSnakeCollision(snakeSystem, snake);
 			}
 		}
@@ -71,6 +71,9 @@ public class CollisionSystem extends EntitySystem {
 					listener.ate();
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
+				} else if (type == PlatformType.WALL) {
+					listener.hit();
+					snakeSystem.stop(snake);
 				}
 			}
 		}

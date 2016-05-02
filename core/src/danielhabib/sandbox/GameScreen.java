@@ -81,6 +81,7 @@ public class GameScreen extends ScreenAdapter {
 					} else if ("poison".equals(rule.toString())) {
 					} else if ("speed".equals(rule.toString())) {
 					} else if ("identityRule".equals(rule.toString())) {
+						world.addWall(x, y, texture);
 					} else if ("boingRule".equals(rule.toString())) {
 						world.addBoing(x, y, texture);
 					} else if ("head".equals(rule.toString())) {

@@ -27,7 +27,7 @@ public class World {
 
 	public void addFruit(int x, int y, Texture texture) {
 		Entity fruit = createEntity(x, y, 0, 0, texture);
-		fruit.add(new PlatformComponent(1f, PlatformType.FRUIT));
+		fruit.add(new PlatformComponent(.1f, PlatformType.FRUIT));
 		engine.addEntity(fruit);
 	}
 
@@ -35,6 +35,12 @@ public class World {
 		Entity boing = createEntity(x, y, 0, 0, texture);
 		boing.add(new PlatformComponent(0f, PlatformType.BOING));
 		engine.addEntity(boing);
+	}
+
+	public void addWall(int x, int y, Texture texture) {
+		Entity wall = createEntity(x, y, 0, 0, texture);
+		wall.add(new PlatformComponent(0f, PlatformType.WALL));
+		engine.addEntity(wall);
 	}
 
 	public Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
@@ -104,6 +110,7 @@ public class World {
 	}
 
 	public Entity newSnakePart() {
-		return newEntityPiece(5, 5);
+		return newEntityPiece(0, 0);
 	}
+
 }

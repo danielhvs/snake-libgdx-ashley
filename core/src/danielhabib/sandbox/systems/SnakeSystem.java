@@ -33,8 +33,7 @@ public class SnakeSystem extends IteratingSystem {
 		SnakeComponent component = entity.getComponent(SnakeComponent.class);
 		SnakeComponent snakeComponent = snakes.get(entity);
 		if (snakeComponent.equals(component)) {
-			StateComponent state = states.get(entity);
-			state.set(SnakeComponent.STATE_HIT);
+			setState(entity, SnakeComponent.STATE_REVERTING);
 		}
 	}
 
@@ -47,11 +46,14 @@ public class SnakeSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
 		MovementComponent movement = movements.get(entity);
-		if (state.get() == SnakeComponent.STATE_HIT) {
+		if (state.get() == SnakeComponent.STATE_REVERTING) {
 			movement.velocity.scl(-1);
 			state.set(SnakeComponent.STATE_MOVING);
 		}
-		moveSnake(snakes.get(entity), movement, deltaTime);
+
+		if (state.get() != SnakeComponent.STATE_STOP) {
+			moveSnake(snakes.get(entity), movement, deltaTime);
+		}
 	}
 
 	private void moveSnake(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
@@ -72,14 +74,16 @@ public class SnakeSystem extends IteratingSystem {
 		headPos.pos.add(tmp.x, tmp.y, 0);
 	}
 
-	public void setYVel(float yVel, Entity snakeEntity) {
-		snakeEntity.getComponent(MovementComponent.class).velocity.x = 0;
-		snakeEntity.getComponent(MovementComponent.class).velocity.y = yVel;
+	public void setYVel(float yVel, Entity snake) {
+		snake.getComponent(MovementComponent.class).velocity.x = 0;
+		snake.getComponent(MovementComponent.class).velocity.y = yVel;
+		setState(snake, SnakeComponent.STATE_MOVING);
 	}
 
-	public void setXVel(float xVel, Entity snakeEntity) {
-		snakeEntity.getComponent(MovementComponent.class).velocity.x = xVel;
-		snakeEntity.getComponent(MovementComponent.class).velocity.y = 0;
+	public void setXVel(float xVel, Entity snake) {
+		snake.getComponent(MovementComponent.class).velocity.x = xVel;
+		snake.getComponent(MovementComponent.class).velocity.y = 0;
+		setState(snake, SnakeComponent.STATE_MOVING);
 	}
 
 	public void grow(Entity snake) {
@@ -87,6 +91,17 @@ public class SnakeSystem extends IteratingSystem {
 		Entity part = world.newSnakePart();
 		snakeComponent.parts.add(part);
 		getEngine().addEntity(part);
+	}
+
+	public void stop(Entity snake) {
+		setState(snake, SnakeComponent.STATE_STOP);
+		snake.getComponent(MovementComponent.class).velocity.x = 0;
+		snake.getComponent(MovementComponent.class).velocity.y = 0;
+	}
+
+	private void setState(Entity snake, int snakeState) {
+		StateComponent state = states.get(snake);
+		state.set(snakeState);
 	}
 
 }
