@@ -76,7 +76,7 @@ public class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(3, 1, SnakeComponent.SPEED, 0, Assets.img);
+		Entity snakeEntity = createEntity(3, 1, SnakeComponent.SPEED, 0, Assets.partImg);
 		snakeEntity.remove(TransformComponent.class);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeComponent.STATE_MOVING);
@@ -101,7 +101,7 @@ public class World {
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
 		Entity pieceEntity = engine.createEntity();
 
-		texture.region = new TextureRegion(Assets.img);
+		texture.region = new TextureRegion(Assets.partImg);
 		transform.pos.x = x;
 		transform.pos.y = y;
 		Random random = new Random();
