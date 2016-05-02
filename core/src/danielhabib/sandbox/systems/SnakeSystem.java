@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
@@ -51,13 +52,12 @@ public class SnakeSystem extends IteratingSystem {
 		}
 
 		if (state.get() != SnakeComponent.STATE_STOP) {
-			movePartsToFollowHead(snakes.get(entity), movement, deltaTime);
+			movePartsToFollowHead(snakes.get(entity));
 		}
 	}
 
-	private void movePartsToFollowHead(SnakeComponent snakeComponent, MovementComponent movement, float deltaTime) {
+	private void movePartsToFollowHead(SnakeComponent snakeComponent) {
 		int len = snakeComponent.parts.size - 1;
-
 		for (int i = len; i > 0; i--) {
 			Vector3 before = snakeComponent.parts.get(i - 1).getComponent(TransformComponent.class).pos;
 			Vector3 part = snakeComponent.parts.get(i).getComponent(TransformComponent.class).pos;
@@ -80,7 +80,7 @@ public class SnakeSystem extends IteratingSystem {
 
 	public void grow(Entity snake) {
 		SnakeComponent snakeComponent = snakes.get(snake);
-		Entity part = world.newSnakePart();
+		Entity part = world.newEntityPiece(0, 0);
 		snakeComponent.parts.add(part);
 		getEngine().addEntity(part);
 	}

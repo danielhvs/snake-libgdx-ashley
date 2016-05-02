@@ -109,8 +109,4 @@ public class World {
 		return pieceEntity;
 	}
 
-	public Entity newSnakePart() {
-		return newEntityPiece(0, 0);
-	}
-
 }
