@@ -13,6 +13,7 @@ import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TransformComponent;
+import danielhabib.sandbox.types.PlatformType;
 
 public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<BoundsComponent> bounds;
@@ -20,6 +21,8 @@ public class CollisionSystem extends EntitySystem {
 
 	public static interface CollisionListener {
 		public void hit();
+
+		public void ate();
 	}
 
 	private Engine engine;
@@ -60,8 +63,15 @@ public class CollisionSystem extends EntitySystem {
 			BoundsComponent snakeBound = bounds.get(snake);
 			BoundsComponent platformBound = bounds.get(platform);
 			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
-				listener.hit();
-				snakeSystem.revert(snake);
+				PlatformType type = platform.getComponent(PlatformComponent.class).type;
+				if (type == PlatformType.BOING) {
+					listener.hit();
+					snakeSystem.revert(snake);
+				} else if (type == PlatformType.FRUIT) {
+					listener.ate();
+					engine.removeEntity(platform);
+					snakeSystem.grow(snake);
+				}
 			}
 		}
 	}

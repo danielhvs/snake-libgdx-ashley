@@ -9,21 +9,14 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.utils.Array;
 
-import danielhabib.sandbox.components.BoundsComponent;
-import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.factory.World;
 import danielhabib.sandbox.components.SnakeComponent;
-import danielhabib.sandbox.components.StateComponent;
-import danielhabib.sandbox.components.TextureComponent;
-import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
@@ -35,24 +28,21 @@ public class GameScreen extends ScreenAdapter {
 
 	private SandboxGame game;
 	private PooledEngine engine;
-	private Entity entity;
 	private SpriteBatch batch;
 	private Entity snakeEntity;
+	private float time;
+	private Entity ai;
+	private World world;
 
 	public GameScreen(SandboxGame game) {
 		this.game = game;
-		batch = new SpriteBatch();
 		engine = new PooledEngine();
+		world = new World(engine);
+		batch = new SpriteBatch();
 
-		snakeEntity = playerSnake(0, 10);
-		ai = playerSnake(5, 5);
-		Entity entity2 = createEntity(5, 6, 0, 0, Assets.img);
-		Entity entity3 = createEntity(1, 4, 0, 0, Assets.img);
-		entity2.add(new PlatformComponent(.1f));
-		entity3.add(new PlatformComponent(-.5f));
+		snakeEntity = world.createSnake(0, 10);
+		ai = world.createSnake(5, 5);
 		engine.addEntity(snakeEntity);
-		engine.addEntity(entity2);
-		engine.addEntity(entity3);
 		engine.addEntity(ai);
 
 		engine.addSystem(new PlatformSystem());
@@ -64,8 +54,13 @@ public class GameScreen extends ScreenAdapter {
 			public void hit() {
 				Assets.playSound(Assets.hitSound);
 			}
+
+			@Override
+			public void ate() {
+				Assets.playSound(Assets.fruitSound);
+			}
 		}));
-		engine.addSystem(new SnakeSystem());
+		engine.addSystem(new SnakeSystem(world));
 		parseMap();
 	}
 
@@ -82,11 +77,12 @@ public class GameScreen extends ScreenAdapter {
 					Object rule = tile.getProperties().get("rule");
 					texture = tile.getTextureRegion().getTexture();
 					if ("fruit".equals(rule.toString())) {
+						world.addFruit(x, y, texture);
 					} else if ("poison".equals(rule.toString())) {
 					} else if ("speed".equals(rule.toString())) {
 					} else if ("identityRule".equals(rule.toString())) {
 					} else if ("boingRule".equals(rule.toString())) {
-						addBoing(x, y, texture);
+						world.addBoing(x, y, texture);
 					} else if ("head".equals(rule.toString())) {
 					} else if ("piece".equals(rule.toString())) {
 					} else if ("tail".equals(rule.toString())) {
@@ -94,80 +90,6 @@ public class GameScreen extends ScreenAdapter {
 				}
 			}
 		}
-	}
-
-	private void addBoing(int x, int y, Texture texture) {
-		Entity boing = createEntity(x, y, 0, 0, texture);
-		boing.add(new PlatformComponent(0f));
-		engine.addEntity(boing);
-	}
-
-	private Entity playerSnake(int x, int y) {
-		// World
-		Entity entity1 = createEntity(3, 1, SnakeComponent.SPEED, 0, Assets.img);
-		entity1.remove(TransformComponent.class);
-		StateComponent state = engine.createComponent(StateComponent.class);
-		state.set(SnakeComponent.STATE_MOVING);
-
-		SnakeComponent snakeComponent = new SnakeComponent();
-		snakeComponent.parts = new Array<Entity>();
-		for (int i = 0; i < 32; i++) {
-			snakeComponent.parts.add(newEntityPiece(newPiece(x, y)));
-		}
-		for (Entity part : snakeComponent.parts) {
-			engine.addEntity(part);
-		}
-		// for collision
-		entity1.add(snakeComponent.parts.get(0).getComponent(TransformComponent.class));
-		entity1.add(snakeComponent);
-		entity1.add(state);
-		return entity1;
-	}
-
-	private Entity newEntityPiece(TransformComponent piece) {
-		TextureComponent texture = engine.createComponent(TextureComponent.class);
-		texture.region = new TextureRegion(Assets.img);
-		Entity pieceEntity = engine.createEntity();
-		pieceEntity.add(texture);
-		pieceEntity.add(piece);
-		Random random = new Random();
-		float nextFloat = random.nextFloat();
-		int factor = nextFloat < .5 ? -1 : 1;
-		pieceEntity.add(new PlatformComponent(random.nextFloat() * factor));
-		return pieceEntity;
-	}
-
-	private TransformComponent newPiece(int x, int y) {
-		TransformComponent piece = engine.createComponent(TransformComponent.class);
-		piece.pos.x = x;
-		piece.pos.y = y;
-		return piece;
-	}
-
-	// World
-	private Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
-		entity = engine.createEntity();
-		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		MovementComponent movement = engine.createComponent(MovementComponent.class);
-		TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
-		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
-
-		textureComponent.region = new TextureRegion(texture);
-		transform.pos.x = xPos;
-		transform.pos.y = yPos;
-		movement.velocity.x = xVel;
-		movement.velocity.y = yVel;
-
-		bounds.bounds.width = textureComponent.region.getRegionWidth() * 0.03125f;
-		bounds.bounds.height = textureComponent.region.getRegionHeight() * 0.03125f;
-		bounds.bounds.x = transform.pos.x;
-		bounds.bounds.y = transform.pos.y;
-
-		entity.add(transform);
-		entity.add(movement);
-		entity.add(textureComponent);
-		entity.add(bounds);
-		return entity;
 	}
 
 	@Override
@@ -208,9 +130,6 @@ public class GameScreen extends ScreenAdapter {
 		}
 		aiMove(delta, limit);
 	}
-
-	private float time;
-	private Entity ai;
 
 	private void aiMove(float delta, float limit) {
 		time += delta;

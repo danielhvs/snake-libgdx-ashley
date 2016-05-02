@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
@@ -17,10 +18,12 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<StateComponent> states;
 	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeComponent> snakes;
+	private World world;
 
-	public SnakeSystem() {
+	public SnakeSystem(World world) {
 		super(Family.all(SnakeComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
 				.get());
+		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
 		snakes = ComponentMapper.getFor(SnakeComponent.class);
@@ -77,6 +80,13 @@ public class SnakeSystem extends IteratingSystem {
 	public void setXVel(float xVel, Entity snakeEntity) {
 		snakeEntity.getComponent(MovementComponent.class).velocity.x = xVel;
 		snakeEntity.getComponent(MovementComponent.class).velocity.y = 0;
+	}
+
+	public void grow(Entity snake) {
+		SnakeComponent snakeComponent = snakes.get(snake);
+		Entity part = world.newSnakePart();
+		snakeComponent.parts.add(part);
+		getEngine().addEntity(part);
 	}
 
 }
