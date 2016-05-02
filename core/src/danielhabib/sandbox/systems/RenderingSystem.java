@@ -94,4 +94,12 @@ public class RenderingSystem extends IteratingSystem {
 	public OrthographicCamera getCamera() {
 		return cam;
 	}
+
+	public void zoomIn() {
+		cam.zoom -= .0625f;
+	}
+
+	public void zoomOut() {
+		cam.zoom += .0625f;
+	}
 }

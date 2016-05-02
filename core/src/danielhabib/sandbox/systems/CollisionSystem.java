@@ -23,6 +23,8 @@ public class CollisionSystem extends EntitySystem {
 		public void hit();
 
 		public void ate();
+
+		public void poison();
 	}
 
 	private Engine engine;
@@ -71,6 +73,10 @@ public class CollisionSystem extends EntitySystem {
 					listener.ate();
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
+				} else if (type == PlatformType.POISON) {
+					listener.poison();
+					engine.removeEntity(platform);
+					snakeSystem.removeTail(snake);
 				} else if (type == PlatformType.WALL) {
 					listener.hit();
 					snakeSystem.stop(snake);

@@ -60,6 +60,11 @@ public class GameScreen extends ScreenAdapter {
 			public void ate() {
 				Assets.playSound(Assets.fruitSound);
 			}
+
+			@Override
+			public void poison() {
+				Assets.playSound(Assets.poisonSound);
+			}
 		}));
 		engine.addSystem(new SnakeSystem(world));
 		parseMap();
@@ -80,6 +85,7 @@ public class GameScreen extends ScreenAdapter {
 					if ("fruit".equals(rule.toString())) {
 						world.addFruit(x, y, texture);
 					} else if ("poison".equals(rule.toString())) {
+						world.addPoison(x, y, texture);
 					} else if ("speed".equals(rule.toString())) {
 					} else if ("identityRule".equals(rule.toString())) {
 						world.addWall(x, y, texture);
@@ -115,6 +121,10 @@ public class GameScreen extends ScreenAdapter {
 		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(true);
 			engine.getSystem(MovementSystem.class).setProcessing(true);
+		} else if (Gdx.input.isKeyPressed(Keys.M)) {
+			engine.getSystem(RenderingSystem.class).zoomIn();
+		} else if (Gdx.input.isKeyPressed(Keys.N)) {
+			engine.getSystem(RenderingSystem.class).zoomOut();
 		}
 
 		updateAi(delta);

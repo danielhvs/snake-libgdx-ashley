@@ -25,6 +25,12 @@ public class World {
 		this.engine = engine;
 	}
 
+	public void addPoison(int x, int y, Texture texture) {
+		Entity fruit = createEntity(x, y, 0, 0, texture);
+		fruit.add(new PlatformComponent(.1f, PlatformType.POISON));
+		engine.addEntity(fruit);
+	}
+
 	public void addFruit(int x, int y, Texture texture) {
 		Entity fruit = createEntity(x, y, 0, 0, texture);
 		fruit.add(new PlatformComponent(.1f, PlatformType.FRUIT));

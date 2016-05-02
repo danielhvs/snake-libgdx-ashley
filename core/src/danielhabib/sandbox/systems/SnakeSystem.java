@@ -96,4 +96,13 @@ public class SnakeSystem extends IteratingSystem {
 		state.set(snakeState);
 	}
 
+	public void removeTail(Entity snake) {
+		SnakeComponent snakeComponent = snakes.get(snake);
+		Array<Entity> parts = snakeComponent.parts;
+		if (parts.size > 1) {
+			Entity removedIndex = parts.removeIndex(parts.size - 1);
+			getEngine().removeEntity(removedIndex);
+		}
+	}
+
 }
