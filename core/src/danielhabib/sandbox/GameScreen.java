@@ -2,22 +2,16 @@ package danielhabib.sandbox;
 
 import java.util.Random;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.MovementSystem;
@@ -30,9 +24,7 @@ public class GameScreen extends ScreenAdapter {
 	private SandboxGame game;
 	private PooledEngine engine;
 	private SpriteBatch batch;
-	private Entity snakeEntity;
 	private float time;
-	private Entity ai;
 	private World world;
 
 	public GameScreen(SandboxGame game) {
@@ -40,11 +32,6 @@ public class GameScreen extends ScreenAdapter {
 		engine = new PooledEngine();
 		world = new World(engine);
 		batch = new SpriteBatch();
-
-		snakeEntity = world.createSnake(0, 10);
-		ai = world.createSnake(5, 5);
-		engine.addEntity(snakeEntity);
-		engine.addEntity(ai);
 
 		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
@@ -67,37 +54,8 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}));
 		engine.addSystem(new SnakeSystem(world));
-		parseMap();
-	}
-
-	private void parseMap() {
-		TiledMap map = new TmxMapLoader().load("map1.tmx");
-		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-
-		Texture texture;
-		for (int x = 0; x < layer.getWidth(); x++) {
-			for (int y = 0; y < layer.getHeight(); y++) {
-				Cell cell = layer.getCell(x, y);
-				if (cell != null) {
-					TiledMapTile tile = cell.getTile();
-					Object rule = tile.getProperties().get("rule");
-					texture = tile.getTextureRegion().getTexture();
-					if ("fruit".equals(rule.toString())) {
-						world.addFruit(x, y, texture);
-					} else if ("poison".equals(rule.toString())) {
-						world.addPoison(x, y, texture);
-					} else if ("speed".equals(rule.toString())) {
-					} else if ("identityRule".equals(rule.toString())) {
-						world.addWall(x, y, texture);
-					} else if ("boingRule".equals(rule.toString())) {
-						world.addBoing(x, y, texture);
-					} else if ("head".equals(rule.toString())) {
-					} else if ("piece".equals(rule.toString())) {
-					} else if ("tail".equals(rule.toString())) {
-					}
-				}
-			}
-		}
+		engine.addSystem(new CameraSystem());
+		world.create();
 	}
 
 	@Override
@@ -106,13 +64,13 @@ public class GameScreen extends ScreenAdapter {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		float speed = SnakeComponent.SPEED;
 		if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
-			snakeSystem.setYVel(speed, snakeEntity);
+			snakeSystem.setYVel(speed, world.getSnake());
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
-			snakeSystem.setYVel(-speed, snakeEntity);
+			snakeSystem.setYVel(-speed, world.getSnake());
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
-			snakeSystem.setXVel(-speed, snakeEntity);
+			snakeSystem.setXVel(-speed, world.getSnake());
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
-			snakeSystem.setXVel(speed, snakeEntity);
+			snakeSystem.setXVel(speed, world.getSnake());
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -157,13 +115,13 @@ public class GameScreen extends ScreenAdapter {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		float speed = SnakeComponent.SPEED;
 		if (nextFloat < .25f) {
-			snakeSystem.setXVel(speed, ai);
+			snakeSystem.setXVel(speed, world.getAi());
 		} else if (nextFloat < .5f) {
-			snakeSystem.setXVel(-speed, ai);
+			snakeSystem.setXVel(-speed, world.getAi());
 		} else if (nextFloat < .75f) {
-			snakeSystem.setYVel(-speed, ai);
+			snakeSystem.setYVel(-speed, world.getAi());
 		} else {
-			snakeSystem.setYVel(speed, ai);
+			snakeSystem.setYVel(speed, world.getAi());
 		}
 
 	}
