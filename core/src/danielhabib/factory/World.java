@@ -46,6 +46,12 @@ public class World {
 		engine.addEntity(fruit);
 	}
 
+	private void addSpeed(int x, int y, Texture texture) {
+		Entity speed = createEntity(x, y, 0, 0, texture);
+		speed.add(new PlatformComponent(.1f, PlatformType.SPEED));
+		engine.addEntity(speed);
+	}
+
 	public void addBoing(int x, int y, Texture texture) {
 		Entity boing = createEntity(x, y, 0, 0, texture);
 		boing.add(new PlatformComponent(0f, PlatformType.BOING));
@@ -162,6 +168,7 @@ public class World {
 					} else if ("poison".equals(rule.toString())) {
 						addPoison(x, y, texture);
 					} else if ("speed".equals(rule.toString())) {
+						addSpeed(x, y, texture);
 					} else if ("identityRule".equals(rule.toString())) {
 						addWall(x, y, texture);
 					} else if ("boingRule".equals(rule.toString())) {

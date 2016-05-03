@@ -2,13 +2,16 @@ package danielhabib.sandbox;
 
 import java.util.Random;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
+import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
@@ -62,15 +65,18 @@ public class GameScreen extends ScreenAdapter {
 	public void render(float delta) {
 
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		float speed = SnakeComponent.SPEED;
+		Entity snake = world.getSnake();
+		MovementComponent movement = snake.getComponent(MovementComponent.class);
+		Vector2 velocity = movement.velocity;
+		float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
 		if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
-			snakeSystem.setYVel(speed, world.getSnake());
+			snakeSystem.setYVel(speed, snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
-			snakeSystem.setYVel(-speed, world.getSnake());
+			snakeSystem.setYVel(-speed, snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
-			snakeSystem.setXVel(-speed, world.getSnake());
+			snakeSystem.setXVel(-speed, snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
-			snakeSystem.setXVel(speed, world.getSnake());
+			snakeSystem.setXVel(speed, snake);
 		}
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {

@@ -105,4 +105,9 @@ public class SnakeSystem extends IteratingSystem {
 		}
 	}
 
+	public void increaseSpeed(Entity snake) {
+		MovementComponent movement = movements.get(snake);
+		movement.velocity.scl(1.125f);
+	}
+
 }

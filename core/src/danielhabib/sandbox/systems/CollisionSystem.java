@@ -78,8 +78,11 @@ public class CollisionSystem extends EntitySystem {
 					engine.removeEntity(platform);
 					snakeSystem.removeTail(snake);
 				} else if (type == PlatformType.WALL) {
+					// listener.hit();
+					// snakeSystem.stop(snake);
+				} else if (type == PlatformType.SPEED) {
 					listener.hit();
-					snakeSystem.stop(snake);
+					snakeSystem.increaseSpeed(snake);
 				}
 			}
 		}
