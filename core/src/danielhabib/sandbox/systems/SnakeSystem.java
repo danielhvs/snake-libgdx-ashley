@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -19,6 +20,7 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeBodyComponent> snakes;
 	private World world;
+	private ComponentMapper<TransformComponent> transforms;
 
 	public SnakeSystem(World world) {
 		super(Family.all(SnakeBodyComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
@@ -26,6 +28,7 @@ public class SnakeSystem extends IteratingSystem {
 		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
+		transforms = ComponentMapper.getFor(TransformComponent.class);
 		snakes = ComponentMapper.getFor(SnakeBodyComponent.class);
 	}
 
@@ -58,17 +61,15 @@ public class SnakeSystem extends IteratingSystem {
 
 	private void movePartsToFollowHead(Entity entity) {
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
-		Vector3 head = entity.getComponent(TransformComponent.class).pos;
+		Vector3 head = transforms.get(entity).pos;
 		Vector3 firstPiece = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
-		firstPiece.x = head.x;
-		firstPiece.y = head.y;
-
+		firstPiece.interpolate(head, .5f, Interpolation.linear);
+		
 		int len = snakeBodyComponent.parts.size - 1;
 		for (int i = len; i > 0; i--) {
 			Vector3 before = snakeBodyComponent.parts.get(i - 1).getComponent(TransformComponent.class).pos;
 			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
-			part.x = before.x;
-			part.y = before.y;
+			part.interpolate(before, 0.5f, Interpolation.linear);
 		}
 	}
 
