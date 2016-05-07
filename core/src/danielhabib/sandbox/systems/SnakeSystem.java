@@ -74,14 +74,17 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void setYVel(float yVel, Entity snake) {
-		snake.getComponent(MovementComponent.class).velocity.x = 0;
-		snake.getComponent(MovementComponent.class).velocity.y = yVel;
+		snake.getComponent(MovementComponent.class).velocity.rotate(-5);
+		snake.getComponent(TransformComponent.class).rotation -= 5;
+		// snake.getComponent(MovementComponent.class).velocity.y = yVel;
 		setState(snake, SnakeBodyComponent.STATE_MOVING);
 	}
 
 	public void setXVel(float xVel, Entity snake) {
-		snake.getComponent(MovementComponent.class).velocity.x = xVel;
-		snake.getComponent(MovementComponent.class).velocity.y = 0;
+		snake.getComponent(MovementComponent.class).velocity.rotate(5);
+		snake.getComponent(TransformComponent.class).rotation += 5;
+		// snake.getComponent(MovementComponent.class).velocity.x = xVel;
+		// snake.getComponent(MovementComponent.class).velocity.y = 0;
 		setState(snake, SnakeBodyComponent.STATE_MOVING);
 	}
 

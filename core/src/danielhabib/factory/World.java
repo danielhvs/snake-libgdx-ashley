@@ -123,7 +123,7 @@ public class World {
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-		pieceEntity.add(new PlatformComponent(.125f * factor, PlatformType.SNAKE_HEAD));
+		pieceEntity.add(new PlatformComponent(10 * factor, PlatformType.SNAKE_HEAD));
 
 		return pieceEntity;
 	}

@@ -10,7 +10,6 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.TextureComponent;
@@ -79,7 +78,7 @@ public class RenderingSystem extends IteratingSystem {
 			float x = t.pos.x - originX;
 			float y = t.pos.y - originY;
 			batch.draw(tex.region, x, y, originX, originY, width, height, t.scale.x * PIXELS_TO_METER,
-					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
+					t.scale.y * PIXELS_TO_METER, t.rotation);
 		}
 
 		batch.end();
