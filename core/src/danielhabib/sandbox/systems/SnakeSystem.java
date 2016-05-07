@@ -48,9 +48,9 @@ public class SnakeSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
-		MovementComponent movement = movements.get(entity);
 		if (state.get() == SnakeBodyComponent.STATE_REVERTING) {
-			movement.velocity.scl(-1);
+			movements.get(entity).velocity.scl(-1);
+			transforms.get(entity).rotation += 180;
 			state.set(SnakeBodyComponent.STATE_MOVING);
 		}
 
@@ -73,25 +73,21 @@ public class SnakeSystem extends IteratingSystem {
 		}
 	}
 
-	public void setYVel(float yVel, Entity snake) {
-		snake.getComponent(MovementComponent.class).velocity.rotate(-5);
-		snake.getComponent(TransformComponent.class).rotation -= 5;
-		// snake.getComponent(MovementComponent.class).velocity.y = yVel;
-		setState(snake, SnakeBodyComponent.STATE_MOVING);
+	public void setYVel(float yVel, Entity entity) {
+		movements.get(entity).velocity.rotate(-5);
+		transforms.get(entity).rotation -= 5;
+		setState(entity, SnakeBodyComponent.STATE_MOVING);
 	}
 
-	public void setXVel(float xVel, Entity snake) {
-		snake.getComponent(MovementComponent.class).velocity.rotate(5);
-		snake.getComponent(TransformComponent.class).rotation += 5;
-		// snake.getComponent(MovementComponent.class).velocity.x = xVel;
-		// snake.getComponent(MovementComponent.class).velocity.y = 0;
-		setState(snake, SnakeBodyComponent.STATE_MOVING);
+	public void setXVel(float xVel, Entity entity) {
+		movements.get(entity).velocity.rotate(5);
+		transforms.get(entity).rotation += 5;
+		setState(entity, SnakeBodyComponent.STATE_MOVING);
 	}
 
-	public void grow(Entity snake) {
-		SnakeBodyComponent snakeComponent = snakes.get(snake);
+	public void grow(Entity entity) {
 		Entity part = world.newEntityPiece(0, 0);
-		snakeComponent.parts.add(part);
+		snakes.get(entity).parts.add(part);
 		getEngine().addEntity(part);
 	}
 

@@ -36,19 +36,19 @@ public class World {
 
 	public void addPoison(int x, int y, Texture texture) {
 		Entity fruit = createEntity(x, y, 0, 0, texture);
-		fruit.add(new PlatformComponent(.1f, PlatformType.POISON));
+		fruit.add(new PlatformComponent(2, PlatformType.POISON));
 		engine.addEntity(fruit);
 	}
 
 	public void addFruit(int x, int y, Texture texture) {
 		Entity fruit = createEntity(x, y, 0, 0, texture);
-		fruit.add(new PlatformComponent(.1f, PlatformType.FRUIT));
+		fruit.add(new PlatformComponent(2, PlatformType.FRUIT));
 		engine.addEntity(fruit);
 	}
 
 	private void addSpeed(int x, int y, Texture texture) {
 		Entity speed = createEntity(x, y, 0, 0, texture);
-		speed.add(new PlatformComponent(.1f, PlatformType.SPEED));
+		speed.add(new PlatformComponent(2, PlatformType.SPEED));
 		engine.addEntity(speed);
 	}
 
@@ -97,7 +97,7 @@ public class World {
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= 32; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
 		}
 		for (Entity part : snakeBodyComponent.parts) {
