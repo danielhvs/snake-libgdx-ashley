@@ -217,17 +217,17 @@ public class World {
 	}
 
 	private Entity newEndWormHole(Texture texture, Vector2 pos) {
-		return newWormHole(texture, pos, PlatformType.HOLE_END);
+		return newWormHole(texture, pos, PlatformType.HOLE_END, 0f);
 	}
 
 	private Entity newInitWormHole(Texture texture, Vector2 pos) {
-		return newWormHole(texture, pos, PlatformType.HOLE);
+		return newWormHole(texture, pos, PlatformType.HOLE, 8f);
 	}
 
-	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type) {
+	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type, float rotation) {
 		Entity hole = createEntity(pos.x / RenderingSystem.PIXELS_PER_METER, pos.y / RenderingSystem.PIXELS_PER_METER,
 				0, 0, texture);
-		hole.add(new PlatformComponent(0f, type));
+		hole.add(new PlatformComponent(rotation, type));
 		return hole;
 	}
 
