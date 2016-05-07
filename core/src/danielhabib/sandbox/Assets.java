@@ -9,9 +9,11 @@ public class Assets {
 	public static Sound fruitSound;
 	public static Sound poisonSound;
 	public static Texture partImg;
+	public static Texture partHead;
 
 	public static void load() {
 		partImg = new Texture("circle32.png");
+		partHead = new Texture("head.png");
 		hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.wav"));
 		fruitSound = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
 		poisonSound = Gdx.audio.newSound(Gdx.files.internal("poison.mp3"));
