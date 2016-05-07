@@ -10,7 +10,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.PlatformComponent;
-import danielhabib.sandbox.components.SnakeComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.types.PlatformType;
@@ -43,7 +43,7 @@ public class CollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		snakes = engine.getEntitiesFor(
-				Family.all(SnakeComponent.class, StateComponent.class, BoundsComponent.class, TransformComponent.class)
+				Family.all(SnakeBodyComponent.class, StateComponent.class, BoundsComponent.class, TransformComponent.class)
 						.get());
 		platformComponents = engine.getEntitiesFor(
 				Family.all(PlatformComponent.class, BoundsComponent.class, TransformComponent.class).get());
@@ -54,7 +54,7 @@ public class CollisionSystem extends EntitySystem {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
 			StateComponent state = states.get(snake);
-			if (state.get() != SnakeComponent.STATE_REVERTING && state.get() != SnakeComponent.STATE_STOP) {
+			if (state.get() != SnakeBodyComponent.STATE_REVERTING && state.get() != SnakeBodyComponent.STATE_STOP) {
 				checkSnakeCollision(snakeSystem, snake);
 			}
 		}

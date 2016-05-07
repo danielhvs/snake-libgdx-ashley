@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.SnakeComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
@@ -119,7 +119,7 @@ public class GameScreen extends ScreenAdapter {
 		Random random = new Random();
 		float nextFloat = random.nextFloat();
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		float speed = SnakeComponent.SPEED;
+		float speed = SnakeBodyComponent.SPEED;
 		if (nextFloat < .25f) {
 			snakeSystem.setXVel(speed, world.getAi());
 		} else if (nextFloat < .5f) {

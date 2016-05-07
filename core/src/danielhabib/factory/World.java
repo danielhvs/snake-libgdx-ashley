@@ -18,7 +18,7 @@ import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
-import danielhabib.sandbox.components.SnakeComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
@@ -91,22 +91,20 @@ public class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(3, 1, SnakeComponent.SPEED, 0, Assets.partImg);
-		snakeEntity.remove(TransformComponent.class);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0, Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
-		state.set(SnakeComponent.STATE_MOVING);
+		state.set(SnakeBodyComponent.STATE_MOVING);
 
-		SnakeComponent snakeComponent = new SnakeComponent();
-		snakeComponent.parts = new Array<Entity>();
-		for (int i = 0; i < 1; i++) {
-			snakeComponent.parts.add(newEntityPiece(x, y));
+		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
+		snakeBodyComponent.parts = new Array<Entity>();
+		for (int i = 1; i <= 1; i++) {
+			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
 		}
-		for (Entity part : snakeComponent.parts) {
+		for (Entity part : snakeBodyComponent.parts) {
 			engine.addEntity(part);
 		}
 		// for collision
-		snakeEntity.add(snakeComponent.parts.get(0).getComponent(TransformComponent.class));
-		snakeEntity.add(snakeComponent);
+		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
 		return snakeEntity;
 	}
