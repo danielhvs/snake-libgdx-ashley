@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Vector3;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -80,6 +81,7 @@ public class CollisionSystem extends EntitySystem {
 				} else if (type == PlatformType.WALL) {
 					// listener.hit();
 					// snakeSystem.stop(snake);
+					snakeSystem.teleport(snake, new Vector3(2, 2, 0));
 				} else if (type == PlatformType.SPEED) {
 					listener.hit();
 					snakeSystem.increaseSpeed(snake);

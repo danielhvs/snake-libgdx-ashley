@@ -129,7 +129,7 @@ public class World {
 	}
 
 	public void create() {
-		snakeEntity = createSnake(0, 10);
+		snakeEntity = createSnake(10, 10);
 		ai = createSnake(5, 5);
 		engine.addEntity(snakeEntity);
 		engine.addEntity(ai);
