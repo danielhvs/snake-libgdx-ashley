@@ -17,7 +17,7 @@ import danielhabib.sandbox.components.TransformComponent;
 
 public class RenderingSystem extends IteratingSystem {
 	static final float PIXELS_TO_METER = 1.0f / 32.0f;
-	static final float PIXELS_PER_METER = 32f;
+	public static final float PIXELS_PER_METER = 32f;
 
 	private SpriteBatch batch;
 	private Array<Entity> renderQueue;

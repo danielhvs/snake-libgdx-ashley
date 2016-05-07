@@ -45,6 +45,7 @@ project(":core") {
 
 
     dependencies {
+        compile "org.apache.commons:commons-lang3:3.0.1"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"

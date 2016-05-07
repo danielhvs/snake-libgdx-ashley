@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Vector3;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -66,10 +65,11 @@ public class CollisionSystem extends EntitySystem {
 			BoundsComponent snakeBound = bounds.get(snake);
 			BoundsComponent platformBound = bounds.get(platform);
 			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
-				PlatformType type = platform.getComponent(PlatformComponent.class).type;
+				PlatformComponent platformComponent = platform.getComponent(PlatformComponent.class);
+				PlatformType type = platformComponent.type;
 				if (type == PlatformType.BOING) {
 					listener.hit();
-					snakeSystem.revert(snake);
+					// snakeSystem.revert(snake);
 				} else if (type == PlatformType.FRUIT) {
 					listener.ate();
 					engine.removeEntity(platform);
@@ -81,10 +81,12 @@ public class CollisionSystem extends EntitySystem {
 				} else if (type == PlatformType.WALL) {
 					// listener.hit();
 					// snakeSystem.stop(snake);
-					snakeSystem.teleport(snake, new Vector3(2, 2, 0));
 				} else if (type == PlatformType.SPEED) {
 					listener.hit();
 					snakeSystem.increaseSpeed(snake);
+				} else if (type == PlatformType.HOLE) {
+					listener.hit();
+					snakeSystem.teleport(snake, platformComponent.other.getComponent(TransformComponent.class).pos);
 				}
 			}
 		}

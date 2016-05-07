@@ -1,16 +1,25 @@
 package danielhabib.factory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
@@ -150,9 +159,9 @@ public class World {
 	}
 
 	private void parseMap() {
-		TiledMap map = new TmxMapLoader().load("map1.tmx");
+		TiledMap map = new TmxMapLoader().load("map2.tmx");
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-
+		loadWormHoles(map);
 		Texture texture;
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
@@ -178,6 +187,53 @@ public class World {
 				}
 			}
 		}
+	}
+
+	private void loadWormHoles(TiledMap map) {
+		Texture holeTexture = Assets.holeImg;
+		if (map.getLayers().getCount() > 1) {
+			MapObjects objects = map.getLayers().get(1).getObjects();
+			Map<String, Entity> mapa = new HashMap<String, Entity>();
+			for (MapObject object : objects) {
+				if (object.getName().startsWith("init")) {
+					Rectangle pos = getRectangle(object);
+					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "init"));
+					mapa.put("init" + index, newInitWormHole(holeTexture, new Vector2(pos.x, pos.y)));
+				} else if (object.getName().startsWith("end")) {
+					Rectangle pos = getRectangle(object);
+					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "end"));
+					mapa.put("end" + index, newEndWormHole(holeTexture, new Vector2(pos.x, pos.y)));
+				}
+			}
+
+			for (int i = 0; i < mapa.size() / 2; i++) {
+				Entity holeEntity = mapa.get("init" + i);
+				Entity holeEnd = mapa.get("end" + i);
+				holeEntity.getComponent(PlatformComponent.class).other = holeEnd;
+				engine.addEntity(holeEntity);
+				engine.addEntity(holeEnd);
+			}
+		}
+	}
+
+	private Entity newEndWormHole(Texture texture, Vector2 pos) {
+		return newWormHole(texture, pos, PlatformType.HOLE_END);
+	}
+
+	private Entity newInitWormHole(Texture texture, Vector2 pos) {
+		return newWormHole(texture, pos, PlatformType.HOLE);
+	}
+
+	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type) {
+		Entity hole = createEntity(pos.x / RenderingSystem.PIXELS_PER_METER, pos.y / RenderingSystem.PIXELS_PER_METER,
+				0, 0, texture);
+		hole.add(new PlatformComponent(0f, type));
+		return hole;
+	}
+
+	private Rectangle getRectangle(MapObject object) {
+		RectangleMapObject rectangle = (RectangleMapObject) object;
+		return rectangle.getRectangle();
 	}
 
 	public Entity getSnake() {
