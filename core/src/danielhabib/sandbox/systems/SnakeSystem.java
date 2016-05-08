@@ -57,15 +57,19 @@ public class SnakeSystem extends IteratingSystem {
 	private void movePartsToFollowHead(Entity entity) {
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
 		Vector3 head = transforms.get(entity).pos;
-		Vector3 firstPiece = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
-		firstPiece.interpolate(head, 1f, Interpolation.linear);
+		Vector3 firstPart = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
+		interpolate(head, firstPart);
 		
 		int len = snakeBodyComponent.parts.size - 1;
 		for (int i = len; i > 0; i--) {
 			Vector3 before = snakeBodyComponent.parts.get(i - 1).getComponent(TransformComponent.class).pos;
 			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
-			part.interpolate(before, 1f, Interpolation.linear);
+			interpolate(before, part);
 		}
+	}
+
+	private void interpolate(Vector3 before, Vector3 part) {
+		part.interpolate(before, 1f, Interpolation.linear);
 	}
 
 	public void setYVel(float yVel, Entity entity) {
@@ -107,8 +111,11 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void increaseSpeed(Entity snake) {
-		MovementComponent movement = movements.get(snake);
-		movement.velocity.scl(1.125f);
+		movements.get(snake).velocity.scl(1.1f);
+	}
+
+	public void decreaseSpeed(Entity snake) {
+		movements.get(snake).velocity.scl(.9f);
 	}
 
 	public void teleport(Entity entity, Vector3 vector2) {

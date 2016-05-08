@@ -21,7 +21,6 @@ import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
-
 public class GameScreen extends ScreenAdapter {
 
 	private SandboxGame game;
@@ -40,7 +39,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
 		engine.addSystem(new BoundsSystem());
-		engine.addSystem(new CollisionSystem(new CollisionListener() {
+		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
 			@Override
 			public void hit() {
 				Assets.playSound(Assets.hitSound);
@@ -55,7 +54,10 @@ public class GameScreen extends ScreenAdapter {
 			public void poison() {
 				Assets.playSound(Assets.poisonSound);
 			}
-		}));
+		});
+		engine.addSystem(collisionSystem);
+		engine.removeSystem(collisionSystem);
+
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		world.create();
@@ -80,7 +82,11 @@ public class GameScreen extends ScreenAdapter {
 			snakeSystem.setYVel(speed, snake);
 		}
 
-		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+		if (Gdx.input.isKeyPressed(Keys.A)) {
+			engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
+		} else if (Gdx.input.isKeyPressed(Keys.D)) {
+			engine.getSystem(SnakeSystem.class).decreaseSpeed(snake);
+		} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(false);
 			engine.getSystem(MovementSystem.class).setProcessing(false);
 		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
