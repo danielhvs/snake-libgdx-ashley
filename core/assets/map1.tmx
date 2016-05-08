@@ -66,7 +66,13 @@
  </tileset>
  <layer name="Tile Layer 1" width="25" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFlYsKgCAMRac97P+/uIKEMa57ZXRgEI08TacWIioTo7Jo7FlSwLssHkcTYbEDB/ruTR3IUUHuD0clPK9yjRGROnbwj1ruSDiyjBwz0eZxxGjvdWSfWmvFa9P2Bh/D42gsl3GgnObwknVYZx9H6xfNoRGtMdpXliPSV16HHFNzLFdsT6wJr8fxFff4M+9ZeQ73++kEylYBqw==
+   eJy9lW0LwCAIhK29tP//i7cPG4iU6TU9OAhOfIisKhHVBEfKwmjCM50AwyuNIbNsxujsipJ5GV8+qullF8BAlc1YUWFrOd8zhnVvvIeFwWsQRi/TGFZlMCx3a5WhKeK98s4V0lNjbI+P1/uPzMw/Kto3fNYBlg==
   </data>
  </layer>
+ <objectgroup name="Object Layer 1" width="25" height="20">
+  <object name="init0" x="543" y="95" width="32" height="32"/>
+  <object name="end0" x="383" y="351" width="32" height="32"/>
+  <object name="init1" x="670" y="481" width="32" height="32"/>
+  <object name="end1" x="129" y="95" width="32" height="32"/>
+ </objectgroup>
 </map>

@@ -112,7 +112,6 @@ public class World {
 		for (Entity part : snakeBodyComponent.parts) {
 			engine.addEntity(part);
 		}
-		// for collision
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
 		return snakeEntity;
@@ -159,7 +158,7 @@ public class World {
 	}
 
 	private void parseMap() {
-		TiledMap map = new TmxMapLoader().load("map2.tmx");
+		TiledMap map = new TmxMapLoader().load("map1.tmx");
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 		loadWormHoles(map);
 		Texture texture;
