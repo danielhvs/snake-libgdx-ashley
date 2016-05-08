@@ -86,8 +86,8 @@ public class World {
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
-		bounds.bounds.width = textureComponent.region.getRegionWidth() * 0.03125f;
-		bounds.bounds.height = textureComponent.region.getRegionHeight() * 0.03125f;
+		bounds.bounds.width = textureComponent.region.getRegionWidth() * RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.height = textureComponent.region.getRegionHeight() * RenderingSystem.PIXELS_TO_METER;
 		bounds.bounds.x = transform.pos.x;
 		bounds.bounds.y = transform.pos.y;
 
@@ -221,7 +221,10 @@ public class World {
 	}
 
 	private Entity newInitWormHole(Texture texture, Vector2 pos) {
-		return newWormHole(texture, pos, PlatformType.HOLE, 8f);
+		Entity newWormHole = newWormHole(texture, pos, PlatformType.HOLE, -8f);
+		newWormHole.getComponent(BoundsComponent.class).bounds.height = 2 * RenderingSystem.PIXELS_TO_METER;
+		newWormHole.getComponent(BoundsComponent.class).bounds.width = 2 * RenderingSystem.PIXELS_TO_METER;
+		return newWormHole;
 	}
 
 	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type, float rotation) {
