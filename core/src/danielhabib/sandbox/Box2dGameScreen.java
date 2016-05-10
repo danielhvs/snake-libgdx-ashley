@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -28,16 +29,20 @@ public class Box2dGameScreen extends ScreenAdapter {
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		circle = createCircle(0, 0);
 		Body circle2 = createCircle(-64f, 0);
-		createBox(-128, -128f, 512f, 1f);
+
+		createEdge(-400f, -400f, -400f, 400f);
+		createEdge(-400f, -400f, 400f, -400f);
+		createEdge(400f, -400f, 400f, 400f);
+		createEdge(400f, 400f, -400f, 400f);
 
 		DistanceJointDef defJoint = new DistanceJointDef();
 		defJoint.length = 16f / RenderingSystem.PIXELS_PER_METER;
 		defJoint.initialize(circle, circle2, new Vector2(0f, 0f), new Vector2(0f, 0f));
 		defJoint.collideConnected = true;
 		world.createJoint(defJoint);
-
 	}
 
 	private Body createBox(float x, float y, float hx, float hy) {
@@ -49,6 +54,18 @@ public class Box2dGameScreen extends ScreenAdapter {
 		box.setAsBox(hx / RenderingSystem.PIXELS_PER_METER, hy / RenderingSystem.PIXELS_PER_METER);
 		body.createFixture(box, 1f);
 		box.dispose();
+		return body;
+	}
+
+	private Body createEdge(float x, float y, float hx, float hy) {
+		BodyDef def = new BodyDef();
+		def.type = BodyDef.BodyType.StaticBody;
+		Body body = world.createBody(def);
+		EdgeShape edge = new EdgeShape();
+		edge.set(x / RenderingSystem.PIXELS_PER_METER, y / RenderingSystem.PIXELS_PER_METER,
+				hx / RenderingSystem.PIXELS_PER_METER, hy / RenderingSystem.PIXELS_PER_METER);
+		body.createFixture(edge, 1f);
+		edge.dispose();
 		return body;
 	}
 
