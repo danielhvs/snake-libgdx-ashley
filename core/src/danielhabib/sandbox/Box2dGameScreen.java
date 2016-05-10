@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -27,16 +28,16 @@ public class Box2dGameScreen extends ScreenAdapter {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		circle = createCircle();
-		createBox(0, -64f / RenderingSystem.PIXELS_PER_METER);
+		createBox(-128, -128f, 512f, 1f);
 	}
 
-	private Body createBox(float x, float y) {
+	private Body createBox(float x, float y, float hx, float hy) {
 		BodyDef def = new BodyDef();
 		def.type = BodyDef.BodyType.StaticBody;
-		def.position.set(x, y);
+		def.position.set(x / RenderingSystem.PIXELS_PER_METER, y / RenderingSystem.PIXELS_PER_METER);
 		Body body = world.createBody(def);
 		PolygonShape box = new PolygonShape();
-		box.setAsBox(64f / RenderingSystem.PIXELS_PER_METER, 16f / RenderingSystem.PIXELS_PER_METER);
+		box.setAsBox(hx / RenderingSystem.PIXELS_PER_METER, hy / RenderingSystem.PIXELS_PER_METER);
 		body.createFixture(box, 1f);
 		box.dispose();
 		return body;
@@ -49,7 +50,11 @@ public class Box2dGameScreen extends ScreenAdapter {
 		Body body = world.createBody(def);
 		CircleShape circle = new CircleShape();
 		circle.setRadius(32f / RenderingSystem.PIXELS_PER_METER);
-		body.createFixture(circle, 1f);
+		FixtureDef fixture = new FixtureDef();
+		fixture.shape = circle;
+		fixture.density = 1f;
+		fixture.restitution = .5f;
+		body.createFixture(fixture);
 		circle.dispose();
 		return body;
 	}
