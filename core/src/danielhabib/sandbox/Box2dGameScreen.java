@@ -25,24 +25,39 @@ public class Box2dGameScreen extends ScreenAdapter {
 	private Body circle;
 
 	public Box2dGameScreen() {
-		world = new World(new Vector2(0, 0), true);
+		world = new World(new Vector2(0, -10), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		circle = createCircle(0, 0);
-		Body circle2 = createCircle(-64f, 0);
-
 		createEdge(-400f, -400f, -400f, 400f);
 		createEdge(-400f, -400f, 400f, -400f);
 		createEdge(400f, -400f, 400f, 400f);
 		createEdge(400f, 400f, -400f, 400f);
 
+		// RevoluteJointDef defJoint = new RevoluteJointDef();
+		// defJoint.initialize(circle, circle2, new Vector2(0f, 0f));
+		createJoints();
+	}
+
+	private void createJoints() {
+		Body circle2 = createCircle(-64f, 0);
 		DistanceJointDef defJoint = new DistanceJointDef();
 		defJoint.length = 16f / RenderingSystem.PIXELS_PER_METER;
-		defJoint.initialize(circle, circle2, new Vector2(0f, 0f), new Vector2(0f, 0f));
+		defJoint.initialize(circle, circle2, circle.getPosition(), circle2.getPosition());
 		defJoint.collideConnected = true;
 		world.createJoint(defJoint);
+
+		for (int i = 0; i < 1; i++) {
+			DistanceJointDef defJointIter = new DistanceJointDef();
+			defJointIter.length = 16f / RenderingSystem.PIXELS_PER_METER;
+			Body circle3 = createCircle(-128f, 0);
+			defJointIter.initialize(circle2, circle3, circle2.getPosition(), circle3.getPosition());
+			defJointIter.collideConnected = true;
+			world.createJoint(defJointIter);
+		}
+
 	}
 
 	private Body createBox(float x, float y, float hx, float hy) {
@@ -79,7 +94,7 @@ public class Box2dGameScreen extends ScreenAdapter {
 		FixtureDef fixture = new FixtureDef();
 		fixture.shape = circle;
 		fixture.density = 1f;
-		fixture.restitution = .5f;
+		fixture.restitution = 0f;
 		body.createFixture(fixture);
 		circle.dispose();
 		return body;
@@ -90,8 +105,8 @@ public class Box2dGameScreen extends ScreenAdapter {
 		camera.position.x = circle.getPosition().x * RenderingSystem.PIXELS_PER_METER;
 		camera.position.y = circle.getPosition().y * RenderingSystem.PIXELS_PER_METER;
 		camera.position.set(position);
-        camera.update();
-    }
+		camera.update();
+	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -115,20 +130,19 @@ public class Box2dGameScreen extends ScreenAdapter {
 			Gdx.app.exit();
 		}
 
-		int horizontalForce = 0;
-
+		float speed = 1f;
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			horizontalForce -= 1;
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			horizontalForce += 1;
+			circle.setLinearVelocity(circle.getLinearVelocity().x - speed, circle.getLinearVelocity().y + speed);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+			circle.setLinearVelocity(circle.getLinearVelocity().x + speed, circle.getLinearVelocity().y + speed);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+			circle.setLinearVelocity(circle.getLinearVelocity().x, circle.getLinearVelocity().y + speed);
+		} else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+			circle.setLinearVelocity(circle.getLinearVelocity().x, circle.getLinearVelocity().y - speed);
 		}
 
-		if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-			circle.applyForceToCenter(0, 300, false);
-		}
-
-		circle.setLinearVelocity(horizontalForce * 5, circle.getLinearVelocity().y);
+		// circle.setLinearVelocity(horizontalForce * 5,
+		// circle.getLinearVelocity().y);
 	}
 
 	@Override
