@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 
 import danielhabib.sandbox.systems.RenderingSystem;
 
@@ -23,12 +24,20 @@ public class Box2dGameScreen extends ScreenAdapter {
 	private Body circle;
 
 	public Box2dGameScreen() {
-		world = new World(new Vector2(0, -10), true);
+		world = new World(new Vector2(0, 0), true);
 		debugRenderer = new Box2DDebugRenderer();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		circle = createCircle();
+		circle = createCircle(0, 0);
+		Body circle2 = createCircle(-64f, 0);
 		createBox(-128, -128f, 512f, 1f);
+
+		DistanceJointDef defJoint = new DistanceJointDef();
+		defJoint.length = 16f / RenderingSystem.PIXELS_PER_METER;
+		defJoint.initialize(circle, circle2, new Vector2(0f, 0f), new Vector2(0f, 0f));
+		defJoint.collideConnected = true;
+		world.createJoint(defJoint);
+
 	}
 
 	private Body createBox(float x, float y, float hx, float hy) {
@@ -43,10 +52,10 @@ public class Box2dGameScreen extends ScreenAdapter {
 		return body;
 	}
 
-	private Body createCircle() {
+	private Body createCircle(float x, float y) {
 		BodyDef def = new BodyDef();
 		def.type = BodyDef.BodyType.DynamicBody;
-		def.position.set(0, 0);
+		def.position.set(x / RenderingSystem.PIXELS_PER_METER, y / RenderingSystem.PIXELS_PER_METER);
 		Body body = world.createBody(def);
 		CircleShape circle = new CircleShape();
 		circle.setRadius(32f / RenderingSystem.PIXELS_PER_METER);
