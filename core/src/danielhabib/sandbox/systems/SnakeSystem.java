@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PathComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TransformComponent;
@@ -21,15 +22,17 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<SnakeBodyComponent> snakes;
 	private World world;
 	private ComponentMapper<TransformComponent> transforms;
+	private ComponentMapper<PathComponent> paths;
 
 	public SnakeSystem(World world) {
-		super(Family.all(SnakeBodyComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
-				.get());
+		super(Family.all(SnakeBodyComponent.class, StateComponent.class, TransformComponent.class,
+				MovementComponent.class, PathComponent.class).get());
 		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
 		transforms = ComponentMapper.getFor(TransformComponent.class);
 		snakes = ComponentMapper.getFor(SnakeBodyComponent.class);
+		paths = ComponentMapper.getFor(PathComponent.class);
 	}
 
 	public void revert(Entity entity) {
@@ -50,21 +53,26 @@ public class SnakeSystem extends IteratingSystem {
 		}
 
 		if (state.get() != SnakeBodyComponent.STATE_STOP) {
+			Array<Vector3> path = paths.get(entity).path;
+			Vector3 headPos = transforms.get(entity).pos;
+			Vector3 part = path.pop().cpy();
+			part.set(headPos.cpy());
+			path.insert(0, part);
 			movePartsToFollowHead(entity);
 		}
 	}
 
 	private void movePartsToFollowHead(Entity entity) {
+		Array<Vector3> path = paths.get(entity).path;
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
 		Vector3 head = transforms.get(entity).pos;
 		Vector3 firstPart = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
-		interpolate(head, firstPart);
-		
-		int len = snakeBodyComponent.parts.size - 1;
-		for (int i = len; i > 0; i--) {
-			Vector3 before = snakeBodyComponent.parts.get(i - 1).getComponent(TransformComponent.class).pos;
+		// interpolate(head, firstPart);
+
+		for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
 			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
-			interpolate(before, part);
+			part.set(path.get((1 + i) * PathComponent.SPACER));
+			// interpolate(before, part);
 		}
 	}
 
@@ -73,14 +81,16 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void setYVel(float yVel, Entity entity) {
-		movements.get(entity).velocity.rotate(-5);
-		transforms.get(entity).rotation -= 5;
+		float degrees = -SnakeBodyComponent.SPEED / PathComponent.FACTOR;
+		movements.get(entity).velocity.rotate(degrees);
+		transforms.get(entity).rotation += degrees;
 		setState(entity, SnakeBodyComponent.STATE_MOVING);
 	}
 
 	public void setXVel(float xVel, Entity entity) {
-		movements.get(entity).velocity.rotate(5);
-		transforms.get(entity).rotation += 5;
+		float degrees = SnakeBodyComponent.SPEED / PathComponent.FACTOR;
+		movements.get(entity).velocity.rotate(degrees);
+		transforms.get(entity).rotation += degrees;
 		setState(entity, SnakeBodyComponent.STATE_MOVING);
 	}
 

@@ -20,12 +20,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PathComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
@@ -100,20 +102,29 @@ public class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0, Assets.partHead);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED / PathComponent.FACTOR, 0, Assets.partHead);
+		PathComponent pathComponent = engine.createComponent(PathComponent.class);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeBodyComponent.STATE_MOVING);
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		for (int i = 1; i <= 32; i++) {
+		int snakeSpacer = PathComponent.SPACER;
+		int bodySize = 3;
+		for (int i = 1; i <= bodySize; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
+		}
+		Vector3 headPos = snakeEntity.getComponent(TransformComponent.class).pos.cpy();
+		pathComponent.path = new Array<Vector3>();
+		for (int i = 0; i <= snakeSpacer * bodySize; i++) {
+			pathComponent.path.add(headPos);
 		}
 		for (Entity part : snakeBodyComponent.parts) {
 			engine.addEntity(part);
 		}
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
+		snakeEntity.add(pathComponent);
 		return snakeEntity;
 	}
 
@@ -140,7 +151,7 @@ public class World {
 		snakeEntity = createSnake(10, 10);
 		ai = createSnake(5, 5);
 		engine.addEntity(snakeEntity);
-		engine.addEntity(ai);
+		// engine.addEntity(ai);
 		parseMap();
 		createCamera(snakeEntity);
 	}
