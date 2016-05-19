@@ -21,6 +21,7 @@ import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
+
 public class GameScreen extends ScreenAdapter {
 
 	private SandboxGame game;
@@ -82,9 +83,9 @@ public class GameScreen extends ScreenAdapter {
 			snakeSystem.setYVel(speed, snake);
 		}
 
-		if (Gdx.input.isKeyPressed(Keys.A)) {
+		if (Gdx.input.isKeyJustPressed(Keys.A)) {
 			engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
-		} else if (Gdx.input.isKeyPressed(Keys.D)) {
+		} else if (Gdx.input.isKeyJustPressed(Keys.D)) {
 			engine.getSystem(SnakeSystem.class).decreaseSpeed(snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(false);

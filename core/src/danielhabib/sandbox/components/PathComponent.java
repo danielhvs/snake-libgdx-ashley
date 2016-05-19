@@ -6,6 +6,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class PathComponent implements Component {
 	public Array<Vector3> path;
-	public static final float FACTOR = 1f;
-	public static final int SPACER = (int) (12 * FACTOR);
+	public static float factor = 1;
+	public static int spacer = (int) (12 * factor);
 }

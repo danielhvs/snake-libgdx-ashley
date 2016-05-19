@@ -71,7 +71,7 @@ public class SnakeSystem extends IteratingSystem {
 
 		for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
 			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
-			part.set(path.get((1 + i) * PathComponent.SPACER));
+			part.set(path.get((1 + i) * PathComponent.spacer));
 			// interpolate(before, part);
 		}
 	}
@@ -81,14 +81,14 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void setYVel(float yVel, Entity entity) {
-		float degrees = -SnakeBodyComponent.SPEED / PathComponent.FACTOR;
+		float degrees = -SnakeBodyComponent.SPEED / PathComponent.factor;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
 		setState(entity, SnakeBodyComponent.STATE_MOVING);
 	}
 
 	public void setXVel(float xVel, Entity entity) {
-		float degrees = SnakeBodyComponent.SPEED / PathComponent.FACTOR;
+		float degrees = SnakeBodyComponent.SPEED / PathComponent.factor;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
 		setState(entity, SnakeBodyComponent.STATE_MOVING);
@@ -120,12 +120,32 @@ public class SnakeSystem extends IteratingSystem {
 		}
 	}
 
-	public void increaseSpeed(Entity snake) {
-		movements.get(snake).velocity.scl(1.1f);
+	private void resetSpeed(Entity entity) {
+		PathComponent.spacer = (int) (12 * PathComponent.factor);
+		Array<Vector3> path = paths.get(entity).path;
+		path.clear();
+		Vector3 headPos = transforms.get(entity).pos;
+		for (int i = 0; i <= PathComponent.spacer * snakes.get(entity).parts.size; i++) {
+			path.add(headPos);
+		}
+		System.out.println("----------------------------------------------");
+		System.out.println("path.size: " + path.size);
+		System.out.println("PathComponent.spacer: " + PathComponent.spacer);
+		System.out.println("PathComponent.factor: " + PathComponent.factor);
+		System.out.println("velocity: " + movements.get(entity).velocity);
+		System.out.println();
 	}
 
-	public void decreaseSpeed(Entity snake) {
-		movements.get(snake).velocity.scl(.9f);
+	public void increaseSpeed(Entity entity) {
+		PathComponent.factor /= 2;
+		resetSpeed(entity);
+		movements.get(entity).velocity.scl(2);
+	}
+
+	public void decreaseSpeed(Entity entity) {
+		PathComponent.factor *= 2;
+		resetSpeed(entity);
+		movements.get(entity).velocity.scl(.5f);
 	}
 
 	public void teleport(Entity entity, Vector3 vector2) {
