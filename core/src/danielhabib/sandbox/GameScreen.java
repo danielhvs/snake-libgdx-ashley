@@ -57,7 +57,7 @@ public class GameScreen extends ScreenAdapter {
 			}
 		});
 		engine.addSystem(collisionSystem);
-		engine.removeSystem(collisionSystem);
+		// engine.removeSystem(collisionSystem);
 
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());

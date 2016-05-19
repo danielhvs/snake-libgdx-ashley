@@ -42,9 +42,9 @@ public class CollisionSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
-		snakes = engine.getEntitiesFor(
-				Family.all(SnakeBodyComponent.class, StateComponent.class, BoundsComponent.class, TransformComponent.class)
-						.get());
+		snakes = engine.getEntitiesFor(Family
+				.all(SnakeBodyComponent.class, StateComponent.class, BoundsComponent.class, TransformComponent.class)
+				.get());
 		platformComponents = engine.getEntitiesFor(
 				Family.all(PlatformComponent.class, BoundsComponent.class, TransformComponent.class).get());
 	}
@@ -73,17 +73,18 @@ public class CollisionSystem extends EntitySystem {
 				} else if (type == PlatformType.FRUIT) {
 					listener.ate();
 					engine.removeEntity(platform);
-					snakeSystem.grow(snake);
+					// snakeSystem.grow(snake);
 				} else if (type == PlatformType.POISON) {
 					listener.poison();
 					engine.removeEntity(platform);
-					snakeSystem.removeTail(snake);
+					// snakeSystem.removeTail(snake);
 				} else if (type == PlatformType.WALL) {
-					listener.hit();
-					snakeSystem.stop(snake);
+					// listener.hit();
+					// snakeSystem.stop(snake);
 				} else if (type == PlatformType.SPEED) {
 					listener.hit();
 					snakeSystem.increaseSpeed(snake);
+					engine.removeEntity(platform);
 				} else if (type == PlatformType.HOLE) {
 					listener.hit();
 					snakeSystem.teleport(snake, platformComponent.other.getComponent(TransformComponent.class).pos);

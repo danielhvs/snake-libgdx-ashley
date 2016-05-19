@@ -47,8 +47,8 @@ public class SnakeSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
 		if (state.get() == SnakeBodyComponent.STATE_REVERTING) {
-			movements.get(entity).velocity.scl(-1);
-			transforms.get(entity).rotation += 180;
+			movements.get(entity).velocity.rotate(90);
+			transforms.get(entity).rotation += 90;
 			state.set(SnakeBodyComponent.STATE_MOVING);
 		}
 
