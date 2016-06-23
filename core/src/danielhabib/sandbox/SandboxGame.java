@@ -4,7 +4,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 
+import danielhabib.sandbox.control.SandboxControl;
+
 public class SandboxGame extends Game {
+
+	public SandboxControl control;
+
+	public SandboxGame(SandboxControl control) {
+		this.control = control;
+	}
 
 	@Override
 	public void create() {

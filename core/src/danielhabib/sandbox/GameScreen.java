@@ -72,14 +72,9 @@ public class GameScreen extends ScreenAdapter {
 		MovementComponent movement = snake.getComponent(MovementComponent.class);
 		Vector2 velocity = movement.velocity;
 		float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
-		if (Gdx.input.isKeyPressed(Keys.DPAD_UP)) {
-			// snakeSystem.setYVel(speed, snake);
-		} else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN)) {
-			// snakeSystem.setYVel(-speed, snake);
-		} else if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT)) {
+		if (game.control.isTurnLeft()) {
 			snakeSystem.setXVel(-speed, snake);
-		} else if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT)) {
-			// snakeSystem.setXVel(speed, snake);
+		} else if (game.control.isTurnRight()) {
 			snakeSystem.setYVel(speed, snake);
 		}
 
