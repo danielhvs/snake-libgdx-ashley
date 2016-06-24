@@ -3,9 +3,9 @@ package danielhabib.sandbox.desktop;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
-import danielhabib.sandbox.control.SandboxControl;
+import danielhabib.sandbox.control.ASandboxControl;
 
-public class DesktopControl implements SandboxControl {
+public class DesktopControl extends ASandboxControl {
 
 	@Override
 	public boolean isTurnRight() {

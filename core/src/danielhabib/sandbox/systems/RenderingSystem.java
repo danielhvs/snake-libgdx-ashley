@@ -95,10 +95,10 @@ public class RenderingSystem extends IteratingSystem {
 	}
 
 	public void zoomIn() {
-		cam.zoom -= .0625f;
+		cam.zoom -= .00625f;
 	}
 
 	public void zoomOut() {
-		cam.zoom += .0625f;
+		cam.zoom += .00625f;
 	}
 }

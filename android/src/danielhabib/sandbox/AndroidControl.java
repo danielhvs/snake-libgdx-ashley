@@ -1,11 +1,10 @@
 package danielhabib.sandbox;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.input.GestureDetector.GestureAdapter;
 
-import danielhabib.sandbox.control.SandboxControl;
+import danielhabib.sandbox.control.ASandboxControl;
 
-public class AndroidControl extends GestureAdapter implements SandboxControl {
+public class AndroidControl extends ASandboxControl {
 
 	private boolean out;
 	private boolean in;
@@ -34,12 +33,19 @@ public class AndroidControl extends GestureAdapter implements SandboxControl {
 	public boolean zoom(float initialDistance, float distance) {
 		out = false;
 		in = false;
-		if (distance > initialDistance) {
+		if (distance < initialDistance) {
 			out = true;
 		} else if (distance > initialDistance) {
 			in = true;
 		}
 		return super.zoom(initialDistance, distance);
+	}
+
+	@Override
+	public void pinchStop() {
+		out = false;
+		in = false;
+		super.pinchStop();
 	}
 
 }

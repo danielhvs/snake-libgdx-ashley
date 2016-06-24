@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.VisUI.SkinScale;
 
-import danielhabib.sandbox.control.SandboxControl;
+import danielhabib.sandbox.control.ASandboxControl;
 
 public class SandboxGame extends Game {
 
-	public SandboxControl control;
+	public ASandboxControl control;
 
-	public SandboxGame(SandboxControl control) {
+	public SandboxGame(ASandboxControl control) {
 		this.control = control;
 	}
 

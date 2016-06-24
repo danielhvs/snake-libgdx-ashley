@@ -1,8 +1,8 @@
 package danielhabib.sandbox.client;
 
-import danielhabib.sandbox.control.SandboxControl;
+import danielhabib.sandbox.control.ASandboxControl;
 
-public class HtmlControl implements SandboxControl {
+public class HtmlControl extends ASandboxControl {
 
 	@Override
 	public boolean isTurnRight() {

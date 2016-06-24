@@ -1,6 +1,5 @@
 package danielhabib.sandbox;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
@@ -9,9 +8,9 @@ public class ScreenManager {
 	private static ScreenManager instance;
 
 	// Reference to game
-	private Game game;
+	private SandboxGame game;
 
-	public Game getGame() {
+	public SandboxGame getGame() {
 		return game;
 	}
 
@@ -29,7 +28,7 @@ public class ScreenManager {
 	}
 
 	// Initialization with the game class
-	public void initialize(Game game) {
+	public void initialize(SandboxGame game) {
 		this.game = game;
 	}
 
