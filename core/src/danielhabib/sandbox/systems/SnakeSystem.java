@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
@@ -47,20 +48,20 @@ public class SnakeSystem extends IteratingSystem {
 		SnakeBodyComponent component = entity.getComponent(SnakeBodyComponent.class);
 		SnakeBodyComponent snakeComponent = snakes.get(entity);
 		if (snakeComponent.equals(component)) {
-			setState(entity, SnakeBodyComponent.STATE_REVERTING);
+			setState(entity, SnakeBodyComponent.State.STATE_REVERTING);
 		}
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
-		if (state.get() == SnakeBodyComponent.STATE_REVERTING) {
+		if (state.get() == SnakeBodyComponent.State.STATE_REVERTING) {
 			movements.get(entity).velocity.rotate(90);
 			transforms.get(entity).rotation += 90;
-			state.set(SnakeBodyComponent.STATE_MOVING);
+			state.set(SnakeBodyComponent.State.STATE_MOVING);
 		}
 
-		if (state.get() != SnakeBodyComponent.STATE_DYING) {
+		if (state.get() != SnakeBodyComponent.State.STATE_DYING) {
 			movePartsToFollowHead(entity);
 		} else {
 			Consumer<Entity> scaleDown = e -> {
@@ -71,11 +72,11 @@ public class SnakeSystem extends IteratingSystem {
 			snakes.get(entity).parts.forEach(scaleDown);
 			Vector2 scale = getTransformComponent(entity).scale;
 			if (scale.len() < REALLY_SMALL_SIZE) {
-				setState(entity, SnakeBodyComponent.STATE_DEAD);
+				setState(entity, SnakeBodyComponent.State.STATE_DEAD);
 			}
 		}
 
-		if (state.get() == SnakeBodyComponent.STATE_DEAD) {
+		if (state.get() == SnakeBodyComponent.State.STATE_DEAD) {
 			getEngine().removeAllEntities();
 		}
 	}
@@ -100,14 +101,14 @@ public class SnakeSystem extends IteratingSystem {
 		float degrees = -5f;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
-		setState(entity, SnakeBodyComponent.STATE_MOVING);
+		setState(entity, SnakeBodyComponent.State.STATE_MOVING);
 	}
 
 	public void setXVel(float xVel, Entity entity) {
 		float degrees = 5f;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
-		setState(entity, SnakeBodyComponent.STATE_MOVING);
+		setState(entity, SnakeBodyComponent.State.STATE_MOVING);
 	}
 
 	public void grow(Entity entity) {
@@ -117,14 +118,14 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void die(Entity snake) {
-		setState(snake, SnakeBodyComponent.STATE_DYING);
+		setState(snake, SnakeBodyComponent.State.STATE_DYING);
 		snake.getComponent(MovementComponent.class).velocity.x = 0;
 		snake.getComponent(MovementComponent.class).velocity.y = 0;
 	}
 
-	private void setState(Entity snake, int snakeState) {
+	private void setState(Entity snake, State bodyState) {
 		StateComponent state = states.get(snake);
-		state.set(snakeState);
+		state.set(bodyState);
 	}
 
 	public void removeTail(Entity snake) {

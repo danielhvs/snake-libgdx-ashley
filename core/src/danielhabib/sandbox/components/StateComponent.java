@@ -3,14 +3,16 @@ package danielhabib.sandbox.components;
 
 import com.badlogic.ashley.core.Component;
 
-public class StateComponent implements Component {
-	private int state = 0;
+import danielhabib.sandbox.components.SnakeBodyComponent.State;
 
-	public int get() {
+public class StateComponent implements Component {
+	private State state;
+
+	public State get() {
 		return this.state;
 	}
 
-	public void set(int state) {
+	public void set(State state) {
 		this.state = state;
 	}
 }

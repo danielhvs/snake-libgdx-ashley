@@ -54,7 +54,8 @@ public class CollisionSystem extends EntitySystem {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
 			StateComponent state = states.get(snake);
-			if (state.get() != SnakeBodyComponent.STATE_REVERTING && state.get() != SnakeBodyComponent.STATE_DYING) {
+			if (state.get() != SnakeBodyComponent.State.STATE_REVERTING
+					&& state.get() != SnakeBodyComponent.State.STATE_DYING) {
 				checkSnakeCollision(snakeSystem, snake);
 			}
 		}

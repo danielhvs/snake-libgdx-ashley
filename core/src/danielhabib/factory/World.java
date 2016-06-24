@@ -102,7 +102,7 @@ public abstract class World {
 		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
 				Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
-		state.set(SnakeBodyComponent.STATE_MOVING);
+		state.set(SnakeBodyComponent.State.STATE_MOVING);
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
