@@ -1,10 +1,12 @@
 package danielhabib.sandbox.systems;
 
+import java.util.function.Consumer;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -17,6 +19,7 @@ import danielhabib.sandbox.components.TransformComponent;
 
 public class SnakeSystem extends IteratingSystem {
 
+	private static final float REALLY_SMALL_SIZE = .001f;
 	private ComponentMapper<StateComponent> states;
 	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeBodyComponent> snakes;
@@ -52,32 +55,46 @@ public class SnakeSystem extends IteratingSystem {
 			state.set(SnakeBodyComponent.STATE_MOVING);
 		}
 
-		if (state.get() != SnakeBodyComponent.STATE_STOP) {
-			Array<Vector3> path = paths.get(entity).path;
-			Vector3 headPos = transforms.get(entity).pos;
-			Vector3 part = path.pop().cpy();
-			part.set(headPos.cpy());
-			path.insert(0, part);
-			movePartsToFollowHead(entity);
+		if (state.get() != SnakeBodyComponent.STATE_DYING) {
+			moveTick(entity);
+		} else {
+			Consumer<Entity> scaleDown = e -> {
+				Vector2 scale = e.getComponent(TransformComponent.class).scale;
+				scale.scl(0.9f);
+			};
+			moveTick(entity);
+			scaleDown.accept(entity);
+			snakes.get(entity).parts.forEach(scaleDown);
+			Vector2 scale = entity.getComponent(TransformComponent.class).scale;
+			if (scale.len() < REALLY_SMALL_SIZE) {
+				setState(entity, SnakeBodyComponent.STATE_DEAD);
+			}
 		}
+
+		if (state.get() == SnakeBodyComponent.STATE_DEAD) {
+			getEngine().removeAllEntities();
+		}
+	}
+
+	private void moveTick(Entity entity) {
+		Array<Vector3> path = paths.get(entity).path;
+		Vector3 headPos = transforms.get(entity).pos;
+		Vector3 part = path.pop().cpy();
+		part.set(headPos.cpy());
+		path.insert(0, part);
+		movePartsToFollowHead(entity);
 	}
 
 	private void movePartsToFollowHead(Entity entity) {
 		Array<Vector3> path = paths.get(entity).path;
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
-		Vector3 head = transforms.get(entity).pos;
-		Vector3 firstPart = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
-		// interpolate(head, firstPart);
-
-		for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
-			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
-			part.set(path.get((1 + i) * PathComponent.spacer));
-			// interpolate(before, part);
-		}
-	}
-
-	private void interpolate(Vector3 before, Vector3 part) {
-		part.interpolate(before, 1f, Interpolation.linear);
+		final int[] j = { 0 };
+		Consumer<Entity> followPath = e -> {
+			Vector3 partPos = e.getComponent(TransformComponent.class).pos;
+			partPos.set(path.get((1 + j[0]) * PathComponent.spacer));
+			j[0]++;
+		};
+		snakeBodyComponent.parts.forEach(followPath);
 	}
 
 	public void setYVel(float yVel, Entity entity) {
@@ -100,8 +117,8 @@ public class SnakeSystem extends IteratingSystem {
 		getEngine().addEntity(part);
 	}
 
-	public void stop(Entity snake) {
-		setState(snake, SnakeBodyComponent.STATE_STOP);
+	public void die(Entity snake) {
+		setState(snake, SnakeBodyComponent.STATE_DYING);
 		snake.getComponent(MovementComponent.class).velocity.x = 0;
 		snake.getComponent(MovementComponent.class).velocity.y = 0;
 	}

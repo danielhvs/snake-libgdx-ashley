@@ -36,10 +36,9 @@ import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.types.PlatformType;
 
-public class World {
-	private PooledEngine engine;
-	private Entity snakeEntity;
-	private Entity ai;
+public abstract class World {
+	protected PooledEngine engine;
+	protected Entity snakeEntity;
 
 	public World(PooledEngine engine) {
 		this.engine = engine;
@@ -146,16 +145,9 @@ public class World {
 		return pieceEntity;
 	}
 
-	public void create() {
-		snakeEntity = createSnake(10, 10);
-		ai = createSnake(5, 5);
-		engine.addEntity(snakeEntity);
-		// engine.addEntity(ai);
-		parseMap();
-		createCamera(snakeEntity);
-	}
+	public abstract void create();
 
-	private void createCamera(Entity target) {
+	protected void createCamera(Entity target) {
 		Entity entity = engine.createEntity();
 
 		CameraComponent camera = new CameraComponent();
@@ -167,7 +159,7 @@ public class World {
 		engine.addEntity(entity);
 	}
 
-	private void parseMap() {
+	protected void parseMap() {
 		TiledMap map = new TmxMapLoader().load("map1.tmx");
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 		loadWormHoles(map);
@@ -246,14 +238,6 @@ public class World {
 	private Rectangle getRectangle(MapObject object) {
 		RectangleMapObject rectangle = (RectangleMapObject) object;
 		return rectangle.getRectangle();
-	}
-
-	public Entity getSnake() {
-		return snakeEntity;
-	}
-
-	public Entity getAi() {
-		return ai;
 	}
 
 }
