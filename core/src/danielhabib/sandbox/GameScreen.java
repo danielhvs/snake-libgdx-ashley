@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -23,15 +22,16 @@ import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
 	private PooledEngine engine;
 	private SpriteBatch batch;
 	private World world;
 
-	public GameScreen(SandboxGame game) {
-		this.game = game;
+	public GameScreen(Object[] params) {
+		int level = (int) params[0];
+		this.game = (SandboxGame) ScreenManager.getInstance().getGame();
 		engine = new PooledEngine();
 		world = new World1(engine);
 		batch = new SpriteBatch();
@@ -96,6 +96,10 @@ public class GameScreen extends ScreenAdapter {
 			}
 		}
 		engine.update(delta);
+	}
+
+	@Override
+	public void buildStage() {
 	}
 
 }

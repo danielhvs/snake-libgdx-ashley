@@ -14,6 +14,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.World;
+import danielhabib.sandbox.ScreenEnum;
+import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent.State;
@@ -78,6 +80,7 @@ public class SnakeSystem extends IteratingSystem {
 
 		if (state.get() == SnakeBodyComponent.State.STATE_DEAD) {
 			getEngine().removeAllEntities();
+			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 		}
 	}
 
