@@ -1,9 +1,5 @@
 package danielhabib.sandbox.systems;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.stream.IntStream;
-
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -30,10 +26,6 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<SnakeBodyComponent> snakes;
 	private World world;
 	private ComponentMapper<TransformComponent> transforms;
-	private final BiConsumer<Entity, Entity> interpolate = (a, b) -> {
-		getTransformComponent(a).pos.interpolate(getTransformComponent(b).pos, .25f,
-				Interpolation.linear);
-	};
 
 	public SnakeSystem(World world) {
 		super(Family.all(SnakeBodyComponent.class, StateComponent.class,
@@ -66,12 +58,11 @@ public class SnakeSystem extends IteratingSystem {
 		if (state.get() != SnakeBodyComponent.State.STATE_DYING) {
 			movePartsToFollowHead(entity);
 		} else {
-			Consumer<Entity> scaleDown = e -> {
-				getTransformComponent(e).scale.scl(0.9f);
-			};
 			movePartsToFollowHead(entity);
-			scaleDown.accept(entity);
-			snakes.get(entity).parts.forEach(scaleDown);
+			scaleDown(entity);
+			for (Entity part : snakes.get(entity).parts) {
+				scaleDown(part);
+			}
 			Vector2 scale = getTransformComponent(entity).scale;
 			if (scale.len() < REALLY_SMALL_SIZE) {
 				setState(entity, SnakeBodyComponent.State.STATE_DEAD);
@@ -84,16 +75,26 @@ public class SnakeSystem extends IteratingSystem {
 		}
 	}
 
+	private void scaleDown(Entity entity) {
+		getTransformComponent(entity).scale.scl(0.9f);
+	}
+
 	private void movePartsToFollowHead(Entity entity) {
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
 		if (snakeBodyComponent.parts.size > 0) {
-			interpolate.accept(snakeBodyComponent.parts.first(), entity);
+			interpolate(snakeBodyComponent.parts.first(), entity);
 		}				
 		if (snakeBodyComponent.parts.size > 1) {
-			IntStream.range(1, snakeBodyComponent.parts.size)
-					.forEach(i -> interpolate.accept(snakeBodyComponent.parts.get(i),
-							snakeBodyComponent.parts.get(i - 1)));
+			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
+				interpolate(snakeBodyComponent.parts.get(i),
+						snakeBodyComponent.parts.get(i - 1));
+			}
 		}
+	}
+
+	private void interpolate(Entity first, Entity entity) {
+		getTransformComponent(first).pos.interpolate(getTransformComponent(entity).pos,
+				.25f, Interpolation.linear);
 	}
 
 	private TransformComponent getTransformComponent(Entity entity) {
