@@ -57,8 +57,6 @@ public class GameScreen extends AbstractScreen {
 			}
 		});
 		engine.addSystem(collisionSystem);
-		// engine.removeSystem(collisionSystem);
-
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		world.create();
@@ -89,9 +87,9 @@ public class GameScreen extends AbstractScreen {
 			} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
 				engine.getSystem(SnakeSystem.class).setProcessing(true);
 				engine.getSystem(MovementSystem.class).setProcessing(true);
-			} else if (Gdx.input.isKeyPressed(Keys.M)) {
+			} else if (game.control.isZoomIn()) {
 				engine.getSystem(RenderingSystem.class).zoomIn();
-			} else if (Gdx.input.isKeyPressed(Keys.N)) {
+			} else if (game.control.isZoomOut()) {
 				engine.getSystem(RenderingSystem.class).zoomOut();
 			}
 		}

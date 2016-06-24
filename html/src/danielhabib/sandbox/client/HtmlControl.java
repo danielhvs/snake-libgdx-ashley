@@ -14,4 +14,14 @@ public class HtmlControl implements SandboxControl {
 		return false;
 	}
 
+	@Override
+	public boolean isZoomIn() {
+		return false;
+	}
+
+	@Override
+	public boolean isZoomOut() {
+		return false;
+	}
+
 }

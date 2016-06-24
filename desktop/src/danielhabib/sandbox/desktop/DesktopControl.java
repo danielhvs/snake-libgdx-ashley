@@ -17,4 +17,14 @@ public class DesktopControl implements SandboxControl {
 		return Gdx.input.isKeyPressed(Keys.DPAD_LEFT);
 	}
 
+	@Override
+	public boolean isZoomIn() {
+		return Gdx.input.isKeyPressed(Keys.M);
+	}
+
+	@Override
+	public boolean isZoomOut() {
+		return Gdx.input.isKeyPressed(Keys.N);
+	}
+
 }

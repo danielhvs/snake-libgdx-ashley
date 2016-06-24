@@ -6,4 +6,8 @@ public interface SandboxControl {
 
 	boolean isTurnLeft();
 
+	boolean isZoomIn();
+
+	boolean isZoomOut();
+
 }
