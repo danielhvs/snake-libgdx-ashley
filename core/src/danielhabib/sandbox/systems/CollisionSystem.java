@@ -73,11 +73,11 @@ public class CollisionSystem extends EntitySystem {
 				} else if (type == PlatformType.FRUIT) {
 					listener.ate();
 					engine.removeEntity(platform);
-					// snakeSystem.grow(snake);
+					snakeSystem.grow(snake);
 				} else if (type == PlatformType.POISON) {
 					listener.poison();
 					engine.removeEntity(platform);
-					// snakeSystem.removeTail(snake);
+					snakeSystem.removeTail(snake);
 				} else if (type == PlatformType.WALL) {
 					listener.hit();
 					snakeSystem.die(snake);

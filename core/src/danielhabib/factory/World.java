@@ -20,14 +20,12 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.PathComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
@@ -101,8 +99,8 @@ public abstract class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED / PathComponent.factor, 0, Assets.partHead);
-		PathComponent pathComponent = engine.createComponent(PathComponent.class);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
+				Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeBodyComponent.STATE_MOVING);
 
@@ -110,19 +108,13 @@ public abstract class World {
 		snakeBodyComponent.parts = new Array<Entity>();
 		int bodySize = 6;
 		for (int i = 1; i <= bodySize; i++) {
-			snakeBodyComponent.parts.add(newEntityPiece(x, y));
-		}
-		Vector3 headPos = snakeEntity.getComponent(TransformComponent.class).pos.cpy();
-		pathComponent.path = new Array<Vector3>();
-		for (int i = 0; i <= PathComponent.spacer * bodySize; i++) {
-			pathComponent.path.add(headPos);
+			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
 		}
 		for (Entity part : snakeBodyComponent.parts) {
 			engine.addEntity(part);
 		}
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
-		snakeEntity.add(pathComponent);
 		return snakeEntity;
 	}
 
