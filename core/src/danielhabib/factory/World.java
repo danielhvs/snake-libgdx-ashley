@@ -151,8 +151,8 @@ public abstract class World {
 		engine.addEntity(entity);
 	}
 
-	protected void parseMap() {
-		TiledMap map = new TmxMapLoader().load("map1.tmx");
+	protected void parseMap(String mapTmx) {
+		TiledMap map = new TmxMapLoader().load(mapTmx);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 		loadWormHoles(map);
 		Texture texture;

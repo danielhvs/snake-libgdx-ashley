@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
+import danielhabib.factory.World2;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
@@ -31,9 +32,13 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(Object[] params) {
 		int level = (int) params[0];
-		this.game = (SandboxGame) ScreenManager.getInstance().getGame();
+		this.game = ScreenManager.getInstance().getGame();
 		engine = new PooledEngine();
-		world = new World1(engine);
+		if (level == 1) {
+			world = new World1(engine);
+		} else {
+			world = new World2(engine);
+		}
 		batch = new SpriteBatch();
 
 		engine.addSystem(new PlatformSystem());
