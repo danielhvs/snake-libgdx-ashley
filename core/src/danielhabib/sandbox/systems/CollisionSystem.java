@@ -62,15 +62,27 @@ public class CollisionSystem extends EntitySystem {
 	}
 
 	private void checkSnakeCollision(SnakeSystem snakeSystem, Entity snake) {
+		boolean colided = false; // avoid colision with 2 entities at the same
+									// time.
 		for (Entity platform : platformComponents) {
 			BoundsComponent snakeBound = bounds.get(snake);
 			BoundsComponent platformBound = bounds.get(platform);
 			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
 				PlatformComponent platformComponent = platform.getComponent(PlatformComponent.class);
 				PlatformType type = platformComponent.type;
-				if (type == PlatformType.BOING) {
+				if (type == PlatformType.WALL && !colided) {
+					listener.ate();
+					snakeSystem.die(snake);
+					colided = true;
+				} else if (type == PlatformType.BOING && !colided) {
 					listener.hit();
 					snakeSystem.revert(snake);
+					colided = true;
+				} else if (type == PlatformType.HOLE && !colided) {
+					listener.hit();
+					snakeSystem.teleport(snake, platformComponent.other
+							.getComponent(TransformComponent.class).pos);
+					colided = true;
 				} else if (type == PlatformType.FRUIT) {
 					listener.ate();
 					engine.removeEntity(platform);
@@ -79,16 +91,10 @@ public class CollisionSystem extends EntitySystem {
 					listener.poison();
 					engine.removeEntity(platform);
 					snakeSystem.removeTail(snake);
-				} else if (type == PlatformType.WALL) {
-					listener.hit();
-					snakeSystem.die(snake);
 				} else if (type == PlatformType.SPEED) {
 					listener.hit();
 					snakeSystem.increaseSpeed(snake);
 					engine.removeEntity(platform);
-				} else if (type == PlatformType.HOLE) {
-					listener.hit();
-					snakeSystem.teleport(snake, platformComponent.other.getComponent(TransformComponent.class).pos);
 				}
 			}
 		}

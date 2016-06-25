@@ -55,10 +55,8 @@ public class SnakeSystem extends IteratingSystem {
 			state.set(SnakeBodyComponent.State.STATE_MOVING);
 		}
 
-		if (state.get() != SnakeBodyComponent.State.STATE_DYING) {
-			movePartsToFollowHead(entity);
-		} else {
-			movePartsToFollowHead(entity);
+		movePartsToFollowHead(entity);
+		if (state.get() == SnakeBodyComponent.State.STATE_DYING) {
 			scaleDown(entity);
 			for (Entity part : snakes.get(entity).parts) {
 				scaleDown(part);
@@ -68,7 +66,6 @@ public class SnakeSystem extends IteratingSystem {
 				setState(entity, SnakeBodyComponent.State.STATE_DEAD);
 			}
 		}
-
 		if (state.get() == SnakeBodyComponent.State.STATE_DEAD) {
 			getEngine().removeAllEntities();
 			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
@@ -105,14 +102,12 @@ public class SnakeSystem extends IteratingSystem {
 		float degrees = -5f;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
-		setState(entity, SnakeBodyComponent.State.STATE_MOVING);
 	}
 
 	public void setXVel(float xVel, Entity entity) {
 		float degrees = 5f;
 		movements.get(entity).velocity.rotate(degrees);
 		transforms.get(entity).rotation += degrees;
-		setState(entity, SnakeBodyComponent.State.STATE_MOVING);
 	}
 
 	public void grow(Entity entity) {
