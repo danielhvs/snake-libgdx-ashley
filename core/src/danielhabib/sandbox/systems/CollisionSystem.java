@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import danielhabib.sandbox.components.BoundsComponent;
+import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
@@ -31,12 +32,14 @@ public class CollisionSystem extends EntitySystem {
 	private CollisionListener listener;
 	private ImmutableArray<Entity> snakes;
 	private ImmutableArray<Entity> platformComponents;
+	private ComponentMapper<CountComponent> counts;
 
 	public CollisionSystem(CollisionListener listener) {
 		this.listener = listener;
 
 		bounds = ComponentMapper.getFor(BoundsComponent.class);
 		states = ComponentMapper.getFor(StateComponent.class);
+		counts = ComponentMapper.getFor(CountComponent.class);
 	}
 
 	@Override
@@ -85,6 +88,7 @@ public class CollisionSystem extends EntitySystem {
 					listener.ate();
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
+					counts.get(snake).fruits++;
 					break;
 				} else if (type == PlatformType.POISON) {
 					listener.poison();

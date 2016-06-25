@@ -12,12 +12,14 @@ import com.badlogic.gdx.math.Vector2;
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
+import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
+import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
@@ -27,48 +29,18 @@ public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
 	private PooledEngine engine;
-	private SpriteBatch batch;
+	private SpriteBatch gameBatch;
 	private World world;
+	private int level;
 
 	public GameScreen(Object[] params) {
-		int level = (int) params[0];
+		this.level = (int) params[0];
 		this.game = ScreenManager.getInstance().getGame();
-		engine = new PooledEngine();
-		if (level == 1) {
-			world = new World1(engine);
-		} else {
-			world = new World2(engine);
-		}
-		batch = new SpriteBatch();
-
-		engine.addSystem(new PlatformSystem());
-		engine.addSystem(new MovementSystem());
-		engine.addSystem(new RenderingSystem(batch));
-		engine.addSystem(new BoundsSystem());
-		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
-			@Override
-			public void hit() {
-				Assets.playSound(Assets.hitSound);
-			}
-
-			@Override
-			public void ate() {
-				Assets.playSound(Assets.fruitSound);
-			}
-
-			@Override
-			public void poison() {
-				Assets.playSound(Assets.poisonSound);
-			}
-		});
-		engine.addSystem(collisionSystem);
-		engine.addSystem(new SnakeSystem(world));
-		engine.addSystem(new CameraSystem());
-		world.create();
 	}
 
 	@Override
 	public void render(float delta) {
+		super.render(delta);
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		ImmutableArray<Entity> snakes = engine.getEntitiesFor(Family.one(SnakeBodyComponent.class).get());
 		if (snakes.size() > 0) {
@@ -101,8 +73,58 @@ public class GameScreen extends AbstractScreen {
 		engine.update(delta);
 	}
 
+	// @Override
+	// public void draw() {
+	// ImmutableArray<Entity> entities = engine
+	// .getEntitiesFor(Family.one(CountComponent.class).get());
+	// for (Entity entity : entities) {
+	// Label label = entity.getComponent(CountComponent.class).fruitsLabel;
+	// label.setPosition(5, 15);
+	// label.draw(getBatch(), .5f);
+	// }
+	// super.draw();
+	// }
+
 	@Override
 	public void buildStage() {
+		engine = new PooledEngine();
+		if (level == 1) {
+			world = new World1(engine);
+		} else {
+			world = new World2(engine);
+		}
+		gameBatch = new SpriteBatch();
+
+		engine.addSystem(new PlatformSystem());
+		engine.addSystem(new MovementSystem());
+		engine.addSystem(new RenderingSystem(gameBatch));
+		engine.addSystem(new BoundsSystem());
+		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.hitSound);
+			}
+
+			@Override
+			public void ate() {
+				Assets.playSound(Assets.fruitSound);
+			}
+
+			@Override
+			public void poison() {
+				Assets.playSound(Assets.poisonSound);
+			}
+		});
+		engine.addSystem(collisionSystem);
+		engine.addSystem(new SnakeSystem(world));
+		engine.addSystem(new CameraSystem());
+		engine.addSystem(new CountSystem());
+		world.create();
+
+		 ImmutableArray<Entity> entities = engine .getEntitiesFor(Family.one(CountComponent.class).get());
+		 for (Entity entity : entities) {
+			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
+		}
 	}
 
 }

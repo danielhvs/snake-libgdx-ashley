@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
+import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
@@ -115,6 +116,7 @@ public abstract class World {
 		}
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
+		snakeEntity.add(engine.createComponent(CountComponent.class));
 		return snakeEntity;
 	}
 
