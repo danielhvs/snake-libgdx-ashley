@@ -21,6 +21,7 @@ import danielhabib.sandbox.components.TransformComponent;
 public class SnakeSystem extends IteratingSystem {
 
 	private static final float REALLY_SMALL_SIZE = .001f;
+	private static final float REALLY_BIG_SIZE = 750f;
 	private ComponentMapper<StateComponent> states;
 	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeBodyComponent> snakes;
@@ -57,19 +58,46 @@ public class SnakeSystem extends IteratingSystem {
 
 		movePartsToFollowHead(entity);
 		if (state.get() == SnakeBodyComponent.State.STATE_DYING) {
-			scaleDown(entity);
-			for (Entity part : snakes.get(entity).parts) {
-				scaleDown(part);
-			}
-			Vector2 scale = getTransformComponent(entity).scale;
-			if (scale.len() < REALLY_SMALL_SIZE) {
-				setState(entity, SnakeBodyComponent.State.STATE_DEAD);
-			}
+			dying(entity);
 		}
 		if (state.get() == SnakeBodyComponent.State.STATE_DEAD) {
-			getEngine().removeAllEntities();
-			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+			showMainMenu();
 		}
+		if (state.get() == State.STATE_WINING) {
+			wining(entity);
+		}
+		if (state.get() == State.STATE_WON) {
+			showMainMenu();
+		}
+	}
+
+	private void showMainMenu() {
+		getEngine().removeAllEntities();
+		ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+	}
+
+	private void dying(Entity entity) {
+		scaleDown(entity);
+		for (Entity part : snakes.get(entity).parts) {
+			scaleDown(part);
+		}
+		Vector2 scale = getTransformComponent(entity).scale;
+		if (scale.len() < REALLY_SMALL_SIZE) {
+			setState(entity, SnakeBodyComponent.State.STATE_DEAD);
+		}
+	}
+
+	private void wining(Entity entity) {
+		scaleUp(entity);
+		removeTail(entity);
+		Vector2 scale = getTransformComponent(entity).scale;
+		if (scale.len() > REALLY_BIG_SIZE) {
+			setState(entity, SnakeBodyComponent.State.STATE_WON);
+		}
+	}
+
+	private void scaleUp(Entity entity) {
+		getTransformComponent(entity).scale.scl(1.1f);
 	}
 
 	private void scaleDown(Entity entity) {
@@ -146,6 +174,10 @@ public class SnakeSystem extends IteratingSystem {
 
 	public void teleport(Entity entity, Vector3 vector2) {
 		transforms.get(entity).pos.set(vector2);
+	}
+
+	public void win(Entity snake) {
+		setState(snake, State.STATE_WINING);
 	}
 
 }
