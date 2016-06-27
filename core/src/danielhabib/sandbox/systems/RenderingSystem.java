@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
@@ -18,6 +17,8 @@ import danielhabib.sandbox.components.TransformComponent;
 public class RenderingSystem extends IteratingSystem {
 	public static final float PIXELS_TO_METER = 1.0f / 32.0f;
 	public static final float PIXELS_PER_METER = 32f;
+	static final float FRUSTUM_WIDTH = 25;
+	static final float FRUSTUM_HEIGHT = 20;
 
 	private SpriteBatch batch;
 	private Array<Entity> renderQueue;
@@ -43,11 +44,10 @@ public class RenderingSystem extends IteratingSystem {
 		};
 
 		this.batch = batch;
-		float w = Gdx.graphics.getWidth() / PIXELS_PER_METER;
-		float h = Gdx.graphics.getHeight() / PIXELS_PER_METER;
+		float h = FRUSTUM_HEIGHT;
 
-		cam = new OrthographicCamera(w, h);
-		cam.position.set(w / 2, h / 2, 0);
+		cam = new OrthographicCamera(FRUSTUM_WIDTH, h);
+		cam.position.set(FRUSTUM_WIDTH / 2, h / 2, 0);
 	}
 
 	@Override

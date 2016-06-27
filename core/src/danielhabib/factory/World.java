@@ -83,6 +83,7 @@ public abstract class World {
 		textureComponent.region = new TextureRegion(texture);
 		transform.pos.x = xPos;
 		transform.pos.y = yPos;
+		transform.pos.z = -1f;
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
@@ -100,8 +101,7 @@ public abstract class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
-				Assets.partHead);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0, Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeBodyComponent.State.STATE_MOVING);
 
@@ -128,6 +128,7 @@ public abstract class World {
 		texture.region = new TextureRegion(Assets.partImg);
 		transform.pos.x = x;
 		transform.pos.y = y;
+		transform.pos.z = 1f;
 		Random random = new Random();
 		float nextFloat = random.nextFloat();
 		int factor = nextFloat < .5 ? -1 : 1;

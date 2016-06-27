@@ -29,8 +29,8 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<TransformComponent> transforms;
 
 	public SnakeSystem(World world) {
-		super(Family.all(SnakeBodyComponent.class, StateComponent.class,
-				TransformComponent.class, MovementComponent.class)
+		super(Family
+				.all(SnakeBodyComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
 				.get());
 		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
@@ -108,18 +108,16 @@ public class SnakeSystem extends IteratingSystem {
 		SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
 		if (snakeBodyComponent.parts.size > 0) {
 			interpolate(snakeBodyComponent.parts.first(), entity);
-		}				
+		}
 		if (snakeBodyComponent.parts.size > 1) {
 			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
-				interpolate(snakeBodyComponent.parts.get(i),
-						snakeBodyComponent.parts.get(i - 1));
+				interpolate(snakeBodyComponent.parts.get(i), snakeBodyComponent.parts.get(i - 1));
 			}
 		}
 	}
 
 	private void interpolate(Entity first, Entity entity) {
-		getTransformComponent(first).pos.interpolate(getTransformComponent(entity).pos,
-				.25f, Interpolation.linear);
+		getTransformComponent(first).pos.interpolate(getTransformComponent(entity).pos, .25f, Interpolation.linear);
 	}
 
 	private TransformComponent getTransformComponent(Entity entity) {
