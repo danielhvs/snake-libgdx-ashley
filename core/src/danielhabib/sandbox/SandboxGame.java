@@ -23,6 +23,7 @@ public class SandboxGame extends Game {
 		Assets.load();
 		VisUI.load(SkinScale.X2);
 		ScreenManager.getInstance().initialize(this);
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override

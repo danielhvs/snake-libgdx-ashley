@@ -56,7 +56,9 @@ public class GameScreen extends AbstractScreen {
 				snakeSystem.setYVel(speed, snake);
 			}
 
-			if (Gdx.input.isKeyJustPressed(Keys.A)) {
+			if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+			} else if (Gdx.input.isKeyJustPressed(Keys.A)) {
 				engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
 			} else if (Gdx.input.isKeyJustPressed(Keys.D)) {
 				engine.getSystem(SnakeSystem.class).decreaseSpeed(snake);
