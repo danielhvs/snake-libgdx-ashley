@@ -66,11 +66,15 @@ public class SnakeSystem extends IteratingSystem {
 		} else if (state.get() == State.MOVING) {
 			movePartsToFollowHead(entity);
 		} else if (state.get() == State.DYING) {
+			getEngine()
+					.removeSystem(getEngine().getSystem(CollisionSystem.class));
 			movePartsToFollowHead(entity);
 			dying(entity);
 		} else if (state.get() == State.DEAD) {
 			showMainMenu();
 		} else if (state.get() == State.WINING) {
+			getEngine()
+					.removeSystem(getEngine().getSystem(CollisionSystem.class));
 			movePartsToFollowHead(entity);
 			wining(entity);
 		} else if (state.get() == State.WON) {

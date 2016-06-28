@@ -47,24 +47,21 @@ public class CollisionSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
-		snakes = engine.getEntitiesFor(Family
-				.all(SnakeBodyComponent.class, StateComponent.class, BoundsComponent.class, TransformComponent.class)
-				.get());
-		platformComponents = engine.getEntitiesFor(
-				Family.all(PlatformComponent.class, BoundsComponent.class, TransformComponent.class).get());
+		snakes = engine
+				.getEntitiesFor(Family
+						.all(SnakeBodyComponent.class, StateComponent.class,
+								BoundsComponent.class, TransformComponent.class)
+						.get());
+		platformComponents = engine
+				.getEntitiesFor(Family.all(PlatformComponent.class,
+						BoundsComponent.class, TransformComponent.class).get());
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
-			StateComponent state = states.get(snake);
-			// FIXME: state problem with snakeSystem....
-			if (state.get() != SnakeBodyComponent.State.REVERTING
-					&& state.get() != SnakeBodyComponent.State.DYING
-					&& state.get() != SnakeBodyComponent.State.WINING) {
-				checkSnakeCollision(snakeSystem, snake);
-			}
+			checkSnakeCollision(snakeSystem, snake);
 		}
 	}
 
@@ -73,7 +70,8 @@ public class CollisionSystem extends EntitySystem {
 			BoundsComponent snakeBound = bounds.get(snake);
 			BoundsComponent platformBound = bounds.get(platform);
 			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
-				PlatformComponent platformComponent = platform.getComponent(PlatformComponent.class);
+				PlatformComponent platformComponent = platform
+						.getComponent(PlatformComponent.class);
 				PlatformType type = platformComponent.type;
 				if (type == PlatformType.WALL) {
 					listener.ate();
@@ -94,7 +92,8 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.grow(snake);
 					CountComponent countComponent = counts.get(snake);
 					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-							String.valueOf(++countComponent.fruits), Color.WHITE, 5, 15);
+							String.valueOf(++countComponent.fruits),
+							Color.WHITE, 5, 15);
 					break;
 				} else if (type == PlatformType.POISON) {
 					listener.poison();
