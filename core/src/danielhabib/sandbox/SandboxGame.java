@@ -11,6 +11,8 @@ import danielhabib.sandbox.control.ASandboxControl;
 public class SandboxGame extends Game {
 
 	public ASandboxControl control;
+	private boolean done;
+	private boolean showed;
 
 	public SandboxGame(ASandboxControl control) {
 		this.control = control;
@@ -21,13 +23,21 @@ public class SandboxGame extends Game {
 		Assets.load();
 		VisUI.load(SkinScale.X2);
 		ScreenManager.getInstance().initialize(this);
-		ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 	}
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0, 0, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		super.render();
+		if (!done) {
+			done = Assets.manager.update();
+			System.out.println(Assets.manager.getProgress());
+		}
+		if (done && !showed) {
+			Assets.finishLoading();
+			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+			showed = true;
+		}
 	}
 }
