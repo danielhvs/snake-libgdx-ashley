@@ -21,13 +21,16 @@ import danielhabib.sandbox.ScreenManager;
 public class UIFactory {
 
 	public static ImageButton createButton(Texture texture) {
-		return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));
+		return new ImageButton(
+				new TextureRegionDrawable(new TextureRegion(texture)));
 	}
 
-	public static InputListener createListener(final ScreenEnum dstScreen, final Object... params) {
+	public static InputListener createListener(final ScreenEnum dstScreen,
+			final Object... params) {
 		return new InputListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
 				ScreenManager.getInstance().showScreen(dstScreen, params);
 				return false;
 			}
@@ -39,7 +42,7 @@ public class UIFactory {
 		int height = Gdx.graphics.getHeight() / 10;
 		table.row();
 		table.add(playButton).width(width).height(height);
-		table.getCell(playButton).spaceBottom(10);
+		table.getCell(playButton).spaceBottom(30f);
 	}
 
 	// FIXME: Use pool to manage memory
@@ -50,8 +53,9 @@ public class UIFactory {
 	}
 
 	private static void setTitle(Label title, Table table) {
-		title.setFontScale(1);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		title.setFontScale(2.5f);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 		table.add(title);
 		table.getCell(title).spaceBottom(100);
 	}

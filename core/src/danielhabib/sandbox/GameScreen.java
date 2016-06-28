@@ -42,10 +42,12 @@ public class GameScreen extends AbstractScreen {
 	public void render(float delta) {
 		super.render(delta);
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		ImmutableArray<Entity> snakes = engine.getEntitiesFor(Family.one(SnakeBodyComponent.class).get());
+		ImmutableArray<Entity> snakes = engine
+				.getEntitiesFor(Family.one(SnakeBodyComponent.class).get());
 		if (snakes.size() > 0) {
 			Entity snake = snakes.first();
-			MovementComponent movement = snake.getComponent(MovementComponent.class);
+			MovementComponent movement = snake
+					.getComponent(MovementComponent.class);
 			Vector2 velocity = movement.velocity;
 			float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
 			if (game.control.isTurnLeft()) {
@@ -73,18 +75,6 @@ public class GameScreen extends AbstractScreen {
 		engine.update(delta);
 	}
 
-	// @Override
-	// public void draw() {
-	// ImmutableArray<Entity> entities = engine
-	// .getEntitiesFor(Family.one(CountComponent.class).get());
-	// for (Entity entity : entities) {
-	// Label label = entity.getComponent(CountComponent.class).fruitsLabel;
-	// label.setPosition(5, 15);
-	// label.draw(getBatch(), .5f);
-	// }
-	// super.draw();
-	// }
-
 	@Override
 	public void buildStage() {
 		engine = new PooledEngine();
@@ -99,30 +89,32 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(gameBatch));
 		engine.addSystem(new BoundsSystem());
-		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
-			@Override
-			public void hit() {
-				Assets.playSound(Assets.hitSound);
-			}
+		CollisionSystem collisionSystem = new CollisionSystem(
+				new CollisionListener() {
+					@Override
+					public void hit() {
+						Assets.playSound(Assets.hitSound);
+					}
 
-			@Override
-			public void ate() {
-				Assets.playSound(Assets.fruitSound);
-			}
+					@Override
+					public void ate() {
+						Assets.playSound(Assets.fruitSound);
+					}
 
-			@Override
-			public void poison() {
-				Assets.playSound(Assets.poisonSound);
-			}
-		});
+					@Override
+					public void poison() {
+						Assets.playSound(Assets.poisonSound);
+					}
+				});
 		engine.addSystem(collisionSystem);
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 		world.create();
 
-		 ImmutableArray<Entity> entities = engine .getEntitiesFor(Family.one(CountComponent.class).get());
-		 for (Entity entity : entities) {
+		ImmutableArray<Entity> entities = engine
+				.getEntitiesFor(Family.one(CountComponent.class).get());
+		for (Entity entity : entities) {
 			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
 		}
 	}
