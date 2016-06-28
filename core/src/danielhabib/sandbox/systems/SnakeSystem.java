@@ -30,7 +30,8 @@ public class SnakeSystem extends IteratingSystem {
 
 	public SnakeSystem(World world) {
 		super(Family
-				.all(SnakeBodyComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
+				.all(SnakeBodyComponent.class, StateComponent.class,
+						TransformComponent.class, MovementComponent.class)
 				.get());
 		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
@@ -40,33 +41,39 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void revert(Entity entity) {
-		SnakeBodyComponent component = entity.getComponent(SnakeBodyComponent.class);
+		SnakeBodyComponent component = entity
+				.getComponent(SnakeBodyComponent.class);
 		SnakeBodyComponent snakeComponent = snakes.get(entity);
 		if (snakeComponent.equals(component)) {
-			setState(entity, SnakeBodyComponent.State.STATE_REVERTING);
+			if (states.get(entity).get() != State.REVERTING2) {
+				setState(entity, SnakeBodyComponent.State.REVERTING);
+			}
 		}
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
-		if (state.get() == SnakeBodyComponent.State.STATE_REVERTING) {
+		if (state.get() == State.REVERTING) {
 			movements.get(entity).velocity.rotate(90);
 			transforms.get(entity).rotation += 90;
-			state.set(SnakeBodyComponent.State.STATE_MOVING);
-		}
-
-		movePartsToFollowHead(entity);
-		if (state.get() == SnakeBodyComponent.State.STATE_DYING) {
+			state.set(State.REVERTING2);
+			movePartsToFollowHead(entity);
+		} else if (state.get() == State.REVERTING2) {
+			// Force move trying not to enter in a reverting loop.
+			movePartsToFollowHead(entity);
+			state.set(State.MOVING);
+		} else if (state.get() == State.MOVING) {
+			movePartsToFollowHead(entity);
+		} else if (state.get() == State.DYING) {
+			movePartsToFollowHead(entity);
 			dying(entity);
-		}
-		if (state.get() == SnakeBodyComponent.State.STATE_DEAD) {
+		} else if (state.get() == State.DEAD) {
 			showMainMenu();
-		}
-		if (state.get() == State.STATE_WINING) {
+		} else if (state.get() == State.WINING) {
+			movePartsToFollowHead(entity);
 			wining(entity);
-		}
-		if (state.get() == State.STATE_WON) {
+		} else if (state.get() == State.WON) {
 			showMainMenu();
 		}
 	}
@@ -83,7 +90,7 @@ public class SnakeSystem extends IteratingSystem {
 		}
 		Vector2 scale = getTransformComponent(entity).scale;
 		if (scale.len() < REALLY_SMALL_SIZE) {
-			setState(entity, SnakeBodyComponent.State.STATE_DEAD);
+			setState(entity, SnakeBodyComponent.State.DEAD);
 		}
 	}
 
@@ -92,7 +99,7 @@ public class SnakeSystem extends IteratingSystem {
 		removeTail(entity);
 		Vector2 scale = getTransformComponent(entity).scale;
 		if (scale.len() > REALLY_BIG_SIZE) {
-			setState(entity, SnakeBodyComponent.State.STATE_WON);
+			setState(entity, SnakeBodyComponent.State.WON);
 		}
 	}
 
@@ -111,13 +118,15 @@ public class SnakeSystem extends IteratingSystem {
 		}
 		if (snakeBodyComponent.parts.size > 1) {
 			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
-				interpolate(snakeBodyComponent.parts.get(i), snakeBodyComponent.parts.get(i - 1));
+				interpolate(snakeBodyComponent.parts.get(i),
+						snakeBodyComponent.parts.get(i - 1));
 			}
 		}
 	}
 
 	private void interpolate(Entity first, Entity entity) {
-		getTransformComponent(first).pos.interpolate(getTransformComponent(entity).pos, .25f, Interpolation.linear);
+		getTransformComponent(first).pos.interpolate(
+				getTransformComponent(entity).pos, .25f, Interpolation.linear);
 	}
 
 	private TransformComponent getTransformComponent(Entity entity) {
@@ -142,10 +151,12 @@ public class SnakeSystem extends IteratingSystem {
 		getEngine().addEntity(part);
 	}
 
-	public void die(Entity snake) {
-		setState(snake, SnakeBodyComponent.State.STATE_DYING);
-		snake.getComponent(MovementComponent.class).velocity.x = 0;
-		snake.getComponent(MovementComponent.class).velocity.y = 0;
+	public void die(Entity entity) {
+		if (states.get(entity).get() != State.DEAD) {
+			setState(entity, SnakeBodyComponent.State.DYING);
+		}
+		entity.getComponent(MovementComponent.class).velocity.x = 0;
+		entity.getComponent(MovementComponent.class).velocity.y = 0;
 	}
 
 	private void setState(Entity snake, State bodyState) {
@@ -174,8 +185,10 @@ public class SnakeSystem extends IteratingSystem {
 		transforms.get(entity).pos.set(vector2);
 	}
 
-	public void win(Entity snake) {
-		setState(snake, State.STATE_WINING);
+	public void win(Entity entity) {
+		if (states.get(entity).get() != State.WON) {
+			setState(entity, State.WINING);
+		}
 	}
 
 }
