@@ -19,10 +19,6 @@ android {
         minSdkVersion 8
         targetSdkVersion 24
     }
-    // FIXME: remove Vis dependency and enable lint again
-    lintOptions {
-        abortOnError false
-    }
 }
 
 

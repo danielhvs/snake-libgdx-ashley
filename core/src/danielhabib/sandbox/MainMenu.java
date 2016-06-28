@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
@@ -13,19 +13,22 @@ public class MainMenu extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		VisTextButton playButton = ButtonFactory.newButton("Go go go!");
-		VisTextButton levelButton = ButtonFactory.newButton("Let's see...");
-		VisTextButton configButton = ButtonFactory.newButton("Change stuff...");
-		VisTextButton quitButton = ButtonFactory.newButton("I'm out!");
+		TextButton playButton = ButtonFactory.newButton("Go go go!");
+		TextButton levelButton = ButtonFactory.newButton("Let's see...");
+		TextButton configButton = ButtonFactory.newButton("Change stuff...");
+		TextButton quitButton = ButtonFactory.newButton("I'm out!");
 
-		Table table = UIFactory.newMenu("OMG! Crazy Snakes!", playButton, levelButton, configButton, quitButton);
+		Table table = UIFactory.newMenu("OMG! Crazy Snakes!", playButton,
+				levelButton, configButton, quitButton);
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
-		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
+		levelButton
+				.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		configButton.addListener(UIFactory.createListener(ScreenEnum.CONFIG));
 		quitButton.addListener(new InputListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
 				Gdx.app.exit();
 				return true;
 			}
@@ -33,7 +36,6 @@ public class MainMenu extends AbstractScreen {
 
 		addActor(table);
 	}
-
 
 	@Override
 	public void hide() {
