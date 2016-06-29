@@ -3,7 +3,6 @@ package danielhabib.sandbox.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -45,10 +44,8 @@ public class UIFactory {
 		table.getCell(playButton).spaceBottom(30f);
 	}
 
-	// FIXME: Use pool to manage memory
 	public static Label newLabel() {
-		BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
-		LabelStyle labelStyle = new LabelStyle(font, Color.WHITE);
+		LabelStyle labelStyle = new LabelStyle(Assets.font, Color.WHITE);
 		return new Label("", labelStyle);
 	}
 

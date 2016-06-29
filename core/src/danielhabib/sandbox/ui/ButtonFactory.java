@@ -1,6 +1,5 @@
 package danielhabib.sandbox.ui;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -17,17 +16,15 @@ public class ButtonFactory {
 
 	private static TextButtonStyle newSnakeButtonStyle(Skin skin) {
 		TextButtonStyle buttonStyle = new TextButtonStyle();
-		buttonStyle.up = skin.getDrawable("button");
-		buttonStyle.over = skin.getDrawable("buttonpressed");
-		buttonStyle.down = skin.getDrawable("buttonpressed");
+		buttonStyle.up = skin.getDrawable("default-rect");
+		buttonStyle.over = skin.getDrawable("default-rect-down");
+		buttonStyle.down = skin.getDrawable("default-rect-down");
 		buttonStyle.font = Assets.font;
 		return buttonStyle;
 	}
 
 	public static TextButtonStyle getStyle() {
-		// FIXME: assets loading
-		Skin skin = new Skin(new TextureAtlas("buttons.pack"));
-		return newSnakeButtonStyle(skin);
+		return newSnakeButtonStyle(Assets.skin);
 	}
 
 }
