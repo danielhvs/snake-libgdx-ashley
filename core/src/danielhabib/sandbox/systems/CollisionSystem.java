@@ -20,7 +20,6 @@ import danielhabib.sandbox.types.PlatformType;
 
 public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<BoundsComponent> bounds;
-	private ComponentMapper<StateComponent> states;
 
 	public static interface CollisionListener {
 		public void hit();
@@ -40,7 +39,7 @@ public class CollisionSystem extends EntitySystem {
 		this.listener = listener;
 
 		bounds = ComponentMapper.getFor(BoundsComponent.class);
-		states = ComponentMapper.getFor(StateComponent.class);
+		ComponentMapper.getFor(StateComponent.class);
 		counts = ComponentMapper.getFor(CountComponent.class);
 	}
 

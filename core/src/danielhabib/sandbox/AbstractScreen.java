@@ -3,7 +3,6 @@ package danielhabib.sandbox;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
@@ -20,9 +19,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 		act(delta);
 		getCamera().update();
 		getBatch().setProjectionMatrix(getCamera().combined);
@@ -32,7 +28,8 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void show() {
-		GestureDetector detector = new GestureDetector(ScreenManager.getInstance().getGame().control);
+		GestureDetector detector = new GestureDetector(
+				ScreenManager.getInstance().getGame().control);
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
 		multiplexer.addProcessor(detector);

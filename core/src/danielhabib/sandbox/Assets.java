@@ -1,5 +1,6 @@
 package danielhabib.sandbox;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Sound;
@@ -17,6 +18,8 @@ public class Assets {
 	public static AssetManager manager;
 	public static BitmapFont font;
 	public static Skin skin;
+	public static float fontScaleY;
+	public static float fontScaleX;
 
 	public static void load() {
 		manager = new AssetManager();
@@ -40,6 +43,8 @@ public class Assets {
 		poisonSound = manager.get("poison.mp3", Sound.class);
 		font = manager.get("default.fnt", BitmapFont.class);
 		skin = manager.get("uiskin.json", Skin.class);
+		fontScaleX = Gdx.graphics.getWidth() / 450f;
+		fontScaleY = Gdx.graphics.getHeight() / 340f;
 	}
 
 	public static void playSound(Sound sound) {
