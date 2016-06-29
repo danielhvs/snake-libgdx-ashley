@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
@@ -73,11 +71,15 @@ public abstract class World {
 		engine.addEntity(wall);
 	}
 
-	public Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
+	public Entity createEntity(float xPos, float yPos, float xVel, float yVel,
+			Texture texture) {
 		Entity entity = engine.createEntity();
-		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		MovementComponent movement = engine.createComponent(MovementComponent.class);
-		TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+		TransformComponent transform = engine
+				.createComponent(TransformComponent.class);
+		MovementComponent movement = engine
+				.createComponent(MovementComponent.class);
+		TextureComponent textureComponent = engine
+				.createComponent(TextureComponent.class);
 		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
 		textureComponent.region = new TextureRegion(texture);
@@ -87,8 +89,10 @@ public abstract class World {
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
-		bounds.bounds.width = textureComponent.region.getRegionWidth() * RenderingSystem.PIXELS_TO_METER;
-		bounds.bounds.height = textureComponent.region.getRegionHeight() * RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.width = textureComponent.region.getRegionWidth()
+				* RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.height = textureComponent.region.getRegionHeight()
+				* RenderingSystem.PIXELS_TO_METER;
 		bounds.bounds.x = transform.pos.x;
 		bounds.bounds.y = transform.pos.y;
 
@@ -101,7 +105,8 @@ public abstract class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0, Assets.partHead);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
+				Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeBodyComponent.State.MOVING);
 
@@ -121,8 +126,10 @@ public abstract class World {
 	}
 
 	public Entity newEntityPiece(float x, float y) {
-		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		TextureComponent texture = engine.createComponent(TextureComponent.class);
+		TransformComponent transform = engine
+				.createComponent(TransformComponent.class);
+		TextureComponent texture = engine
+				.createComponent(TextureComponent.class);
 		Entity pieceEntity = engine.createEntity();
 
 		texture.region = new TextureRegion(Assets.partImg);
@@ -135,7 +142,8 @@ public abstract class World {
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-		pieceEntity.add(new PlatformComponent(10 * factor, PlatformType.SNAKE_HEAD));
+		pieceEntity.add(
+				new PlatformComponent(10 * factor, PlatformType.SNAKE_HEAD));
 
 		return pieceEntity;
 	}
@@ -191,25 +199,34 @@ public abstract class World {
 			MapObjects objects = map.getLayers().get(1).getObjects();
 			Map<String, Entity> mapa = new HashMap<String, Entity>();
 			for (MapObject object : objects) {
-				if (object.getName().startsWith("init")) {
+				String name = object.getName();
+				if (name.startsWith("init")) {
 					Rectangle pos = getRectangle(object);
-					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "init"));
-					mapa.put("init" + index, newInitWormHole(holeTexture, new Vector2(pos.x, pos.y)));
-				} else if (object.getName().startsWith("end")) {
+					Integer index = integerAfter("init", name);
+					mapa.put("init" + index, newInitWormHole(holeTexture,
+							new Vector2(pos.x, pos.y)));
+				} else if (name.startsWith("end")) {
 					Rectangle pos = getRectangle(object);
-					Integer index = Integer.valueOf(StringUtils.substringAfter(object.getName(), "end"));
-					mapa.put("end" + index, newEndWormHole(holeTexture, new Vector2(pos.x, pos.y)));
+					Integer index = integerAfter("end", name);
+					mapa.put("end" + index, newEndWormHole(holeTexture,
+							new Vector2(pos.x, pos.y)));
 				}
 			}
 
 			for (int i = 0; i < mapa.size() / 2; i++) {
 				Entity holeEntity = mapa.get("init" + i);
 				Entity holeEnd = mapa.get("end" + i);
-				holeEntity.getComponent(PlatformComponent.class).other = holeEnd;
+				holeEntity
+						.getComponent(PlatformComponent.class).other = holeEnd;
 				engine.addEntity(holeEntity);
 				engine.addEntity(holeEnd);
 			}
 		}
+	}
+
+	private Integer integerAfter(String init, String name) {
+		return Integer
+				.valueOf(name.substring(name.indexOf(init) + init.length()));
 	}
 
 	private Entity newEndWormHole(Texture texture, Vector2 pos) {
@@ -218,14 +235,17 @@ public abstract class World {
 
 	private Entity newInitWormHole(Texture texture, Vector2 pos) {
 		Entity newWormHole = newWormHole(texture, pos, PlatformType.HOLE, -8f);
-		newWormHole.getComponent(BoundsComponent.class).bounds.height = 2 * RenderingSystem.PIXELS_TO_METER;
-		newWormHole.getComponent(BoundsComponent.class).bounds.width = 2 * RenderingSystem.PIXELS_TO_METER;
+		newWormHole.getComponent(BoundsComponent.class).bounds.height = 2
+				* RenderingSystem.PIXELS_TO_METER;
+		newWormHole.getComponent(BoundsComponent.class).bounds.width = 2
+				* RenderingSystem.PIXELS_TO_METER;
 		return newWormHole;
 	}
 
-	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type, float rotation) {
-		Entity hole = createEntity(pos.x / RenderingSystem.PIXELS_PER_METER, pos.y / RenderingSystem.PIXELS_PER_METER,
-				0, 0, texture);
+	private Entity newWormHole(Texture texture, Vector2 pos, PlatformType type,
+			float rotation) {
+		Entity hole = createEntity(pos.x / RenderingSystem.PIXELS_PER_METER,
+				pos.y / RenderingSystem.PIXELS_PER_METER, 0, 0, texture);
 		hole.add(new PlatformComponent(rotation, type));
 		return hole;
 	}

@@ -33,8 +33,8 @@ public class GameScreen extends AbstractScreen {
 	private World world;
 	private int level;
 
-	public GameScreen(Object[] params) {
-		this.level = (int) params[0];
+	public GameScreen(Integer[] params) {
+		this.level = params[0];
 		this.game = ScreenManager.getInstance().getGame();
 	}
 

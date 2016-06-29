@@ -32,7 +32,7 @@ public class ScreenManager {
 		this.game = game;
 	}
 
-	public void showScreen(ScreenEnum screenEnum, Object... params) {
+	public void showScreen(ScreenEnum screenEnum, Integer... params) {
 
 		Screen previousScreen = game.getScreen();
 
