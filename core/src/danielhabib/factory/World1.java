@@ -13,7 +13,7 @@ public class World1 extends World {
 	@Override
 	public void create() {
 		snakeEntity = createSnake(10, 10);
-		snakeEntity.getComponent(CountComponent.class).maxFruits = 15;
+		snakeEntity.getComponent(CountComponent.class).maxFruits = 3;
 		engine.addEntity(snakeEntity);
 		parseMap("map1.tmx");
 		createCamera(snakeEntity);

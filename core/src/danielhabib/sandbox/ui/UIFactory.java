@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.ScreenEnum;
@@ -63,7 +64,7 @@ public class UIFactory {
 		table.getCell(title).spaceBottom(spaceBottom);
 	}
 
-	public static Table newMenu(String titleText, Button... buttons) {
+	public static Table newMenu(String titleText, Array<Button> buttons) {
 		Table table = new Table();
 		Label title = new Label(titleText, labelStyle());
 		UIFactory.setTitle(title, table);

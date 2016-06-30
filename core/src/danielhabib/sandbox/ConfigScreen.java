@@ -1,7 +1,8 @@
 package danielhabib.sandbox;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
@@ -10,12 +11,12 @@ public class ConfigScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		TextButton soundButton = ButtonFactory.newButton("Sound");
-		TextButton musicButton = ButtonFactory.newButton("Music");
-		TextButton backButton = ButtonFactory.newButton("<-- Back");
+		Button soundButton = ButtonFactory.newButton("Sound");
+		Button musicButton = ButtonFactory.newButton("Music");
+		Button backButton = ButtonFactory.newButton("<-- Back");
 
 		Table table = UIFactory.newMenu("Let's change some stuff...",
-				soundButton, musicButton, backButton);
+				Array.with(soundButton, musicButton, backButton));
 
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 
