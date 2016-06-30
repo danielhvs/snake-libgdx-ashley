@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.World;
+import danielhabib.sandbox.SnakeSettings;
 import danielhabib.sandbox.ScreenEnum;
 import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.components.MovementComponent;
@@ -78,6 +79,7 @@ public class SnakeSystem extends IteratingSystem {
 			movePartsToFollowHead(entity);
 			wining(entity);
 		} else if (state.get() == State.WON) {
+			SnakeSettings.win();
 			showMainMenu();
 		}
 	}

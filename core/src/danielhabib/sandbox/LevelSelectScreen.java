@@ -18,10 +18,12 @@ public class LevelSelectScreen extends AbstractScreen {
 				level2Button, backButton);
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
+		if(SnakeSettings.level >= 2)
 		level2Button.addListener(UIFactory.createListener(ScreenEnum.GAME, 2));
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 
 		addActor(table);
+
 	}
 
 }
