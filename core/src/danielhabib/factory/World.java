@@ -80,7 +80,6 @@ public abstract class World {
 				.createComponent(MovementComponent.class);
 		TextureComponent textureComponent = engine
 				.createComponent(TextureComponent.class);
-		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
 		textureComponent.region = new TextureRegion(texture);
 		transform.pos.x = xPos;
@@ -89,18 +88,25 @@ public abstract class World {
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
-		bounds.bounds.width = textureComponent.region.getRegionWidth()
-				* RenderingSystem.PIXELS_TO_METER;
-		bounds.bounds.height = textureComponent.region.getRegionHeight()
-				* RenderingSystem.PIXELS_TO_METER;
-		bounds.bounds.x = transform.pos.x;
-		bounds.bounds.y = transform.pos.y;
+		BoundsComponent bounds = newBoundComponent(transform, textureComponent);
 
 		entity.add(transform);
 		entity.add(movement);
 		entity.add(textureComponent);
 		entity.add(bounds);
 		return entity;
+	}
+
+	private BoundsComponent newBoundComponent(TransformComponent transform,
+			TextureComponent textureComponent) {
+		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
+		bounds.bounds.width = textureComponent.region.getRegionWidth()
+				* RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.height = textureComponent.region.getRegionHeight()
+				* RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.x = transform.pos.x;
+		bounds.bounds.y = transform.pos.y;
+		return bounds;
 	}
 
 	public Entity createSnake(int x, int y) {
@@ -140,6 +146,9 @@ public abstract class World {
 		float nextFloat = random.nextFloat();
 		int factor = nextFloat < .5 ? -1 : 1;
 
+		BoundsComponent bounds = newBoundComponent(transform, texture);
+
+		pieceEntity.add(bounds);
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
 		pieceEntity.add(

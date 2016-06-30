@@ -81,7 +81,7 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.revert(snake);
 					break;
 				} else if (type == PlatformType.HOLE) {
-					listener.hit();
+					listener.ate();
 					snakeSystem.teleport(snake, platformComponent.other
 							.getComponent(TransformComponent.class).pos);
 					break;

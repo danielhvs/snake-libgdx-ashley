@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class SnakeBodyComponent implements Component {
 	public enum State {
-		MOVING, REVERTING, DYING, DEAD, WINING, WON, REVERTING2;
+		MOVING, REVERTING, DYING, DEAD, WINING, WON, REVERTING2, TELEPORTING, TELEPORTED;
 	}
 
 	public static final float SPEED = 5f;

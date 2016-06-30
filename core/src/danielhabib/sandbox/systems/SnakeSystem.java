@@ -1,5 +1,6 @@
 package danielhabib.sandbox.systems;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -10,13 +11,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.World;
-import danielhabib.sandbox.SnakeSettings;
 import danielhabib.sandbox.ScreenEnum;
 import danielhabib.sandbox.ScreenManager;
+import danielhabib.sandbox.SnakeSettings;
+import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
 public class SnakeSystem extends IteratingSystem {
@@ -28,6 +31,11 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<SnakeBodyComponent> snakes;
 	private World world;
 	private ComponentMapper<TransformComponent> transforms;
+	private Vector3 destination;
+	private Vector2 velocity;
+	private Component headTexture;
+	private Component bodyTexture;
+	private float rotation;
 
 	public SnakeSystem(World world) {
 		super(Family
@@ -55,9 +63,10 @@ public class SnakeSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		StateComponent state = states.get(entity);
+		TransformComponent headTransform = transforms.get(entity);
 		if (state.get() == State.REVERTING) {
 			movements.get(entity).velocity.rotate(90);
-			transforms.get(entity).rotation += 90;
+			headTransform.rotation += 90;
 			state.set(State.REVERTING2);
 			movePartsToFollowHead(entity);
 		} else if (state.get() == State.REVERTING2) {
@@ -81,6 +90,41 @@ public class SnakeSystem extends IteratingSystem {
 		} else if (state.get() == State.WON) {
 			SnakeSettings.win();
 			showMainMenu();
+		} else if (state.get() == State.TELEPORTING) {
+			movePartsToFollowHead(entity);
+			Component headTexture = entity.remove(TextureComponent.class);
+			if (headTexture != null) {
+				this.headTexture = headTexture;
+			}
+			SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
+			BoundsComponent head = entity.getComponent(BoundsComponent.class);
+			boolean allPartsInside = true;
+			for (Entity body : snakeBodyComponent.parts) {
+				if (!body.getComponent(BoundsComponent.class).bounds
+						.overlaps(head.bounds)) {
+					allPartsInside = false;
+				} else {
+					Component bodyTexture = body.remove(TextureComponent.class);
+					if (bodyTexture != null) {
+						this.bodyTexture = bodyTexture;
+					}
+				}
+			}
+			if (allPartsInside) {
+				setState(entity, State.TELEPORTED);
+			}
+		} else if (state.get() == State.TELEPORTED) {
+			headTransform.rotation = this.rotation;
+			headTransform.pos.set(destination);
+			movements.get(entity).velocity.set(this.velocity);
+			entity.add(headTexture);
+			for (Entity part : snakes.get(entity).parts) {
+				part.add(bodyTexture);
+				Vector3 pos = getTransformComponent(entity).pos.cpy();
+				pos.z = 1f;
+				getTransformComponent(part).pos.set(pos);
+			}
+			setState(entity, State.MOVING);
 		}
 	}
 
@@ -90,13 +134,17 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	private void dying(Entity entity) {
-		scaleDown(entity);
-		for (Entity part : snakes.get(entity).parts) {
-			scaleDown(part);
-		}
+		scaleAllSnakeDown(entity);
 		Vector2 scale = getTransformComponent(entity).scale;
 		if (scale.len() < REALLY_SMALL_SIZE) {
 			setState(entity, SnakeBodyComponent.State.DEAD);
+		}
+	}
+
+	private void scaleAllSnakeDown(Entity entity) {
+		scaleDown(entity);
+		for (Entity part : snakes.get(entity).parts) {
+			scaleDown(part);
 		}
 	}
 
@@ -187,8 +235,15 @@ public class SnakeSystem extends IteratingSystem {
 		movements.get(entity).velocity.scl(.5f);
 	}
 
-	public void teleport(Entity entity, Vector3 vector2) {
-		transforms.get(entity).pos.set(vector2);
+	public void teleport(Entity entity, Vector3 destination) {
+		State state = states.get(entity).get();
+		if (state != State.TELEPORTING && state != State.TELEPORTED) {
+			setState(entity, State.TELEPORTING);
+			this.velocity = movements.get(entity).velocity.cpy();
+			movements.get(entity).velocity.setZero();
+			this.destination = destination;
+			this.rotation = getTransformComponent(entity).rotation;
+		}
 	}
 
 	public void win(Entity entity) {
