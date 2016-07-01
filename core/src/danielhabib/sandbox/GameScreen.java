@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
@@ -24,6 +25,8 @@ import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
+import danielhabib.sandbox.ui.ButtonFactory;
+import danielhabib.sandbox.ui.UIFactory;
 
 public class GameScreen extends AbstractScreen {
 
@@ -119,6 +122,15 @@ public class GameScreen extends AbstractScreen {
 		for (Entity entity : entities) {
 			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
 		}
+
+		Button button = ButtonFactory.newButton("II");
+		button.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		button.setWidth(Gdx.graphics.getWidth() / 12.5f);
+		button.setHeight(Gdx.graphics.getHeight() / 12.5f);
+		button.setX(Gdx.graphics.getWidth() - button.getWidth());
+		button.setY(Gdx.graphics.getHeight() - button.getHeight());
+		addActor(button);
+
 	}
 
 }
