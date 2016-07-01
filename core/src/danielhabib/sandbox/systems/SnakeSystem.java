@@ -6,6 +6,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -100,14 +102,22 @@ public class SnakeSystem extends IteratingSystem {
 			BoundsComponent head = entity.getComponent(BoundsComponent.class);
 			boolean allPartsInside = true;
 			for (Entity body : snakeBodyComponent.parts) {
-				if (!body.getComponent(BoundsComponent.class).bounds
-						.overlaps(head.bounds)) {
-					allPartsInside = false;
-				} else {
-					Component bodyTexture = body.remove(TextureComponent.class);
-					if (bodyTexture != null) {
-						this.bodyTexture = bodyTexture;
+				// FIXME: relate parts...
+				Rectangle bodyBounds = body
+						.getComponent(BoundsComponent.class).bounds;
+				Rectangle intersection = new Rectangle();
+				if (Intersector.intersectRectangles(bodyBounds, head.bounds,
+						intersection)) {
+					float factor = intersection.area() / head.bounds.area();
+					if (factor > .6f) {
+						Component bodyTexture = body
+								.remove(TextureComponent.class);
+						if (bodyTexture != null) {
+							this.bodyTexture = bodyTexture;
+						}
 					}
+				} else {
+					allPartsInside = false;
 				}
 			}
 			if (allPartsInside) {

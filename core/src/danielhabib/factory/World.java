@@ -244,10 +244,11 @@ public abstract class World {
 
 	private Entity newInitWormHole(Texture texture, Vector2 pos) {
 		Entity newWormHole = newWormHole(texture, pos, PlatformType.HOLE, -8f);
-		newWormHole.getComponent(BoundsComponent.class).bounds.height = 2
-				* RenderingSystem.PIXELS_TO_METER;
-		newWormHole.getComponent(BoundsComponent.class).bounds.width = 2
-				* RenderingSystem.PIXELS_TO_METER;
+		// FIXME: confirm that we need to delete this code
+		// newWormHole.getComponent(BoundsComponent.class).bounds.height = 2
+		// * RenderingSystem.PIXELS_TO_METER;
+		// newWormHole.getComponent(BoundsComponent.class).bounds.width = 2
+		// * RenderingSystem.PIXELS_TO_METER;
 		return newWormHole;
 	}
 

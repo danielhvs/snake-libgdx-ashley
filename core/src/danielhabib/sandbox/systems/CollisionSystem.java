@@ -8,6 +8,8 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 
 import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.BoundsComponent;
@@ -82,8 +84,17 @@ public class CollisionSystem extends EntitySystem {
 					break;
 				} else if (type == PlatformType.HOLE) {
 					listener.ate();
-					snakeSystem.teleport(snake, platformComponent.other
-							.getComponent(TransformComponent.class).pos);
+					Rectangle intersection = new Rectangle();
+					if (Intersector.intersectRectangles(snakeBound.bounds,
+							platformBound.bounds, intersection)) {
+						float factor = intersection.area()
+								/ snakeBound.bounds.area();
+						if (factor > .6f) {
+							snakeSystem.teleport(snake,
+									platformComponent.other.getComponent(
+											TransformComponent.class).pos);
+						}
+					}
 					break;
 				} else if (type == PlatformType.FRUIT) {
 					listener.ate();
