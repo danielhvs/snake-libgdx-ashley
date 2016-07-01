@@ -101,21 +101,32 @@ public class SnakeSystem extends IteratingSystem {
 			SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
 			BoundsComponent head = entity.getComponent(BoundsComponent.class);
 			boolean allPartsInside = true;
-			for (Entity body : snakeBodyComponent.parts) {
-				// FIXME: relate parts...
+
+			Rectangle intersection = new Rectangle();
+			if (snakeBodyComponent.parts.size >= 1) {
+				Entity firstPart = snakeBodyComponent.parts.first();
+				Rectangle bodyBounds = firstPart
+						.getComponent(BoundsComponent.class).bounds;
+				if (isAlmostInside(bodyBounds, head.bounds, intersection)) {
+					Component bodyTexture = firstPart
+							.remove(TextureComponent.class);
+					if (bodyTexture != null) {
+						this.bodyTexture = bodyTexture;
+					}
+				} else {
+					allPartsInside = false;
+				}
+			}
+			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
+				Entity bodyAhead = snakeBodyComponent.parts.get(i);
+				Entity body = snakeBodyComponent.parts.get(i - 1);
 				Rectangle bodyBounds = body
 						.getComponent(BoundsComponent.class).bounds;
-				Rectangle intersection = new Rectangle();
-				if (Intersector.intersectRectangles(bodyBounds, head.bounds,
-						intersection)) {
-					float factor = intersection.area() / head.bounds.area();
-					if (factor > .6f) {
-						Component bodyTexture = body
-								.remove(TextureComponent.class);
-						if (bodyTexture != null) {
-							this.bodyTexture = bodyTexture;
-						}
-					}
+				intersection = new Rectangle();
+				Rectangle bodyAheadBounds = bodyAhead
+						.getComponent(BoundsComponent.class).bounds;
+				if (isAlmostInside(bodyBounds, bodyAheadBounds, intersection)) {
+					body.remove(TextureComponent.class);
 				} else {
 					allPartsInside = false;
 				}
@@ -123,7 +134,9 @@ public class SnakeSystem extends IteratingSystem {
 			if (allPartsInside) {
 				setState(entity, State.TELEPORTED);
 			}
-		} else if (state.get() == State.TELEPORTED) {
+		} else if (state.get() == State.TELEPORTED)
+
+		{
 			headTransform.rotation = this.rotation;
 			headTransform.pos.set(destination);
 			movements.get(entity).velocity.set(this.velocity);
@@ -134,8 +147,21 @@ public class SnakeSystem extends IteratingSystem {
 				pos.z = 1f;
 				getTransformComponent(part).pos.set(pos);
 			}
+
 			setState(entity, State.MOVING);
 		}
+
+	}
+
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
+			Rectangle intersect) {
+		if (Intersector.intersectRectangles(r1, r2, intersect)) {
+			float factor = intersect.area() / r2.area();
+			if (factor > .9f) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void showMainMenu() {

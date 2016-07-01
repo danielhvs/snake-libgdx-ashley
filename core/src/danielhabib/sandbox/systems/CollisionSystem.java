@@ -83,17 +83,12 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.revert(snake);
 					break;
 				} else if (type == PlatformType.HOLE) {
-					listener.ate();
 					Rectangle intersection = new Rectangle();
-					if (Intersector.intersectRectangles(snakeBound.bounds,
-							platformBound.bounds, intersection)) {
-						float factor = intersection.area()
-								/ snakeBound.bounds.area();
-						if (factor > .6f) {
-							snakeSystem.teleport(snake,
-									platformComponent.other.getComponent(
-											TransformComponent.class).pos);
-						}
+					if (isAlmostInside(snakeBound.bounds, platformBound.bounds,
+							intersection)) {
+						listener.ate();
+						snakeSystem.teleport(snake, platformComponent.other
+								.getComponent(TransformComponent.class).pos);
 					}
 					break;
 				} else if (type == PlatformType.FRUIT) {
@@ -118,5 +113,17 @@ public class CollisionSystem extends EntitySystem {
 				}
 			}
 		}
+	}
+
+	// FIXME: DRY
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
+			Rectangle intersect) {
+		if (Intersector.intersectRectangles(r1, r2, intersect)) {
+			float factor = intersect.area() / r2.area();
+			if (factor > .6f) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
