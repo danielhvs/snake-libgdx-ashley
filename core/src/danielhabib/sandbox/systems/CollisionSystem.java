@@ -87,7 +87,8 @@ public class CollisionSystem extends EntitySystem {
 					if (isAlmostInside(snakeBound.bounds, platformBound.bounds,
 							intersection)) {
 						listener.ate();
-						snakeSystem.teleport(snake, platformComponent.other
+						snakeSystem.teleport(snake, platformBound.bounds,
+								platformComponent.other
 								.getComponent(TransformComponent.class).pos);
 					}
 					break;

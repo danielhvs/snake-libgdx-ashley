@@ -38,6 +38,7 @@ public class SnakeSystem extends IteratingSystem {
 	private Component headTexture;
 	private Component bodyTexture;
 	private float rotation;
+	private Rectangle from;
 
 	public SnakeSystem(World world) {
 		super(Family
@@ -271,12 +272,15 @@ public class SnakeSystem extends IteratingSystem {
 		movements.get(entity).velocity.scl(.5f);
 	}
 
-	public void teleport(Entity entity, Vector3 destination) {
+	public void teleport(Entity entity, Rectangle from, Vector3 destination) {
 		State state = states.get(entity).get();
 		if (state != State.TELEPORTING && state != State.TELEPORTED) {
 			setState(entity, State.TELEPORTING);
 			this.velocity = movements.get(entity).velocity.cpy();
 			movements.get(entity).velocity.setZero();
+			// FIXME: use tranform instead of bounds.
+			transforms.get(entity).pos.set(
+					new Vector3(from.x + from.width / 2, from.y + from.height / 2, 0));
 			this.destination = destination;
 			this.rotation = getTransformComponent(entity).rotation;
 		}
