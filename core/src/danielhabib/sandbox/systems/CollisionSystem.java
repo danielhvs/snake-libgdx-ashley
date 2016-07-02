@@ -16,6 +16,7 @@ import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.types.PlatformType;
@@ -49,20 +50,20 @@ public class CollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		snakes = engine
-				.getEntitiesFor(Family
-						.all(SnakeBodyComponent.class, StateComponent.class,
-								BoundsComponent.class, TransformComponent.class)
-						.get());
-		platformComponents = engine
-				.getEntitiesFor(Family.all(PlatformComponent.class,
+				.getEntitiesFor(Family.all(SnakeBodyComponent.class, StateComponent.class,
 						BoundsComponent.class, TransformComponent.class).get());
+		platformComponents = engine.getEntitiesFor(Family.all(PlatformComponent.class,
+				BoundsComponent.class, TransformComponent.class).get());
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
-			checkSnakeCollision(snakeSystem, snake);
+			if (snake.getComponent(StateComponent.class)
+					.get() != State.MOVING_DESTINATION) {
+				checkSnakeCollision(snakeSystem, snake);
+			}
 		}
 	}
 
@@ -89,7 +90,7 @@ public class CollisionSystem extends EntitySystem {
 						listener.ate();
 						snakeSystem.teleport(snake, platformBound.bounds,
 								platformComponent.other
-								.getComponent(TransformComponent.class).pos);
+										.getComponent(BoundsComponent.class).bounds);
 					}
 					break;
 				} else if (type == PlatformType.FRUIT) {
@@ -98,8 +99,7 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.grow(snake);
 					CountComponent countComponent = counts.get(snake);
 					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-							String.valueOf(++countComponent.fruits),
-							Color.WHITE, 5, 15);
+							String.valueOf(++countComponent.fruits), Color.WHITE, 5, 15);
 					break;
 				} else if (type == PlatformType.POISON) {
 					listener.poison();
@@ -117,8 +117,7 @@ public class CollisionSystem extends EntitySystem {
 	}
 
 	// FIXME: DRY
-	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
-			Rectangle intersect) {
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2, Rectangle intersect) {
 		if (Intersector.intersectRectangles(r1, r2, intersect)) {
 			float factor = intersect.area() / r2.area();
 			if (factor > .6f) {
