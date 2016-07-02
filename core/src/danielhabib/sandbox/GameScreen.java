@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 import danielhabib.factory.World;
@@ -28,7 +30,6 @@ import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
-import danielhabib.sandbox.ui.UIFactory;
 
 public class GameScreen extends AbstractScreen {
 
@@ -67,11 +68,9 @@ public class GameScreen extends AbstractScreen {
 			} else if (Gdx.input.isKeyJustPressed(Keys.D)) {
 				engine.getSystem(SnakeSystem.class).decreaseSpeed(snake);
 			} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-				engine.getSystem(SnakeSystem.class).setProcessing(false);
-				engine.getSystem(MovementSystem.class).setProcessing(false);
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 			} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
-				engine.getSystem(SnakeSystem.class).setProcessing(true);
-				engine.getSystem(MovementSystem.class).setProcessing(true);
+				togglePause();
 			} else if (game.control.isZoomIn()) {
 				engine.getSystem(RenderingSystem.class).zoomIn();
 			} else if (game.control.isZoomOut()) {
@@ -83,6 +82,23 @@ public class GameScreen extends AbstractScreen {
 		getCamera().update();
 		drawMenuBar();
 		super.render(delta);
+	}
+
+	private void togglePause() {
+		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
+		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
+		MovementSystem movementSystem = engine.getSystem(MovementSystem.class);
+		movementSystem.setProcessing(!movementSystem.checkProcessing());
+	}
+
+	private void pauseGame() {
+		engine.getSystem(SnakeSystem.class).setProcessing(false);
+		engine.getSystem(MovementSystem.class).setProcessing(false);
+	}
+
+	private void unpauseGame() {
+		engine.getSystem(SnakeSystem.class).setProcessing(true);
+		engine.getSystem(MovementSystem.class).setProcessing(true);
 	}
 
 	private void drawMenuBar() {
@@ -140,13 +156,25 @@ public class GameScreen extends AbstractScreen {
 		}
 
 		Button pauseButton = ButtonFactory.newButton("II");
-		pauseButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		pauseButton.addListener(new InputListener() {
+			@Override
+			public void touchUp(InputEvent event, float x, float y, int pointer,
+					int button) {
+				togglePause();
+				super.touchUp(event, x, y, pointer, button);
+			}
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				return true;
+
+			}
+		});
 		pauseButton.setWidth(Gdx.graphics.getWidth() / 12.5f);
 		pauseButton.setHeight(Gdx.graphics.getHeight() / 12.5f);
 		pauseButton.setX(Gdx.graphics.getWidth() - pauseButton.getWidth());
 		pauseButton.setY(Gdx.graphics.getHeight() - pauseButton.getHeight());
 		addActor(pauseButton);
-
 	}
 
 }

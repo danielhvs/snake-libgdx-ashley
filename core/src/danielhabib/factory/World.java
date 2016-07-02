@@ -144,7 +144,7 @@ public abstract class World {
 		transform.pos.z = 1f;
 		Random random = new Random();
 		float nextFloat = random.nextFloat();
-		int factor = nextFloat < .5 ? -1 : 1;
+		int factor = 1;
 
 		BoundsComponent bounds = newBoundComponent(transform, texture);
 
