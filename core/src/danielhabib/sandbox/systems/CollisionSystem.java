@@ -99,7 +99,7 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.grow(snake);
 					CountComponent countComponent = counts.get(snake);
 					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-							String.valueOf(++countComponent.fruits), Color.WHITE, 5, 15);
+							String.valueOf(++countComponent.fruits), Color.RED);
 					break;
 				} else if (type == PlatformType.POISON) {
 					listener.poison();

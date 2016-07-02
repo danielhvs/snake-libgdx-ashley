@@ -11,8 +11,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
+	static final float FRUSTUM_WIDTH = 25;
+	static final float FRUSTUM_HEIGHT = 20;
+
 	protected AbstractScreen() {
-		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
+		super(new ScreenViewport(new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT)),
+				new SpriteBatch());
 	}
 
 	public abstract void buildStage();
@@ -22,7 +26,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		act(delta);
 		getCamera().update();
 		getBatch().setProjectionMatrix(getCamera().combined);
-
 		draw();
 	}
 

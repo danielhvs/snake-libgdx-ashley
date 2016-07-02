@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.TextureComponent;
@@ -20,7 +20,7 @@ public class RenderingSystem extends IteratingSystem {
 	static final float FRUSTUM_WIDTH = 25;
 	static final float FRUSTUM_HEIGHT = 20;
 
-	private SpriteBatch batch;
+	private Batch batch;
 	private Array<Entity> renderQueue;
 	private Comparator<Entity> comparator;
 	private OrthographicCamera cam;
@@ -28,7 +28,7 @@ public class RenderingSystem extends IteratingSystem {
 	private ComponentMapper<TextureComponent> textureM;
 	private ComponentMapper<TransformComponent> transformM;
 
-	public RenderingSystem(SpriteBatch batch) {
+	public RenderingSystem(Batch batch) {
 		super(Family.all(TransformComponent.class, TextureComponent.class).get());
 
 		textureM = ComponentMapper.getFor(TextureComponent.class);
@@ -44,10 +44,8 @@ public class RenderingSystem extends IteratingSystem {
 		};
 
 		this.batch = batch;
-		float h = FRUSTUM_HEIGHT;
-
-		cam = new OrthographicCamera(FRUSTUM_WIDTH, h);
-		cam.position.set(FRUSTUM_WIDTH / 2, h / 2, 0);
+		cam = new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT);
+		cam.position.set(FRUSTUM_WIDTH / 2, FRUSTUM_HEIGHT / 2, 0);
 	}
 
 	@Override

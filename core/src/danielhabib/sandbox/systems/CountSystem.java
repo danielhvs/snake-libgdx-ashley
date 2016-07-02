@@ -32,7 +32,9 @@ public class CountSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		CountComponent countComponent = counts.get(entity);
 		Label label = countComponent.fruitsLabel;
-		label.setPosition(5, Gdx.graphics.getHeight() - 20);
+		float x = Gdx.graphics.getWidth() / 28f;
+		float y = Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 28f;
+		label.setPosition(x, y);
 		label.setText(String.valueOf(countComponent.fruits));
 		if (countComponent.fruits == countComponent.maxFruits) {
 			SnakeSystem snakeSystem = getEngine().getSystem(SnakeSystem.class);

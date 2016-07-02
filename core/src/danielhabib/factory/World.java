@@ -126,7 +126,6 @@ public abstract class World {
 		}
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
-		snakeEntity.add(engine.createComponent(CountComponent.class));
 		return snakeEntity;
 	}
 
@@ -262,6 +261,13 @@ public abstract class World {
 	private Rectangle getRectangle(MapObject object) {
 		RectangleMapObject rectangle = (RectangleMapObject) object;
 		return rectangle.getRectangle();
+	}
+
+	protected CountComponent newCountComponent(int max) {
+		CountComponent countComponent = new CountComponent();
+		countComponent.maxFruits = max;
+		countComponent.region = new TextureRegion(Assets.apple);
+		return countComponent;
 	}
 
 }

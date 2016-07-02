@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -29,12 +28,12 @@ import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
+import danielhabib.sandbox.ui.TextureDrawer;
 
 public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
 	private PooledEngine engine;
-	private SpriteBatch gameBatch;
 	private World world;
 	private int level;
 
@@ -65,7 +64,7 @@ public class GameScreen extends AbstractScreen {
 		ShapeRenderer shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setProjectionMatrix(getCamera().combined);
 		int width = Gdx.graphics.getWidth();
-		float height = Gdx.graphics.getHeight() / 12.5f;
+		float height = Assets.menuBarHeight;
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0, .2f, 0, 0);
 		shapeRenderer.rect(0, Gdx.graphics.getHeight() - height, width, height);
@@ -80,13 +79,12 @@ public class GameScreen extends AbstractScreen {
 		} else {
 			world = new World2(engine);
 		}
-		gameBatch = new SpriteBatch();
 
 		engine.addEntity(newControlEntity());
 		engine.addSystem(new ControlSystem());
 		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
-		engine.addSystem(new RenderingSystem(gameBatch));
+		engine.addSystem(new RenderingSystem(getBatch()));
 		engine.addSystem(new BoundsSystem());
 		CollisionSystem collisionSystem = new CollisionSystem(
 				new CollisionListener() {
@@ -114,7 +112,9 @@ public class GameScreen extends AbstractScreen {
 		ImmutableArray<Entity> entities = engine
 				.getEntitiesFor(Family.one(CountComponent.class).get());
 		for (Entity entity : entities) {
-			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
+			CountComponent component = entity.getComponent(CountComponent.class);
+			addActor(component.fruitsLabel);
+			addActor(new TextureDrawer(component.region));
 		}
 
 		Button pauseButton = ButtonFactory.newButton("II");
@@ -132,10 +132,12 @@ public class GameScreen extends AbstractScreen {
 
 			}
 		});
-		pauseButton.setWidth(Gdx.graphics.getWidth() / 12.5f);
-		pauseButton.setHeight(Gdx.graphics.getHeight() / 12.5f);
-		pauseButton.setX(Gdx.graphics.getWidth() - pauseButton.getWidth());
-		pauseButton.setY(Gdx.graphics.getHeight() - pauseButton.getHeight());
+		pauseButton.setWidth(Gdx.graphics.getWidth() / 16f);
+		pauseButton.setHeight(Gdx.graphics.getHeight() / 16f);
+		pauseButton.setX(Gdx.graphics.getWidth() - pauseButton.getWidth()
+				- Gdx.graphics.getWidth() / 256f);
+		pauseButton.setY(Gdx.graphics.getHeight() - pauseButton.getHeight()
+				- Gdx.graphics.getWidth() / 256f);
 		addActor(pauseButton);
 	}
 

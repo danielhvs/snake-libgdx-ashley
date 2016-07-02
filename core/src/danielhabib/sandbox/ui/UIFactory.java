@@ -54,9 +54,9 @@ public class UIFactory {
 	}
 
 	public static Label newLabel() {
-		LabelStyle labelStyle = new LabelStyle(Assets.font, Color.WHITE);
+		LabelStyle labelStyle = new LabelStyle(Assets.font, Color.RED);
 		Label label = new Label("", labelStyle);
-		label.setFontScale(Assets.fontScaleX, Assets.fontScaleY);
+		label.setFontScale(Assets.fontScaleX / 1.5f, Assets.fontScaleY / 1.5f);
 		return label;
 	}
 

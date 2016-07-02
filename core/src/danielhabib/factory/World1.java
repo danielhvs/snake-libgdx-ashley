@@ -2,8 +2,6 @@ package danielhabib.factory;
 
 import com.badlogic.ashley.core.PooledEngine;
 
-import danielhabib.sandbox.components.CountComponent;
-
 public class World1 extends World {
 
 	public World1(PooledEngine engine) {
@@ -13,7 +11,7 @@ public class World1 extends World {
 	@Override
 	public void create() {
 		snakeEntity = createSnake(10, 10, 10);
-		snakeEntity.getComponent(CountComponent.class).maxFruits = 3;
+		snakeEntity.add(newCountComponent(3));
 		engine.addEntity(snakeEntity);
 		parseMap("map1.tmx");
 		createCamera(snakeEntity);
