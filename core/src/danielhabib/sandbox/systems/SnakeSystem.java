@@ -138,6 +138,7 @@ public class SnakeSystem extends IteratingSystem {
 				headVelocity.setAngleRad(angleRad);
 				headVelocity.scl(6f);
 				movements.get(entity).velocity.set(headVelocity);
+				getEngine().removeSystem(getEngine().getSystem(ControlSystem.class));
 				setState(entity, State.MOVING_DESTINATION);
 			}
 		} else if (state.get() == State.MOVING_DESTINATION) {
@@ -158,7 +159,7 @@ public class SnakeSystem extends IteratingSystem {
 				pos.z = 1f;
 				getTransformComponent(part).pos.set(pos);
 			}
-
+			getEngine().addSystem(new ControlSystem());
 			setState(entity, State.MOVING);
 		}
 
