@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -114,7 +116,10 @@ public class GameScreen extends AbstractScreen {
 		for (Entity entity : entities) {
 			CountComponent component = entity.getComponent(CountComponent.class);
 			addActor(component.fruitsLabel);
-			addActor(new TextureDrawer(component.region));
+
+			addActor(new TextureDrawer(component.region,
+					new Vector3(16, Gdx.graphics.getHeight() - 32, 0),
+					new Vector2(1, 1)));
 		}
 
 		Button pauseButton = ButtonFactory.newButton("II");
