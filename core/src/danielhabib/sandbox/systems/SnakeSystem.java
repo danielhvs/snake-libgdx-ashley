@@ -150,7 +150,8 @@ public class SnakeSystem extends IteratingSystem {
 			}
 		} else if (state.get() == State.TELEPORTED) {
 			headTransform.rotation = this.rotation;
-			headTransform.pos.set(new Vector3(destination.x, destination.y, 0));
+			headTransform.pos.set(new Vector3(destination.x + destination.width / 2,
+					destination.y + destination.height / 2, 0));
 			movements.get(entity).velocity.set(this.velocity);
 			entity.add(headTexture);
 			for (Entity part : snakes.get(entity).parts) {
