@@ -7,6 +7,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
@@ -77,7 +79,21 @@ public class GameScreen extends AbstractScreen {
 			}
 		}
 		engine.update(delta);
+
+		getCamera().update();
+		drawMenuBar();
 		super.render(delta);
+	}
+
+	private void drawMenuBar() {
+		ShapeRenderer shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setProjectionMatrix(getCamera().combined);
+		int width = Gdx.graphics.getWidth();
+		float height = Gdx.graphics.getHeight() / 12.5f;
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(0, .2f, 0, 0);
+		shapeRenderer.rect(0, Gdx.graphics.getHeight() - height, width, height);
+		shapeRenderer.end();
 	}
 
 	@Override
@@ -123,13 +139,13 @@ public class GameScreen extends AbstractScreen {
 			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
 		}
 
-		Button button = ButtonFactory.newButton("II");
-		button.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
-		button.setWidth(Gdx.graphics.getWidth() / 12.5f);
-		button.setHeight(Gdx.graphics.getHeight() / 12.5f);
-		button.setX(Gdx.graphics.getWidth() - button.getWidth());
-		button.setY(Gdx.graphics.getHeight() - button.getHeight());
-		addActor(button);
+		Button pauseButton = ButtonFactory.newButton("II");
+		pauseButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		pauseButton.setWidth(Gdx.graphics.getWidth() / 12.5f);
+		pauseButton.setHeight(Gdx.graphics.getHeight() / 12.5f);
+		pauseButton.setX(Gdx.graphics.getWidth() - pauseButton.getWidth());
+		pauseButton.setY(Gdx.graphics.getHeight() - pauseButton.getHeight());
+		addActor(pauseButton);
 
 	}
 
