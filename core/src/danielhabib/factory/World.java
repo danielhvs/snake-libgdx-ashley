@@ -109,7 +109,7 @@ public abstract class World {
 		return bounds;
 	}
 
-	public Entity createSnake(int x, int y) {
+	public Entity createSnake(int x, int y, int size) {
 		// World
 		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
 				Assets.partHead);
@@ -118,8 +118,7 @@ public abstract class World {
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		int bodySize = 6;
-		for (int i = 1; i <= bodySize; i++) {
+		for (int i = 1; i <= size; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
 		}
 		for (Entity part : snakeBodyComponent.parts) {
