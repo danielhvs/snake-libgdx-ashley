@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
+import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
@@ -78,8 +79,10 @@ public class GameScreen extends AbstractScreen {
 		engine = new PooledEngine();
 		if (level == 1) {
 			world = new World1(engine);
-		} else {
+		} else if (level == 2) {
 			world = new World2(engine);
+		} else {
+			world = new World3(engine);
 		}
 
 		engine.addEntity(newControlEntity());

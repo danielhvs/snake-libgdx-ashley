@@ -21,8 +21,7 @@ import danielhabib.sandbox.ScreenManager;
 public class UIFactory {
 
 	public static ImageButton createButton(Texture texture) {
-		return new ImageButton(
-				new TextureRegionDrawable(new TextureRegion(texture)));
+		return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));
 	}
 
 	public static InputListener createListener(final ScreenEnum dstScreen,
@@ -35,10 +34,10 @@ public class UIFactory {
 				ScreenManager.getInstance().showScreen(dstScreen, params);
 				super.touchUp(event, x, y, pointer, button);
 			}
-			
+
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+			public boolean touchDown(InputEvent event, float x, float y, int pointer,
+					int button) {
 				return true;
 			}
 		};
@@ -64,8 +63,7 @@ public class UIFactory {
 		float fontScaleX = Gdx.graphics.getWidth() / 200f;
 		float fontScaleY = Gdx.graphics.getHeight() / 150f;
 		title.setFontScale(fontScaleX, fontScaleY);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight());
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		int spaceBottom = Gdx.graphics.getHeight() / 12;
 		table.getCell(title).spaceBottom(spaceBottom);
@@ -85,6 +83,27 @@ public class UIFactory {
 
 	private static LabelStyle labelStyle() {
 		return new LabelStyle(Assets.font, Color.WHITE);
+	}
+
+	public static Table newSelectLevels(String titleText, Array<Button> buttons) {
+		Table table = new Table();
+		Label title = new Label(titleText, labelStyle());
+		UIFactory.setTitle(title, table);
+		table.row();
+
+		// FIXME: layout
+		for (int i = 0; i < 9; i++) {
+			Button button = buttons.get(i);
+			int width = Gdx.graphics.getWidth() / 6;
+			int height = Gdx.graphics.getHeight() / 12;
+			table.add(button).width(width).height(height);
+			float spaceBottom = Gdx.graphics.getHeight() / 25f;
+			table.getCell(button).space(spaceBottom);
+			if (i != 0 && (i + 1) % 3 == 0) {
+				table.row();
+			}
+		}
+		return table;
 	}
 
 }

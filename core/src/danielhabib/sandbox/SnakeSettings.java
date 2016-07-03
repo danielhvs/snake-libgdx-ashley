@@ -15,7 +15,7 @@ public class SnakeSettings {
 
 	public static void win() {
 		// FIXME. do not hard-code.
-		if (level < 2) {
+		if (level < 3) {
 			level++;
 			Preferences prefs = Gdx.app.getPreferences("snakeSettings");
 			prefs.putInteger("level", level);
