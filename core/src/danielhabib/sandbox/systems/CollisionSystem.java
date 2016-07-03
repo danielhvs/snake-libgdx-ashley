@@ -14,6 +14,8 @@ import com.badlogic.gdx.math.Rectangle;
 import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CountComponent;
+import danielhabib.sandbox.components.EnemyComponent;
+import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent.State;
@@ -37,6 +39,8 @@ public class CollisionSystem extends EntitySystem {
 	private ImmutableArray<Entity> snakes;
 	private ImmutableArray<Entity> platformComponents;
 	private ComponentMapper<CountComponent> counts;
+	private ImmutableArray<Entity> enemies;
+	private ComponentMapper<MovementComponent> movements;
 
 	public CollisionSystem(CollisionListener listener) {
 		this.listener = listener;
@@ -44,11 +48,13 @@ public class CollisionSystem extends EntitySystem {
 		bounds = ComponentMapper.getFor(BoundsComponent.class);
 		ComponentMapper.getFor(StateComponent.class);
 		counts = ComponentMapper.getFor(CountComponent.class);
+		movements = ComponentMapper.getFor(MovementComponent.class);
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
+		enemies = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
 		snakes = engine
 				.getEntitiesFor(Family.all(SnakeBodyComponent.class, StateComponent.class,
 						BoundsComponent.class, TransformComponent.class).get());
@@ -60,9 +66,24 @@ public class CollisionSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
+			// FIXME: shouldnt care about state...
 			if (snake.getComponent(StateComponent.class)
 					.get() != State.MOVING_DESTINATION) {
 				checkSnakeCollision(snakeSystem, snake);
+			}
+		}
+		for (Entity enemy : enemies) {
+			for (Entity platform : platformComponents) {
+				BoundsComponent enemyBound = bounds.get(enemy);
+				BoundsComponent platformBound = bounds.get(platform);
+				// FIXME: performance via mapper.
+				if (platform.getComponent(
+						PlatformComponent.class).type == PlatformType.BOING) {
+					if (platformBound.bounds.overlaps(enemyBound.bounds)) {
+						movements.get(enemy).velocity.x *= -1f;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -75,7 +96,7 @@ public class CollisionSystem extends EntitySystem {
 				PlatformComponent platformComponent = platform
 						.getComponent(PlatformComponent.class);
 				PlatformType type = platformComponent.type;
-				if (type == PlatformType.WALL) {
+				if (type == PlatformType.WALL || type == PlatformType.ENEMY) {
 					listener.ate();
 					snakeSystem.die(snake);
 					break;
