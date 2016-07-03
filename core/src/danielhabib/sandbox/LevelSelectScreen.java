@@ -1,5 +1,7 @@
 package danielhabib.sandbox;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
@@ -12,19 +14,23 @@ public class LevelSelectScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		Array<Button> buttons = new Array<Button>();
-		int level = SnakeSettings.level;
-		// FIXME level listening.
 		for (int i = 0; i < 9; i++) {
-			Button levelButton = ButtonFactory.newButton("GO " + (i + 1) + "!");
-			levelButton.addListener(UIFactory.createListener(ScreenEnum.GAME, (i + 1)));
-			buttons.add(levelButton);
+			int level = i + 1;
+			Button button = ButtonFactory.newButton("GO " + level + "!");
+			if (level <= SnakeSettings.level) {
+				button.addListener(UIFactory.createListener(ScreenEnum.GAME, level));
+			} else {
+				button.setColor(Color.GRAY);
+			}
+			buttons.add(button);
 		}
 		Table table = UIFactory.newSelectLevels("Hum... I see...", buttons);
-
 		Button backButton = ButtonFactory.newButton("<-- Back");
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 		table.row();
-		table.add(backButton);
+		int width = Gdx.graphics.getWidth() / 4;
+		int height = Gdx.graphics.getHeight() / 8;
+		table.add(backButton).size(width, height);
 
 		addActor(table);
 	}

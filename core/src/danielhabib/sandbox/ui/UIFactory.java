@@ -63,16 +63,14 @@ public class UIFactory {
 		float fontScaleX = Gdx.graphics.getWidth() / 200f;
 		float fontScaleY = Gdx.graphics.getHeight() / 150f;
 		title.setFontScale(fontScaleX, fontScaleY);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		table.add(title);
 		int spaceBottom = Gdx.graphics.getHeight() / 12;
 		table.getCell(title).spaceBottom(spaceBottom);
 	}
 
 	public static Table newMenu(String titleText, Array<Button> buttons) {
-		Table table = new Table();
-		Label title = new Label(titleText, labelStyle());
-		UIFactory.setTitle(title, table);
+		Table table = newTable();
+		UIFactory.setTitle(new Label(titleText, labelStyle()), table);
 
 		for (Button button : buttons) {
 			addButtonToTable(button, table);
@@ -81,27 +79,26 @@ public class UIFactory {
 		return table;
 	}
 
+	private static Table newTable() {
+		Table table = new Table();
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		return table;
+	}
+
 	private static LabelStyle labelStyle() {
 		return new LabelStyle(Assets.font, Color.WHITE);
 	}
 
 	public static Table newSelectLevels(String titleText, Array<Button> buttons) {
-		Table table = new Table();
-		Label title = new Label(titleText, labelStyle());
-		UIFactory.setTitle(title, table);
-		table.row();
-
-		// FIXME: layout
-		for (int i = 0; i < 9; i++) {
-			Button button = buttons.get(i);
-			int width = Gdx.graphics.getWidth() / 6;
-			int height = Gdx.graphics.getHeight() / 12;
-			table.add(button).width(width).height(height);
-			float spaceBottom = Gdx.graphics.getHeight() / 25f;
-			table.getCell(button).space(spaceBottom);
-			if (i != 0 && (i + 1) % 3 == 0) {
+		Table table = newTable();
+		for (int i = 0; i < buttons.size; i++) {
+			 Button button = buttons.get(i);
+			int width = Gdx.graphics.getWidth() / 4;
+			int height = Gdx.graphics.getHeight() / 8;
+			if (i % 3 == 0) {
 				table.row();
 			}
+			table.add(button).size(width, height).pad(5, 5, 5, 5).expand();
 		}
 		return table;
 	}
