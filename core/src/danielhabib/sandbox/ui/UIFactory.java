@@ -93,9 +93,9 @@ public class UIFactory {
 		Table table = newTable();
 		for (int i = 0; i < buttons.size; i++) {
 			 Button button = buttons.get(i);
-			int width = Gdx.graphics.getWidth() / 4;
+			int width = Gdx.graphics.getWidth() / 6;
 			int height = Gdx.graphics.getHeight() / 8;
-			if (i % 3 == 0) {
+			if (i % 4 == 0) {
 				table.row();
 			}
 			table.add(button).size(width, height).pad(5, 5, 5, 5).expand();

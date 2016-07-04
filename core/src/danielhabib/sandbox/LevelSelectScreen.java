@@ -14,7 +14,7 @@ public class LevelSelectScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		Array<Button> buttons = new Array<Button>();
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < 16; i++) {
 			int level = i + 1;
 			Button button = ButtonFactory.newButton("GO " + level + "!");
 			if (level <= SnakeSettings.level) {

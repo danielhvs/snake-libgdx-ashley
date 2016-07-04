@@ -119,10 +119,13 @@ public class GameScreen extends AbstractScreen {
 		for (Entity entity : entities) {
 			CountComponent component = entity.getComponent(CountComponent.class);
 			addActor(component.fruitsLabel);
-
 			addActor(new TextureDrawer(component.region,
-					new Vector3(16, Gdx.graphics.getHeight() - 32, 0),
-					new Vector2(1, 1)));
+							new Vector3(Gdx.graphics.getWidth() / 50,
+									Gdx.graphics.getHeight()
+											- Gdx.graphics.getHeight() / 18.75f,
+									0),
+					new Vector2(Gdx.graphics.getWidth() / 800f,
+							Gdx.graphics.getHeight() / 600f)));
 		}
 
 		Button pauseButton = ButtonFactory.newButton("II");
