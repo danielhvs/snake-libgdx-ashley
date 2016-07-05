@@ -2,7 +2,6 @@ package danielhabib.sandbox;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -36,7 +35,7 @@ import danielhabib.sandbox.ui.TextureDrawer;
 public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
-	private PooledEngine engine;
+	private SnakeEngine engine;
 	private World world;
 	private int level;
 
@@ -47,13 +46,19 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
+		engine.render(delta);
+		getCamera().update();
+		drawMenuBar();
+		super.render(delta);
+	}
+
+	@Override
+	public void act(float delta) {
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 		}
 		engine.update(delta);
-		getCamera().update();
-		drawMenuBar();
-		super.render(delta);
+		super.act(delta);
 	}
 
 	private void togglePause() {
@@ -76,7 +81,7 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		engine = new PooledEngine();
+		engine = new SnakeEngine();
 		if (level == 1) {
 			world = new World1(engine);
 		} else if (level == 2) {
@@ -117,13 +122,14 @@ public class GameScreen extends AbstractScreen {
 		ImmutableArray<Entity> entities = engine
 				.getEntitiesFor(Family.one(CountComponent.class).get());
 		for (Entity entity : entities) {
-			CountComponent component = entity.getComponent(CountComponent.class);
+			CountComponent component = entity
+					.getComponent(CountComponent.class);
 			addActor(component.fruitsLabel);
 			addActor(new TextureDrawer(component.region,
-							new Vector3(Gdx.graphics.getWidth() / 50,
-									Gdx.graphics.getHeight()
-											- Gdx.graphics.getHeight() / 18.75f,
-									0),
+					new Vector3(Gdx.graphics.getWidth() / 50,
+							Gdx.graphics.getHeight()
+									- Gdx.graphics.getHeight() / 18.75f,
+							0),
 					new Vector2(Gdx.graphics.getWidth() / 800f,
 							Gdx.graphics.getHeight() / 600f)));
 		}
@@ -136,6 +142,7 @@ public class GameScreen extends AbstractScreen {
 				togglePause();
 				super.touchUp(event, x, y, pointer, button);
 			}
+
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
