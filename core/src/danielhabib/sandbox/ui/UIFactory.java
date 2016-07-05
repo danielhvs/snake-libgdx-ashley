@@ -21,7 +21,8 @@ import danielhabib.sandbox.ScreenManager;
 public class UIFactory {
 
 	public static ImageButton createButton(Texture texture) {
-		return new ImageButton(new TextureRegionDrawable(new TextureRegion(texture)));
+		return new ImageButton(
+				new TextureRegionDrawable(new TextureRegion(texture)));
 	}
 
 	public static InputListener createListener(final ScreenEnum dstScreen,
@@ -36,8 +37,8 @@ public class UIFactory {
 			}
 
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer,
-					int button) {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
 				return true;
 			}
 		};
@@ -81,7 +82,8 @@ public class UIFactory {
 
 	private static Table newTable() {
 		Table table = new Table();
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		table.setBounds(0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 		return table;
 	}
 
@@ -89,16 +91,16 @@ public class UIFactory {
 		return new LabelStyle(Assets.font, Color.WHITE);
 	}
 
-	public static Table newSelectLevels(String titleText, Array<Button> buttons) {
+	public static Table newSelectLevels(String titleText,
+			Array<Button> buttons) {
 		Table table = newTable();
+		int size = Gdx.graphics.getWidth() / 10;
 		for (int i = 0; i < buttons.size; i++) {
-			 Button button = buttons.get(i);
-			int width = Gdx.graphics.getWidth() / 6;
-			int height = Gdx.graphics.getHeight() / 8;
-			if (i % 4 == 0) {
+			Button button = buttons.get(i);
+			if (i % 5 == 0) {
 				table.row();
 			}
-			table.add(button).size(width, height).pad(5, 5, 5, 5).expand();
+			table.add(button).size(size).pad(5, 5, 5, 5).expand();
 		}
 		return table;
 	}

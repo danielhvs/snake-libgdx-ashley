@@ -14,14 +14,12 @@ public class MainMenu extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		Button playButton = ButtonFactory.newButton("Go go go!");
 		Button levelButton = ButtonFactory.newButton("Let's see...");
 		Button configButton = ButtonFactory.newButton("Change stuff...");
 		Button quitButton = ButtonFactory.newButton("I'm out!");
 		Table table = UIFactory.newMenu("OMG! Crazy Snakes!",
-				Array.with(playButton, levelButton, configButton, quitButton));
+				Array.with(levelButton, configButton, quitButton));
 
-		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton
 				.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		configButton.addListener(UIFactory.createListener(ScreenEnum.CONFIG));
