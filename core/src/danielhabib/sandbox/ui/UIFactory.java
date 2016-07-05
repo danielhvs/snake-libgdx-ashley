@@ -94,7 +94,7 @@ public class UIFactory {
 	public static Table newSelectLevels(String titleText,
 			Array<Button> buttons) {
 		Table table = newTable();
-		int size = Gdx.graphics.getWidth() / 10;
+		int size = Gdx.graphics.getWidth() / 16;
 		for (int i = 0; i < buttons.size; i++) {
 			Button button = buttons.get(i);
 			if (i % 5 == 0) {
