@@ -1,0 +1,322 @@
+
+pack.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ButtonSpellPressed
+  rotate: false
+  xy: 851, 345
+  size: 19, 73
+  split: 7, 8, 6, 8
+  orig: 19, 73
+  offset: 0, 0
+  index: -1
+armyIcon
+  rotate: false
+  xy: 770, 340
+  size: 79, 78
+  orig: 79, 78
+  offset: 0, 0
+  index: -1
+balloon
+  rotate: false
+  xy: 2, 97
+  size: 243, 327
+  orig: 243, 327
+  offset: 0, 0
+  index: -1
+balloon2
+  rotate: false
+  xy: 247, 61
+  size: 195, 330
+  orig: 195, 330
+  offset: 0, 0
+  index: -1
+bush1
+  rotate: false
+  xy: 1148, 679
+  size: 156, 129
+  orig: 156, 129
+  offset: 0, 0
+  index: -1
+bush2
+  rotate: false
+  xy: 444, 55
+  size: 150, 99
+  orig: 150, 99
+  offset: 0, 0
+  index: -1
+bush3
+  rotate: false
+  xy: 1772, 912
+  size: 157, 107
+  orig: 157, 107
+  offset: 0, 0
+  index: -1
+buttonbg
+  rotate: false
+  xy: 1708, 855
+  size: 57, 57
+  split: 25, 26, 25, 26
+  orig: 57, 57
+  offset: 0, 0
+  index: -1
+cloud1
+  rotate: false
+  xy: 1553, 914
+  size: 217, 105
+  orig: 217, 105
+  offset: 0, 0
+  index: -1
+cloud2
+  rotate: false
+  xy: 2, 24
+  size: 178, 71
+  orig: 178, 71
+  offset: 0, 0
+  index: -1
+dialog
+  rotate: false
+  xy: 910, 910
+  size: 251, 109
+  split: 121, 123, 43, 45
+  orig: 251, 109
+  offset: 0, 0
+  index: -1
+doghouse
+  rotate: false
+  xy: 1306, 666
+  size: 137, 142
+  orig: 137, 142
+  offset: 0, 0
+  index: -1
+fence
+  rotate: false
+  xy: 776, 420
+  size: 102, 81
+  orig: 102, 81
+  offset: 0, 0
+  index: -1
+grayButton
+  rotate: false
+  xy: 596, 72
+  size: 18, 82
+  split: 5, 6, 5, 6
+  orig: 18, 82
+  offset: 0, 0
+  index: -1
+ground2
+  rotate: false
+  xy: 2, 890
+  size: 906, 129
+  orig: 906, 129
+  offset: 0, 0
+  index: -1
+house10
+  rotate: false
+  xy: 315, 643
+  size: 361, 245
+  orig: 361, 245
+  offset: 0, 0
+  index: -1
+house11
+  rotate: false
+  xy: 2, 426
+  size: 311, 462
+  orig: 311, 462
+  offset: 0, 0
+  index: -1
+house5
+  rotate: false
+  xy: 678, 655
+  size: 295, 233
+  orig: 295, 233
+  offset: 0, 0
+  index: -1
+house6
+  rotate: false
+  xy: 315, 393
+  size: 347, 248
+  orig: 347, 248
+  offset: 0, 0
+  index: -1
+house7
+  rotate: false
+  xy: 1163, 810
+  size: 234, 209
+  orig: 234, 209
+  offset: 0, 0
+  index: -1
+hp
+  rotate: false
+  xy: 436, 27
+  size: 6, 32
+  split: 0, 0, 0, 0
+  orig: 6, 32
+  offset: 0, 0
+  index: -1
+hpbar
+  rotate: false
+  xy: 247, 2
+  size: 47, 57
+  split: 21, 22, 18, 19
+  orig: 47, 57
+  offset: 0, 0
+  index: -1
+menuBtn
+  rotate: false
+  xy: 776, 603
+  size: 134, 50
+  orig: 134, 50
+  offset: 0, 0
+  index: -1
+menuSliderSwitch
+  rotate: false
+  xy: 247, 398
+  size: 63, 26
+  split: 22, 23, 0, 0
+  orig: 63, 26
+  offset: 0, 0
+  index: -1
+menuX
+  rotate: false
+  xy: 296, 8
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+menuXPressed
+  rotate: false
+  xy: 395, 21
+  size: 39, 38
+  orig: 39, 38
+  offset: 0, 0
+  index: -1
+miniSliderb
+  rotate: false
+  xy: 349, 22
+  size: 44, 37
+  split: 15, 16, 15, 16
+  orig: 44, 37
+  offset: 0, 0
+  index: -1
+pausePlay
+  rotate: false
+  xy: 1541, 675
+  size: 145, 146
+  orig: 145, 146
+  offset: 0, 0
+  index: -1
+post
+  rotate: false
+  xy: 1445, 679
+  size: 94, 157
+  orig: 94, 157
+  offset: 0, 0
+  index: -1
+restartLvl
+  rotate: false
+  xy: 770, 188
+  size: 73, 74
+  orig: 73, 74
+  offset: 0, 0
+  index: -1
+s1
+  rotate: false
+  xy: 664, 397
+  size: 39, 45
+  orig: 39, 45
+  offset: 0, 0
+  index: -1
+s2
+  rotate: false
+  xy: 705, 408
+  size: 45, 34
+  orig: 45, 34
+  offset: 0, 0
+  index: -1
+s5
+  rotate: false
+  xy: 912, 608
+  size: 42, 45
+  orig: 42, 45
+  offset: 0, 0
+  index: -1
+santaFront
+  rotate: false
+  xy: 444, 156
+  size: 195, 235
+  orig: 195, 235
+  offset: 0, 0
+  index: -1
+santaSide
+  rotate: false
+  xy: 182, 2
+  size: 63, 93
+  orig: 63, 93
+  offset: 0, 0
+  index: -1
+sleigh
+  rotate: false
+  xy: 1553, 823
+  size: 153, 89
+  orig: 153, 89
+  offset: 0, 0
+  index: -1
+toMenu
+  rotate: false
+  xy: 770, 264
+  size: 74, 74
+  orig: 74, 74
+  offset: 0, 0
+  index: -1
+tree1
+  rotate: false
+  xy: 641, 190
+  size: 127, 201
+  orig: 127, 201
+  offset: 0, 0
+  index: -1
+tree2
+  rotate: false
+  xy: 975, 679
+  size: 171, 229
+  orig: 171, 229
+  offset: 0, 0
+  index: -1
+tree3
+  rotate: false
+  xy: 1399, 838
+  size: 152, 181
+  orig: 152, 181
+  offset: 0, 0
+  index: -1
+tree4
+  rotate: false
+  xy: 664, 444
+  size: 110, 197
+  orig: 110, 197
+  offset: 0, 0
+  index: -1
+tw
+  rotate: false
+  xy: 1931, 904
+  size: 115, 115
+  orig: 115, 115
+  offset: 0, 0
+  index: -1
+zibil1
+  rotate: false
+  xy: 864, 519
+  size: 70, 82
+  orig: 70, 82
+  offset: 0, 0
+  index: -1
+zibil2
+  rotate: false
+  xy: 776, 503
+  size: 86, 98
+  orig: 86, 98
+  offset: 0, 0
+  index: -1

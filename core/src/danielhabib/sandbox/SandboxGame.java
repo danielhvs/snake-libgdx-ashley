@@ -34,7 +34,8 @@ public class SandboxGame extends Game {
 		}
 		if (done && !showed) {
 			Assets.finishLoading();
-			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+			setScreen(new MainMenu2());
+			// ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 			showed = true;
 		}
 	}

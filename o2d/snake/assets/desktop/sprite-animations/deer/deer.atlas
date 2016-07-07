@@ -1,0 +1,97 @@
+
+deer.png
+size: 2048,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+deer0001
+  rotate: false
+  xy: 582, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0002
+  rotate: false
+  xy: 1162, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0003
+  rotate: false
+  xy: 234, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0004
+  rotate: false
+  xy: 466, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0005
+  rotate: false
+  xy: 1394, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0006
+  rotate: false
+  xy: 2, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0007
+  rotate: false
+  xy: 350, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0008
+  rotate: false
+  xy: 698, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0009
+  rotate: false
+  xy: 814, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0010
+  rotate: false
+  xy: 930, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0011
+  rotate: false
+  xy: 118, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0012
+  rotate: false
+  xy: 1046, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
+deer0013
+  rotate: false
+  xy: 1278, 2
+  size: 114, 95
+  orig: 114, 95
+  offset: 0, 0
+  index: -1
