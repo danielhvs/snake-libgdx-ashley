@@ -13,6 +13,7 @@ public class MainMenu extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		Viewport viewport = new FitViewport(192, 120);
+		// FIXME: performance. Load all sceneLoader and cache them?
 		sceneLoader = new SceneLoader();
 		sceneLoader.loadScene("MainScene", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
