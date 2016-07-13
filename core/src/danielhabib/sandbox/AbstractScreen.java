@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.uwsoft.editor.renderer.SceneLoader;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
 	static final float FRUSTUM_WIDTH = 25;
 	static final float FRUSTUM_HEIGHT = 20;
+	protected SceneLoader sceneLoader;
 
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT)),
@@ -23,6 +25,11 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void render(float delta) {
+		// FIXME: Migrate do overlap2d
+		if (sceneLoader != null) {
+			sceneLoader.getEngine().update(delta);
+		}
+
 		act(delta);
 		getCamera().update();
 		getBatch().setProjectionMatrix(getCamera().combined);
