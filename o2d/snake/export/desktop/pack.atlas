@@ -12,6 +12,13 @@ ButtonSpellPressed
   orig: 19, 73
   offset: 0, 0
   index: -1
+apple32
+  rotate: false
+  xy: 641, 171
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
 armyIcon
   rotate: false
   xy: 770, 340
@@ -31,6 +38,20 @@ balloon2
   xy: 247, 61
   size: 195, 330
   orig: 195, 330
+  offset: 0, 0
+  index: -1
+boing32
+  rotate: false
+  xy: 975, 660
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+box32
+  rotate: false
+  xy: 910, 891
+  size: 17, 17
+  orig: 17, 17
   offset: 0, 0
   index: -1
 bush1
@@ -60,6 +81,13 @@ buttonbg
   size: 57, 57
   split: 25, 26, 25, 26
   orig: 57, 57
+  offset: 0, 0
+  index: -1
+circle32
+  rotate: false
+  xy: 1688, 804
+  size: 17, 17
+  orig: 17, 17
   offset: 0, 0
   index: -1
 cloud1
@@ -111,6 +139,20 @@ ground2
   xy: 2, 890
   size: 906, 129
   orig: 906, 129
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 1708, 836
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+hole
+  rotate: false
+  xy: 616, 137
+  size: 17, 17
+  orig: 17, 17
   offset: 0, 0
   index: -1
 house10
@@ -208,6 +250,13 @@ pausePlay
   orig: 145, 146
   offset: 0, 0
   index: -1
+poison32
+  rotate: false
+  xy: 2, 5
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
 post
   rotate: false
   xy: 1445, 679
@@ -220,6 +269,13 @@ restartLvl
   xy: 770, 188
   size: 73, 74
   orig: 73, 74
+  offset: 0, 0
+  index: -1
+run32
+  rotate: false
+  xy: 1399, 819
+  size: 17, 17
+  orig: 17, 17
   offset: 0, 0
   index: -1
 s1

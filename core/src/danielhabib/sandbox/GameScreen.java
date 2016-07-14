@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.uwsoft.editor.renderer.SceneLoader;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
@@ -82,12 +83,13 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		engine = new SnakeEngine();
+		sceneLoader = new SceneLoader();
 		if (level == 1) {
-			world = new World1(engine);
+			world = new World1(engine, sceneLoader);
 		} else if (level == 2) {
-			world = new World2(engine);
+			world = new World2(engine, sceneLoader);
 		} else {
-			world = new World3(engine);
+			world = new World3(engine, sceneLoader);
 		}
 
 		engine.addEntity(newControlEntity());

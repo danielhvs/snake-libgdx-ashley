@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.uwsoft.editor.renderer.SceneLoader;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
@@ -36,9 +37,11 @@ import danielhabib.sandbox.types.PlatformType;
 public abstract class World {
 	protected PooledEngine engine;
 	protected Entity snakeEntity;
+	protected SceneLoader sceneLoader;
 
-	public World(PooledEngine engine) {
+	public World(PooledEngine engine, SceneLoader sceneLoader) {
 		this.engine = engine;
+		this.sceneLoader = sceneLoader;
 	}
 
 	public void addPoison(int x, int y, Texture texture) {
