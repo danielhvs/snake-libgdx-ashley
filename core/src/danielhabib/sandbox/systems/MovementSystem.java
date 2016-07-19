@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 
 import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.TransformComponent;
 
 public class MovementSystem extends IteratingSystem {
 	private Vector2 tmp = new Vector2();
@@ -31,6 +31,8 @@ public class MovementSystem extends IteratingSystem {
 		mov.velocity.add(tmp);
 
 		tmp.set(mov.velocity).scl(deltaTime);
-		pos.pos.add(tmp.x, tmp.y, 0.0f);
+		// pos.pos.add(tmp.x, tmp.y, 0.0f);
+		pos.x += tmp.x;
+		pos.y += tmp.y;
 	}
 }

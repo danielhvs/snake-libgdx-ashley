@@ -1,5 +1,6 @@
 package danielhabib.sandbox;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -21,14 +22,12 @@ import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
-import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
-import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.TextureDrawer;
@@ -47,7 +46,7 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		engine.render(delta);
+		// engine.render(delta);
 		getCamera().update();
 		drawMenuBar();
 		super.render(delta);
@@ -58,7 +57,7 @@ public class GameScreen extends AbstractScreen {
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 		}
-		engine.update(delta);
+		// engine.update(delta);
 		super.act(delta);
 	}
 
@@ -91,12 +90,12 @@ public class GameScreen extends AbstractScreen {
 		} else {
 			world = new World3(engine, sceneLoader);
 		}
-
+		Engine engine = sceneLoader.getEngine();
 		engine.addEntity(newControlEntity());
 		engine.addSystem(new ControlSystem());
 		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
-		engine.addSystem(new RenderingSystem(getBatch()));
+		// engine.addSystem(new RenderingSystem(getBatch()));
 		engine.addSystem(new BoundsSystem());
 		CollisionSystem collisionSystem = new CollisionSystem(
 				new CollisionListener() {
@@ -116,8 +115,8 @@ public class GameScreen extends AbstractScreen {
 					}
 				});
 		engine.addSystem(collisionSystem);
-		engine.addSystem(new SnakeSystem(world));
-		engine.addSystem(new CameraSystem());
+		// engine.addSystem(new SnakeSystem(world));
+		// engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 		world.create();
 
