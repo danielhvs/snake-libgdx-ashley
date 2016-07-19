@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.ScreenEnum;
@@ -23,7 +23,6 @@ import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TextureComponent;
-import danielhabib.sandbox.components.TransformComponent;
 
 public class SnakeSystem extends IteratingSystem {
 
@@ -93,87 +92,85 @@ public class SnakeSystem extends IteratingSystem {
 		} else if (state.get() == State.WON) {
 			SnakeSettings.win();
 			showNextLevel();
-		} else if (state.get() == State.TELEPORTING) {
-			movePartsToFollowHead(entity);
-			Component headTexture = entity.remove(TextureComponent.class);
-			if (headTexture != null) {
-				this.headTexture = headTexture;
-			}
-			SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
-			BoundsComponent head = entity.getComponent(BoundsComponent.class);
-			boolean allPartsInside = true;
+		} else {
+			TransformComponent transformComponent = getTransformComponent(entity);
+			if (state.get() == State.TELEPORTING) {
+				movePartsToFollowHead(entity);
+				Component headTexture = entity.remove(TextureComponent.class);
+				if (headTexture != null) {
+					this.headTexture = headTexture;
+				}
+				SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
+				BoundsComponent head = entity.getComponent(BoundsComponent.class);
+				boolean allPartsInside = true;
 
-			Rectangle intersection = new Rectangle();
-			if (snakeBodyComponent.parts.size >= 1) {
-				Entity firstPart = snakeBodyComponent.parts.first();
-				Rectangle bodyBounds = firstPart
-						.getComponent(BoundsComponent.class).bounds;
-				if (isAlmostInside(bodyBounds, head.bounds, intersection,
-						.9f)) {
-					Component bodyTexture = firstPart
-							.remove(TextureComponent.class);
-					if (bodyTexture != null) {
-						firstPart.remove(TextureComponent.class);
-						this.bodyTexture = bodyTexture;
+				Rectangle intersection = new Rectangle();
+				if (snakeBodyComponent.parts.size >= 1) {
+					Entity firstPart = snakeBodyComponent.parts.first();
+					Rectangle bodyBounds = firstPart
+							.getComponent(BoundsComponent.class).bounds;
+					if (isAlmostInside(bodyBounds, head.bounds, intersection, .9f)) {
+						Component bodyTexture = firstPart.remove(TextureComponent.class);
+						if (bodyTexture != null) {
+							firstPart.remove(TextureComponent.class);
+							this.bodyTexture = bodyTexture;
+						}
+					} else {
+						allPartsInside = false;
 					}
-				} else {
-					allPartsInside = false;
 				}
-			}
-			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
-				Entity bodyAhead = snakeBodyComponent.parts.get(i);
-				Entity body = snakeBodyComponent.parts.get(i - 1);
-				Rectangle bodyBounds = body
-						.getComponent(BoundsComponent.class).bounds;
-				intersection = new Rectangle();
-				Rectangle bodyAheadBounds = bodyAhead
-						.getComponent(BoundsComponent.class).bounds;
-				if (isAlmostInside(bodyBounds, bodyAheadBounds, intersection,
-						.9f)) {
-					body.remove(TextureComponent.class);
-				} else {
-					allPartsInside = false;
+				for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
+					Entity bodyAhead = snakeBodyComponent.parts.get(i);
+					Entity body = snakeBodyComponent.parts.get(i - 1);
+					Rectangle bodyBounds = body
+							.getComponent(BoundsComponent.class).bounds;
+					intersection = new Rectangle();
+					Rectangle bodyAheadBounds = bodyAhead
+							.getComponent(BoundsComponent.class).bounds;
+					if (isAlmostInside(bodyBounds, bodyAheadBounds, intersection, .9f)) {
+						body.remove(TextureComponent.class);
+					} else {
+						allPartsInside = false;
+					}
 				}
-			}
-			if (allPartsInside) {
-				for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
-					snakeBodyComponent.parts.get(i)
-							.remove(TextureComponent.class);
+				if (allPartsInside) {
+					for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
+						snakeBodyComponent.parts.get(i).remove(TextureComponent.class);
+					}
+					Vector2 headVelocity = new Vector2(1, 1);
+					headVelocity.setLength(velocity.len());
+					float angleRad = MathUtils.atan2(destination.y - transformComponent.y,
+							destination.x - transformComponent.x);
+					headVelocity.setAngleRad(angleRad);
+					headVelocity.scl(6f);
+					movements.get(entity).velocity.set(headVelocity);
+					getEngine().removeSystem(getEngine().getSystem(ControlSystem.class));
+					setState(entity, State.MOVING_DESTINATION);
 				}
-				Vector3 pos = getTransformComponent(entity).pos;
-				Vector2 headVelocity = new Vector2(1, 1);
-				headVelocity.setLength(velocity.len());
-				float angleRad = MathUtils.atan2(destination.y - pos.y,
-						destination.x - pos.x);
-				headVelocity.setAngleRad(angleRad);
-				headVelocity.scl(6f);
-				movements.get(entity).velocity.set(headVelocity);
-				getEngine().removeSystem(
-						getEngine().getSystem(ControlSystem.class));
-				setState(entity, State.MOVING_DESTINATION);
+			} else if (state.get() == State.MOVING_DESTINATION) {
+				movePartsToFollowHead(entity);
+				Rectangle intersection = new Rectangle();
+				Rectangle head = entity.getComponent(BoundsComponent.class).bounds;
+				if (isAlmostInside(head, destination, intersection, .1f)) {
+					setState(entity, State.TELEPORTED);
+				}
+			} else if (state.get() == State.TELEPORTED) {
+				// TODO: migrate
+				// headTransform.rotation = this.rotation;
+				// headTransform.pos.set(new Vector3(destination.x +
+				// destination.width / 2,
+				// destination.y + destination.height / 2, 0));
+				// movements.get(entity).velocity.set(this.velocity);
+				// entity.add(headTexture);
+				// for (Entity part : snakes.get(entity).parts) {
+				// part.add(bodyTexture);
+				// Vector3 pos = transformComponent.pos.cpy();
+				// pos.z = 1f;
+				// getTransformComponent(part).pos.set(pos);
+				// }
+				// getEngine().addSystem(new ControlSystem());
+				setState(entity, State.MOVING);
 			}
-		} else if (state.get() == State.MOVING_DESTINATION) {
-			movePartsToFollowHead(entity);
-			Rectangle intersection = new Rectangle();
-			Rectangle head = entity.getComponent(BoundsComponent.class).bounds;
-			if (isAlmostInside(head, destination, intersection, .1f)) {
-				setState(entity, State.TELEPORTED);
-			}
-		} else if (state.get() == State.TELEPORTED) {
-			headTransform.rotation = this.rotation;
-			headTransform.pos
-					.set(new Vector3(destination.x + destination.width / 2,
-							destination.y + destination.height / 2, 0));
-			movements.get(entity).velocity.set(this.velocity);
-			entity.add(headTexture);
-			for (Entity part : snakes.get(entity).parts) {
-				part.add(bodyTexture);
-				Vector3 pos = getTransformComponent(entity).pos.cpy();
-				pos.z = 1f;
-				getTransformComponent(part).pos.set(pos);
-			}
-			getEngine().addSystem(new ControlSystem());
-			setState(entity, State.MOVING);
 		}
 
 	}
@@ -202,10 +199,16 @@ public class SnakeSystem extends IteratingSystem {
 
 	private void dying(Entity entity) {
 		scaleAllSnakeDown(entity);
-		Vector2 scale = getTransformComponent(entity).scale;
+		Vector2 scale = getScale(entity);
 		if (scale.len() < REALLY_SMALL_SIZE) {
 			setState(entity, SnakeBodyComponent.State.DEAD);
 		}
+	}
+
+	private Vector2 getScale(Entity entity) {
+		TransformComponent pos = getTransformComponent(entity);
+		Vector2 scale = new Vector2(pos.scaleX, pos.scaleY);
+		return scale;
 	}
 
 	private void scaleAllSnakeDown(Entity entity) {
@@ -218,18 +221,22 @@ public class SnakeSystem extends IteratingSystem {
 	private void wining(Entity entity) {
 		scaleUp(entity);
 		removeTail(entity);
-		Vector2 scale = getTransformComponent(entity).scale;
+		Vector2 scale = getScale(entity);
 		if (scale.len() > REALLY_BIG_SIZE) {
 			setState(entity, SnakeBodyComponent.State.WON);
 		}
 	}
 
 	private void scaleUp(Entity entity) {
-		getTransformComponent(entity).scale.scl(1.1f);
+		TransformComponent transform = getTransformComponent(entity);
+		transform.scaleX *= 1.1f;
+		transform.scaleY *= 1.1f;
 	}
 
 	private void scaleDown(Entity entity) {
-		getTransformComponent(entity).scale.scl(0.9f);
+		TransformComponent transform = getTransformComponent(entity);
+		transform.scaleX *= .9f;
+		transform.scaleY *= .9f;
 	}
 
 	private void movePartsToFollowHead(Entity entity) {
@@ -246,8 +253,17 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	private void interpolate(Entity first, Entity entity) {
-		getTransformComponent(first).pos.interpolate(
-				getTransformComponent(entity).pos, .25f, Interpolation.linear);
+		TransformComponent transformFirst = getTransformComponent(first);
+		TransformComponent transformEntity = getTransformComponent(entity);
+		Vector2 posFirst = getPos(transformFirst);
+		Vector2 posEntity = getPos(transformEntity);
+		posFirst.interpolate(posEntity, .25f, Interpolation.linear);
+		transformFirst.x = posFirst.x;
+		transformFirst.y = posFirst.y;
+	}
+
+	private Vector2 getPos(TransformComponent transform) {
+		return new Vector2(transform.x, transform.y);
 	}
 
 	private TransformComponent getTransformComponent(Entity entity) {
@@ -303,18 +319,19 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void teleport(Entity entity, Rectangle from, Rectangle destination) {
-		State state = states.get(entity).get();
-		if (state != State.TELEPORTING && state != State.TELEPORTED
-				&& state != State.MOVING_DESTINATION) {
-			setState(entity, State.TELEPORTING);
-			this.velocity = movements.get(entity).velocity.cpy();
-			movements.get(entity).velocity.setZero();
-			// FIXME: use tranform instead of bounds.
-			transforms.get(entity).pos.set(new Vector3(from.x + from.width / 2,
-					from.y + from.height / 2, 0));
-			this.destination = destination;
-			this.rotation = getTransformComponent(entity).rotation;
-		}
+		// FIXME: migrate
+		// State state = states.get(entity).get();
+		// if (state != State.TELEPORTING && state != State.TELEPORTED
+		// && state != State.MOVING_DESTINATION) {
+		// setState(entity, State.TELEPORTING);
+		// this.velocity = movements.get(entity).velocity.cpy();
+		// movements.get(entity).velocity.setZero();
+		// // FIXME: use tranform instead of bounds.
+		// transforms.get(entity).pos.set(new Vector3(from.x + from.width / 2,
+		// from.y + from.height / 2, 0));
+		// this.destination = destination;
+		// this.rotation = getTransformComponent(entity).rotation;
+		// }
 	}
 
 	public void win(Entity entity) {
