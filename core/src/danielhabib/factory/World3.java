@@ -1,7 +1,6 @@
 package danielhabib.factory;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.math.MathUtils;
 import com.uwsoft.editor.renderer.SceneLoader;
 
@@ -13,8 +12,8 @@ import danielhabib.sandbox.types.PlatformType;
 
 public class World3 extends World {
 
-	public World3(PooledEngine engine, SceneLoader sceneLoader) {
-		super(engine, sceneLoader);
+	public World3(SceneLoader sceneLoader) {
+		super(sceneLoader);
 	}
 
 	@Override

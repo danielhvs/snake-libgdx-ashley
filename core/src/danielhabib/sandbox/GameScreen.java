@@ -28,14 +28,12 @@ import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
-import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.TextureDrawer;
 
 public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
-	private SnakeEngine engine;
 	private World world;
 	private int level;
 
@@ -62,10 +60,11 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void togglePause() {
-		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
-		MovementSystem movementSystem = engine.getSystem(MovementSystem.class);
-		movementSystem.setProcessing(!movementSystem.checkProcessing());
+		// SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
+		// snakeSystem.setProcessing(!snakeSystem.checkProcessing());
+		// MovementSystem movementSystem =
+		// engine.getSystem(MovementSystem.class);
+		// movementSystem.setProcessing(!movementSystem.checkProcessing());
 	}
 
 	private void drawMenuBar() {
@@ -81,14 +80,13 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		engine = new SnakeEngine();
 		sceneLoader = new SceneLoader();
 		if (level == 1) {
-			world = new World1(engine, sceneLoader);
+			world = new World1(sceneLoader);
 		} else if (level == 2) {
-			world = new World2(engine, sceneLoader);
+			world = new World2(sceneLoader);
 		} else {
-			world = new World3(engine, sceneLoader);
+			world = new World3(sceneLoader);
 		}
 		Engine engine = sceneLoader.getEngine();
 		engine.addEntity(newControlEntity());
@@ -161,10 +159,9 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private Entity newControlEntity() {
-		ControlComponent controlComponent = engine
-				.createComponent(ControlComponent.class);
+		ControlComponent controlComponent = new ControlComponent();
 		controlComponent.control = game.control;
-		Entity entity = engine.createEntity();
+		Entity entity = new Entity();
 		entity.add(controlComponent);
 		return entity;
 	}

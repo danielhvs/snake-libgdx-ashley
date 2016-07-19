@@ -35,12 +35,12 @@ import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.types.PlatformType;
 
 public abstract class World {
+	// FIXME: Migrate.
 	protected PooledEngine engine;
 	protected Entity snakeEntity;
 	protected SceneLoader sceneLoader;
 
-	public World(PooledEngine engine, SceneLoader sceneLoader) {
-		this.engine = engine;
+	public World(SceneLoader sceneLoader) {
 		this.sceneLoader = sceneLoader;
 	}
 
