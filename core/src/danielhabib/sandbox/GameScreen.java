@@ -28,6 +28,7 @@ import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
+import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.TextureDrawer;
 
@@ -45,7 +46,7 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		// engine.render(delta);
-		getCamera().update();
+		getCamera().update(); // FIXME DRY
 		drawMenuBar();
 		super.render(delta);
 	}
@@ -88,8 +89,12 @@ public class GameScreen extends AbstractScreen {
 		} else {
 			world = new World3(sceneLoader);
 		}
+		// The engine is reloaded inside the loadScene()!
+		world.create();
+
 		Engine engine = sceneLoader.getEngine();
 		engine.addEntity(newControlEntity());
+
 		engine.addSystem(new ControlSystem());
 		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
@@ -113,10 +118,9 @@ public class GameScreen extends AbstractScreen {
 					}
 				});
 		engine.addSystem(collisionSystem);
-		// engine.addSystem(new SnakeSystem(world));
+		engine.addSystem(new SnakeSystem(world));
 		// engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
-		world.create();
 
 		ImmutableArray<Entity> entities = engine
 				.getEntitiesFor(Family.one(CountComponent.class).get());

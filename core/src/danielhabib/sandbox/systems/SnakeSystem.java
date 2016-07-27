@@ -93,7 +93,8 @@ public class SnakeSystem extends IteratingSystem {
 			SnakeSettings.win();
 			showNextLevel();
 		} else {
-			TransformComponent transformComponent = getTransformComponent(entity);
+			TransformComponent transformComponent = getTransformComponent(
+					entity);
 			if (state.get() == State.TELEPORTING) {
 				movePartsToFollowHead(entity);
 				Component headTexture = entity.remove(TextureComponent.class);
@@ -101,7 +102,8 @@ public class SnakeSystem extends IteratingSystem {
 					this.headTexture = headTexture;
 				}
 				SnakeBodyComponent snakeBodyComponent = snakes.get(entity);
-				BoundsComponent head = entity.getComponent(BoundsComponent.class);
+				BoundsComponent head = entity
+						.getComponent(BoundsComponent.class);
 				boolean allPartsInside = true;
 
 				Rectangle intersection = new Rectangle();
@@ -109,8 +111,10 @@ public class SnakeSystem extends IteratingSystem {
 					Entity firstPart = snakeBodyComponent.parts.first();
 					Rectangle bodyBounds = firstPart
 							.getComponent(BoundsComponent.class).bounds;
-					if (isAlmostInside(bodyBounds, head.bounds, intersection, .9f)) {
-						Component bodyTexture = firstPart.remove(TextureComponent.class);
+					if (isAlmostInside(bodyBounds, head.bounds, intersection,
+							.9f)) {
+						Component bodyTexture = firstPart
+								.remove(TextureComponent.class);
 						if (bodyTexture != null) {
 							firstPart.remove(TextureComponent.class);
 							this.bodyTexture = bodyTexture;
@@ -127,7 +131,8 @@ public class SnakeSystem extends IteratingSystem {
 					intersection = new Rectangle();
 					Rectangle bodyAheadBounds = bodyAhead
 							.getComponent(BoundsComponent.class).bounds;
-					if (isAlmostInside(bodyBounds, bodyAheadBounds, intersection, .9f)) {
+					if (isAlmostInside(bodyBounds, bodyAheadBounds,
+							intersection, .9f)) {
 						body.remove(TextureComponent.class);
 					} else {
 						allPartsInside = false;
@@ -135,22 +140,26 @@ public class SnakeSystem extends IteratingSystem {
 				}
 				if (allPartsInside) {
 					for (int i = 0; i < snakeBodyComponent.parts.size; i++) {
-						snakeBodyComponent.parts.get(i).remove(TextureComponent.class);
+						snakeBodyComponent.parts.get(i)
+								.remove(TextureComponent.class);
 					}
 					Vector2 headVelocity = new Vector2(1, 1);
 					headVelocity.setLength(velocity.len());
-					float angleRad = MathUtils.atan2(destination.y - transformComponent.y,
+					float angleRad = MathUtils.atan2(
+							destination.y - transformComponent.y,
 							destination.x - transformComponent.x);
 					headVelocity.setAngleRad(angleRad);
 					headVelocity.scl(6f);
 					movements.get(entity).velocity.set(headVelocity);
-					getEngine().removeSystem(getEngine().getSystem(ControlSystem.class));
+					getEngine().removeSystem(
+							getEngine().getSystem(ControlSystem.class));
 					setState(entity, State.MOVING_DESTINATION);
 				}
 			} else if (state.get() == State.MOVING_DESTINATION) {
 				movePartsToFollowHead(entity);
 				Rectangle intersection = new Rectangle();
-				Rectangle head = entity.getComponent(BoundsComponent.class).bounds;
+				Rectangle head = entity
+						.getComponent(BoundsComponent.class).bounds;
 				if (isAlmostInside(head, destination, intersection, .1f)) {
 					setState(entity, State.TELEPORTED);
 				}

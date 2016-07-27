@@ -1,11 +1,17 @@
 package danielhabib.factory;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.sandbox.components.SnakeBodyComponent;
+import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.types.PlatformType;
 
 public class World1 extends World {
 
@@ -24,12 +30,42 @@ public class World1 extends World {
 
 	@Override
 	protected void parseMap(String mapTmx) {
-		sceneLoader.loadScene("level1", new FitViewport(192, 120));
+		sceneLoader.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
 		ItemWrapper wrapper = new ItemWrapper(sceneLoader.getRoot());
-		Entity head = wrapper.getChild("head").getEntity();
+		Entity snakeEntity = wrapper.getChild("head").getEntity();
 		MovementComponent movement = new MovementComponent();
 		movement.velocity.x = 1f;
-		head.add(movement);
+
+		StateComponent state = new StateComponent();
+		state.set(SnakeBodyComponent.State.MOVING);
+
+		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
+		snakeBodyComponent.parts = new Array<Entity>();
+		for (int i = 1; i <= 3; i++) {
+			snakeBodyComponent.parts.add(newEntityPiece(0, 0));
+		}
+		for (Entity part : snakeBodyComponent.parts) {
+			sceneLoader.getEngine().addEntity(part);
+		}
+		snakeEntity.add(movement);
+		snakeEntity.add(snakeBodyComponent);
+		snakeEntity.add(state);
+
+	}
+
+	@Override
+	public Entity newEntityPiece(float x, float y) {
+		TransformComponent transform = new TransformComponent();
+		Entity pieceEntity = new Entity(); // FIXME: load from library
+
+		// FIXME: bounds
+		// BoundsComponent bounds = newBoundComponent(transform, texture);
+		// pieceEntity.add(bounds);
+
+		pieceEntity.add(transform);
+		pieceEntity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
+
+		return pieceEntity;
 	}
 
 }

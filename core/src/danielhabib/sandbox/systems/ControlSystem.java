@@ -33,7 +33,8 @@ public class ControlSystem extends IteratingSystem {
 		ASandboxControl control = controls.get(entity).control;
 		if (snakes.size() > 0) {
 			Entity snake = snakes.first();
-			MovementComponent movement = snake.getComponent(MovementComponent.class);
+			MovementComponent movement = snake
+					.getComponent(MovementComponent.class);
 			Vector2 velocity = movement.velocity;
 			float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
 			if (control.isTurnLeft()) {
@@ -61,7 +62,8 @@ public class ControlSystem extends IteratingSystem {
 	private void togglePause() {
 		SnakeSystem snakeSystem = getEngine().getSystem(SnakeSystem.class);
 		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
-		MovementSystem movementSystem = getEngine().getSystem(MovementSystem.class);
+		MovementSystem movementSystem = getEngine()
+				.getSystem(MovementSystem.class);
 		CameraSystem cameraSystem = getEngine().getSystem(CameraSystem.class);
 		cameraSystem.setProcessing(!cameraSystem.checkProcessing());
 		// movementSystem.setProcessing(!movementSystem.checkProcessing());

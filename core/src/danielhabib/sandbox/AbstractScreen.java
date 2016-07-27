@@ -17,7 +17,8 @@ public abstract class AbstractScreen extends Stage implements Screen {
 	protected SceneLoader sceneLoader;
 
 	protected AbstractScreen() {
-		super(new ScreenViewport(new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT)),
+		super(new ScreenViewport(
+				new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT)),
 				new SpriteBatch());
 	}
 
