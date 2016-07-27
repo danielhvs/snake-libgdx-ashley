@@ -4,14 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
-import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
-import danielhabib.sandbox.types.PlatformType;
 
 public class World1 extends World {
 
@@ -50,20 +47,16 @@ public class World1 extends World {
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
-
 	}
 
 	@Override
 	public Entity newEntityPiece(float x, float y) {
-		TransformComponent transform = new TransformComponent();
-		Entity pieceEntity = new Entity(); // FIXME: load from library
-
+		Entity pieceEntity = sceneLoader.loadFromLibrary("part");
 		// FIXME: bounds
 		// BoundsComponent bounds = newBoundComponent(transform, texture);
 		// pieceEntity.add(bounds);
 
-		pieceEntity.add(transform);
-		pieceEntity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
+		// pieceEntity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
 
 		return pieceEntity;
 	}

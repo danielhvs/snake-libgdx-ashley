@@ -64,9 +64,11 @@ public class ControlSystem extends IteratingSystem {
 		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
 		MovementSystem movementSystem = getEngine()
 				.getSystem(MovementSystem.class);
-		CameraSystem cameraSystem = getEngine().getSystem(CameraSystem.class);
-		cameraSystem.setProcessing(!cameraSystem.checkProcessing());
-		// movementSystem.setProcessing(!movementSystem.checkProcessing());
+		// FIXME
+		// CameraSystem cameraSystem =
+		// getEngine().getSystem(CameraSystem.class);
+		// cameraSystem.setProcessing(!cameraSystem.checkProcessing());
+		movementSystem.setProcessing(!movementSystem.checkProcessing());
 	}
 
 }

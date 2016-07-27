@@ -257,6 +257,12 @@ public class SnakeSystem extends IteratingSystem {
 			for (int i = 1; i < snakeBodyComponent.parts.size; i++) {
 				interpolate(snakeBodyComponent.parts.get(i),
 						snakeBodyComponent.parts.get(i - 1));
+
+				TransformComponent transformFirst = getTransformComponent(
+						snakeBodyComponent.parts.get(i));
+
+				System.out.println(transformFirst + ":" + transformFirst.x + ","
+						+ transformFirst.y);
 			}
 		}
 	}
