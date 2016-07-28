@@ -13,6 +13,7 @@ import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.scripts.RotatingScript;
 import danielhabib.sandbox.types.PlatformType;
 
 public class World1 extends World {
@@ -65,7 +66,8 @@ public class World1 extends World {
 		ZIndexComponent zIndex = ComponentRetriever.get(entity,
 				ZIndexComponent.class);
 		zIndex.setZIndex(1);
-		entity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
+		new ItemWrapper(entity).addScript(new RotatingScript(10));
+		entity.add(new PlatformComponent(0, PlatformType.SNAKE_HEAD));
 		// FIXME: bounds
 		// BoundsComponent bounds = newBoundComponent(transform, texture);
 		// pieceEntity.add(bounds);
