@@ -38,10 +38,10 @@ public abstract class World {
 	// FIXME: Migrate.
 	protected PooledEngine engine;
 	protected Entity snakeEntity;
-	protected SceneLoader sceneLoader;
+	protected SceneLoader sl;
 
 	public World(SceneLoader sceneLoader) {
-		this.sceneLoader = sceneLoader;
+		this.sl = sceneLoader;
 	}
 
 	public void addPoison(int x, int y, Texture texture) {

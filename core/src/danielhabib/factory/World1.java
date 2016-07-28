@@ -4,11 +4,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
+import com.uwsoft.editor.renderer.components.ZIndexComponent;
+import com.uwsoft.editor.renderer.data.CompositeItemVO;
+import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.types.PlatformType;
 
 public class World1 extends World {
 
@@ -27,22 +32,22 @@ public class World1 extends World {
 
 	@Override
 	protected void parseMap(String mapTmx) {
-		sceneLoader.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
-		ItemWrapper wrapper = new ItemWrapper(sceneLoader.getRoot());
+		sl.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
+		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
 		Entity snakeEntity = wrapper.getChild("head").getEntity();
 		MovementComponent movement = new MovementComponent();
-		movement.velocity.x = 1f;
+		movement.velocity.x = 16f;
 
 		StateComponent state = new StateComponent();
 		state.set(SnakeBodyComponent.State.MOVING);
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		for (int i = 1; i <= 3; i++) {
+		for (int i = 1; i <= 10; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(0, 0));
 		}
 		for (Entity part : snakeBodyComponent.parts) {
-			sceneLoader.getEngine().addEntity(part);
+			sl.getEngine().addEntity(part);
 		}
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
@@ -51,14 +56,20 @@ public class World1 extends World {
 
 	@Override
 	public Entity newEntityPiece(float x, float y) {
-		Entity pieceEntity = sceneLoader.loadFromLibrary("part");
+		CompositeItemVO pieceVo = sl.loadVoFromLibrary("part");
+		pieceVo.x = x;
+		pieceVo.y = y;
+		Entity entity = sl.entityFactory.createEntity(sl.getRoot(), pieceVo);
+		sl.entityFactory.initAllChildren(sl.getEngine(), entity,
+				pieceVo.composite);
+		ZIndexComponent zIndex = ComponentRetriever.get(entity,
+				ZIndexComponent.class);
+		zIndex.setZIndex(1);
+		entity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
 		// FIXME: bounds
 		// BoundsComponent bounds = newBoundComponent(transform, texture);
 		// pieceEntity.add(bounds);
-
-		// pieceEntity.add(new PlatformComponent(10, PlatformType.SNAKE_HEAD));
-
-		return pieceEntity;
+		return entity;
 	}
 
 }

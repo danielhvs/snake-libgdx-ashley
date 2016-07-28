@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.uwsoft.editor.renderer.SceneLoader;
+import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.data.CompositeItemVO;
+import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
@@ -21,6 +24,7 @@ import danielhabib.factory.World2;
 import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
+import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
