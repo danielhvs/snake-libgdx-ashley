@@ -10,6 +10,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.uwsoft.editor.renderer.components.DimensionsComponent;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 
 import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.BoundsComponent;
@@ -20,11 +22,10 @@ import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
-import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.types.PlatformType;
 
 public class CollisionSystem extends EntitySystem {
-	private ComponentMapper<BoundsComponent> bounds;
+	private ComponentMapper<DimensionsComponent> bounds;
 
 	public static interface CollisionListener {
 		public void hit();
@@ -45,7 +46,7 @@ public class CollisionSystem extends EntitySystem {
 	public CollisionSystem(CollisionListener listener) {
 		this.listener = listener;
 
-		bounds = ComponentMapper.getFor(BoundsComponent.class);
+		bounds = ComponentMapper.getFor(DimensionsComponent.class);
 		ComponentMapper.getFor(StateComponent.class);
 		counts = ComponentMapper.getFor(CountComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
@@ -55,11 +56,13 @@ public class CollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		enemies = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-		snakes = engine
-				.getEntitiesFor(Family.all(SnakeBodyComponent.class, StateComponent.class,
-						BoundsComponent.class, TransformComponent.class).get());
-		platformComponents = engine.getEntitiesFor(Family.all(PlatformComponent.class,
-				BoundsComponent.class, TransformComponent.class).get());
+		snakes = engine.getEntitiesFor(Family
+				.all(SnakeBodyComponent.class, StateComponent.class,
+						DimensionsComponent.class, TransformComponent.class)
+				.get());
+		platformComponents = engine.getEntitiesFor(
+				Family.all(PlatformComponent.class, DimensionsComponent.class,
+						TransformComponent.class).get());
 	}
 
 	@Override
@@ -74,12 +77,12 @@ public class CollisionSystem extends EntitySystem {
 		}
 		for (Entity enemy : enemies) {
 			for (Entity platform : platformComponents) {
-				BoundsComponent enemyBound = bounds.get(enemy);
-				BoundsComponent platformBound = bounds.get(platform);
+				DimensionsComponent enemyBound = bounds.get(enemy);
+				DimensionsComponent platformBound = bounds.get(platform);
 				// FIXME: performance via mapper.
 				if (platform.getComponent(
 						PlatformComponent.class).type == PlatformType.BOING) {
-					if (platformBound.bounds.overlaps(enemyBound.bounds)) {
+					if (platformBound.boundBox.overlaps(enemyBound.boundBox)) {
 						movements.get(enemy).velocity.x *= -1f;
 						break;
 					}
@@ -90,9 +93,9 @@ public class CollisionSystem extends EntitySystem {
 
 	private void checkSnakeCollision(SnakeSystem snakeSystem, Entity snake) {
 		for (Entity platform : platformComponents) {
-			BoundsComponent snakeBound = bounds.get(snake);
-			BoundsComponent platformBound = bounds.get(platform);
-			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
+			DimensionsComponent snakeBound = bounds.get(snake);
+			DimensionsComponent platformBound = bounds.get(platform);
+			if (snakeBound.boundBox.overlaps(platformBound.boundBox)) {
 				PlatformComponent platformComponent = platform
 						.getComponent(PlatformComponent.class);
 				PlatformType type = platformComponent.type;
@@ -106,12 +109,12 @@ public class CollisionSystem extends EntitySystem {
 					break;
 				} else if (type == PlatformType.HOLE) {
 					Rectangle intersection = new Rectangle();
-					if (isAlmostInside(snakeBound.bounds, platformBound.bounds,
-							intersection)) {
+					if (isAlmostInside(snakeBound.boundBox,
+							platformBound.boundBox, intersection)) {
 						listener.ate();
-						snakeSystem.teleport(snake, platformBound.bounds,
-								platformComponent.other
-										.getComponent(BoundsComponent.class).bounds);
+						snakeSystem.teleport(snake, platformBound.boundBox,
+								platformComponent.other.getComponent(
+										BoundsComponent.class).bounds);
 					}
 					break;
 				} else if (type == PlatformType.FRUIT) {
@@ -138,7 +141,8 @@ public class CollisionSystem extends EntitySystem {
 	}
 
 	// FIXME: DRY
-	private boolean isAlmostInside(Rectangle r1, Rectangle r2, Rectangle intersect) {
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
+			Rectangle intersect) {
 		if (Intersector.intersectRectangles(r1, r2, intersect)) {
 			float factor = intersect.area() / r2.area();
 			if (factor > .6f) {

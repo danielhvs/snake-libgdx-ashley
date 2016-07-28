@@ -20,28 +20,37 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-
-import danielhabib.sandbox.components.BoundsComponent;
-import danielhabib.sandbox.components.TransformComponent;
+import com.uwsoft.editor.renderer.components.DimensionsComponent;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 
 public class BoundsSystem extends IteratingSystem {
 
 	private ComponentMapper<TransformComponent> tm;
-	private ComponentMapper<BoundsComponent> bm;
+	private ComponentMapper<DimensionsComponent> bm;
 
 	public BoundsSystem() {
-		super(Family.all(BoundsComponent.class, TransformComponent.class).get());
+		super(Family.all(DimensionsComponent.class, TransformComponent.class)
+				.get());
 
 		tm = ComponentMapper.getFor(TransformComponent.class);
-		bm = ComponentMapper.getFor(BoundsComponent.class);
+		bm = ComponentMapper.getFor(DimensionsComponent.class);
+	}
+
+	@Override
+	public void update(float deltaTime) {
+		System.out.println("------------");
+		super.update(deltaTime);
 	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		TransformComponent pos = tm.get(entity);
-		BoundsComponent bounds = bm.get(entity);
+		DimensionsComponent bounds = bm.get(entity);
 
-		bounds.bounds.x = pos.pos.x - bounds.bounds.width * 0.5f;
-		bounds.bounds.y = pos.pos.y - bounds.bounds.height * 0.5f;
+		System.out.println(entity + " - " + bounds.boundBox);
+		if (bounds.boundBox != null) {
+			bounds.boundBox.x = pos.x - bounds.boundBox.width * 0.5f;
+			bounds.boundBox.y = pos.y - bounds.boundBox.height * 0.5f;
+		}
 	}
 }

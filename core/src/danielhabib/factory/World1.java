@@ -1,9 +1,14 @@
 package danielhabib.factory;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
+import com.uwsoft.editor.renderer.components.DimensionsComponent;
+import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.ZIndexComponent;
 import com.uwsoft.editor.renderer.data.CompositeItemVO;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
@@ -29,11 +34,19 @@ public class World1 extends World {
 		parseMap("map1.tmx");
 		// createCamera(snakeEntity);
 		snakeEntity = createSnake();
+		System.out.println("SNAKE: " + snakeEntity);
 	}
 
 	@Override
 	protected void parseMap(String mapTmx) {
 		sl.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
+
+		addComponentsByTagName("boing",
+				new PlatformComponent(0, PlatformType.BOING));
+		// ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
+		// PlatformComponent component = wrapper.getChild("boing")
+		// .getComponent(PlatformComponent.class);
+		// component.type = PlatformType.BOING;
 	}
 
 	private Entity createSnake() {
@@ -56,7 +69,24 @@ public class World1 extends World {
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
+		DimensionsComponent component = ComponentRetriever.get(snakeEntity,
+				DimensionsComponent.class);
+		component.boundBox = new Rectangle(0, 0, component.width,
+				component.height);
+
 		return snakeEntity;
+	}
+
+	protected void addComponentsByTagName(String tagName, Component component) {
+		ImmutableArray<Entity> entities = sl.getEngine().getEntities();
+		for (Entity entity : entities) {
+			MainItemComponent mainItemComponent = ComponentRetriever.get(entity,
+					MainItemComponent.class);
+			if (mainItemComponent.tags.contains(tagName)) {
+				System.out.println("added " + component);
+				entity.add(component);
+			}
+		}
 	}
 
 	@Override
