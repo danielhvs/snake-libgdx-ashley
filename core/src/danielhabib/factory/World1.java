@@ -24,16 +24,19 @@ public class World1 extends World {
 
 	@Override
 	public void create() {
-		// snakeEntity = createSnake(10, 10, 10);
 		// snakeEntity.add(newCountComponent(3));
 		// engine.addEntity(snakeEntity);
 		parseMap("map1.tmx");
 		// createCamera(snakeEntity);
+		snakeEntity = createSnake();
 	}
 
 	@Override
 	protected void parseMap(String mapTmx) {
 		sl.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
+	}
+
+	private Entity createSnake() {
 		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
 		Entity snakeEntity = wrapper.getChild("head").getEntity();
 		MovementComponent movement = new MovementComponent();
@@ -53,6 +56,7 @@ public class World1 extends World {
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
+		return snakeEntity;
 	}
 
 	@Override
@@ -66,7 +70,8 @@ public class World1 extends World {
 		ZIndexComponent zIndex = ComponentRetriever.get(entity,
 				ZIndexComponent.class);
 		zIndex.setZIndex(1);
-		new ItemWrapper(entity).addScript(new RotatingScript(10));
+		new ItemWrapper(entity).getChild("partImage")
+				.addScript(new RotatingScript(10));
 		entity.add(new PlatformComponent(0, PlatformType.SNAKE_HEAD));
 		// FIXME: bounds
 		// BoundsComponent bounds = newBoundComponent(transform, texture);
