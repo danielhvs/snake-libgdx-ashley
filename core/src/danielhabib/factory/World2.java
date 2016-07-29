@@ -10,11 +10,9 @@ public class World2 extends World {
 
 	@Override
 	public void create() {
+		parseMap("level2");
 		snakeEntity = createSnake();
 		snakeEntity.add(newCountComponent(28));
-		engine.addEntity(snakeEntity);
-		parseMap("map2.tmx");
-		createCamera(snakeEntity);
 	}
 
 }

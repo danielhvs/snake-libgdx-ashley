@@ -42,14 +42,14 @@ balloon2
   index: -1
 boing32
   rotate: false
-  xy: 910, 891
+  xy: 975, 660
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 box32
   rotate: false
-  xy: 616, 137
+  xy: 910, 891
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -85,7 +85,7 @@ buttonbg
   index: -1
 circle32
   rotate: false
-  xy: 1708, 836
+  xy: 1688, 804
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
@@ -143,14 +143,14 @@ ground2
   index: -1
 head
   rotate: false
-  xy: 975, 660
+  xy: 1708, 836
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 hole
   rotate: false
-  xy: 1688, 804
+  xy: 616, 137
   size: 17, 17
   orig: 17, 17
   offset: 0, 0

@@ -2,7 +2,6 @@ package danielhabib.factory;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,23 +17,20 @@ import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.Assets;
-import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.scripts.RotatingScript;
-import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.types.PlatformType;
 
 public abstract class World {
-	// FIXME: Migrate.
-	protected PooledEngine engine;
 	protected Entity snakeEntity;
 	protected SceneLoader sl;
 
 	public World(SceneLoader sceneLoader) {
+		ComponentRetriever.addMapper(PlatformComponent.class);
 		this.sl = sceneLoader;
 	}
 
@@ -46,44 +42,32 @@ public abstract class World {
 		sl.entityFactory.initAllChildren(sl.getEngine(), entity, pieceVo.composite);
 		setZ(entity, 2);
 		new ItemWrapper(entity).getChild("partImage").addScript(new RotatingScript(10));
-		entity.add(new PlatformComponent(0, PlatformType.SNAKE_HEAD));
+		entity.add(new PlatformComponent(PlatformType.SNAKE_HEAD));
 		setBoundBox(entity);
 		return entity;
 	}
 
 	public abstract void create();
 
-	protected void createCamera(Entity target) {
-		Entity entity = engine.createEntity();
-
-		CameraComponent camera = new CameraComponent();
-		camera.camera = engine.getSystem(RenderingSystem.class).getCamera();
-		camera.target = target;
-
-		entity.add(camera);
-
-		engine.addEntity(entity);
-	}
-
 	protected void parseMap(String map) {
 		sl.loadScene(map, new FitViewport(192, 120)); // 1920x1200
-		addComponentsByTagName("boing", new PlatformComponent(0, PlatformType.BOING));
-		addComponentsByTagName("box", new PlatformComponent(0, PlatformType.WALL));
-		addComponentsByTagName("hole", new PlatformComponent(0, PlatformType.HOLE));
+		addComponentsByTagName("boing", new PlatformComponent(PlatformType.BOING));
+		addComponentsByTagName("box", new PlatformComponent(PlatformType.WALL));
+		addComponentsByTagName("hole", new PlatformComponent(PlatformType.HOLE));
 		for (Entity entity : getEntitiesByTagName("bounded")) {
 			setBoundBox(entity);
 		}
 		// FIXME: Rotate via tag or custom vars.
 		for (Entity entity : getEntitiesByTagName("poison")) {
-			entity.add(new PlatformComponent(0, PlatformType.POISON));
+			entity.add(new PlatformComponent(PlatformType.POISON));
 			new ItemWrapper(entity).addScript(new RotatingScript(5));
 		}
 		for (Entity entity : getEntitiesByTagName("fruit")) {
-			entity.add(new PlatformComponent(0, PlatformType.FRUIT));
+			entity.add(new PlatformComponent(PlatformType.FRUIT));
 			new ItemWrapper(entity).addScript(new RotatingScript(-5));
 		}
 		for (Entity entity : getEntitiesByTagName("speed")) {
-			entity.add(new PlatformComponent(0, PlatformType.SPEED));
+			entity.add(new PlatformComponent(PlatformType.SPEED));
 			new ItemWrapper(entity).addScript(new RotatingScript(3));
 		}
 		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
@@ -157,6 +141,7 @@ public abstract class World {
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
+		setZ(snakeEntity, 3);
 		return snakeEntity;
 	}
 

@@ -14,9 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.uwsoft.editor.renderer.SceneLoader;
-import com.uwsoft.editor.renderer.components.TransformComponent;
-import com.uwsoft.editor.renderer.data.CompositeItemVO;
-import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
@@ -24,14 +21,12 @@ import danielhabib.factory.World2;
 import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
-import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
-import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.TextureDrawer;
@@ -100,7 +95,6 @@ public class GameScreen extends AbstractScreen {
 		engine.addEntity(newControlEntity());
 
 		engine.addSystem(new ControlSystem());
-		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
 		// engine.addSystem(new RenderingSystem(getBatch()));
 		engine.addSystem(new BoundsSystem());
