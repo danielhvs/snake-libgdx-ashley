@@ -16,6 +16,7 @@ import com.uwsoft.editor.renderer.components.ViewPortComponent;
 import com.uwsoft.editor.renderer.components.ZIndexComponent;
 import com.uwsoft.editor.renderer.data.CompositeItemVO;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
+import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.Assets;
@@ -135,7 +136,12 @@ public abstract class World {
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		for (int i = 1; i <= 10; i++) {
+		CustomVariables customVariables = new CustomVariables();
+		String customVars = ComponentRetriever.get(snakeEntity,
+				MainItemComponent.class).customVars;
+		customVariables.loadFromString(customVars);
+		Integer size = customVariables.getIntegerVariable("size");
+		for (int i = 1; i <= size; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(0, 0));
 		}
 		for (Entity part : snakeBodyComponent.parts) {
