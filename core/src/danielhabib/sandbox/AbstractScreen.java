@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
 
 public abstract class AbstractScreen extends Stage implements Screen {
@@ -17,8 +18,8 @@ public abstract class AbstractScreen extends Stage implements Screen {
 	protected SceneLoader sceneLoader;
 
 	protected AbstractScreen() {
-		super(new ScreenViewport(
-				new OrthographicCamera(FRUSTUM_WIDTH, FRUSTUM_HEIGHT)),
+		super(new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight(), new OrthographicCamera()),
 				new SpriteBatch());
 	}
 

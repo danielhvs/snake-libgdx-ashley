@@ -11,9 +11,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.uwsoft.editor.renderer.SceneLoader;
+import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
@@ -29,7 +29,6 @@ import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
-import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.TextureDrawer;
 
 public class GameScreen extends AbstractScreen {
@@ -45,7 +44,6 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		// engine.render(delta);
 		getCamera().update(); // FIXME DRY
 		drawMenuBar();
 		super.render(delta);
@@ -56,16 +54,15 @@ public class GameScreen extends AbstractScreen {
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 		}
-		// engine.update(delta);
 		super.act(delta);
 	}
 
 	private void togglePause() {
-		// SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		// snakeSystem.setProcessing(!snakeSystem.checkProcessing());
-		// MovementSystem movementSystem =
-		// engine.getSystem(MovementSystem.class);
-		// movementSystem.setProcessing(!movementSystem.checkProcessing());
+		SnakeSystem snakeSystem = sceneLoader.getEngine().getSystem(SnakeSystem.class);
+		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
+		MovementSystem movementSystem = sceneLoader.getEngine()
+				.getSystem(MovementSystem.class);
+		movementSystem.setProcessing(!movementSystem.checkProcessing());
 	}
 
 	private void drawMenuBar() {
@@ -135,30 +132,17 @@ public class GameScreen extends AbstractScreen {
 					new Vector2(Gdx.graphics.getWidth() / 800f,
 							Gdx.graphics.getHeight() / 600f)));
 		}
-
-		Button pauseButton = ButtonFactory.newButton("II");
-		pauseButton.addListener(new InputListener() {
+		CompositeActor button = new CompositeActor(
+				sceneLoader.loadVoFromLibrary("button"), sceneLoader.getRm());
+		button.setX(getWidth() - button.getWidth());
+		button.setY(getHeight() - button.getHeight());
+		button.addListener(new ClickListener() {
 			@Override
-			public void touchUp(InputEvent event, float x, float y, int pointer,
-					int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				togglePause();
-				super.touchUp(event, x, y, pointer, button);
-			}
-
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
-				return true;
-
 			}
 		});
-		pauseButton.setWidth(Gdx.graphics.getWidth() / 16f);
-		pauseButton.setHeight(Gdx.graphics.getHeight() / 16f);
-		pauseButton.setX(Gdx.graphics.getWidth() - pauseButton.getWidth()
-				- Gdx.graphics.getWidth() / 256f);
-		pauseButton.setY(Gdx.graphics.getHeight() - pauseButton.getHeight()
-				- Gdx.graphics.getWidth() / 256f);
-		addActor(pauseButton);
+		addActor(button);
 	}
 
 	private Entity newControlEntity() {
