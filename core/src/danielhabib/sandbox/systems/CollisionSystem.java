@@ -12,9 +12,9 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 import danielhabib.factory.TextFactory;
-import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.MovementComponent;
@@ -113,8 +113,8 @@ public class CollisionSystem extends EntitySystem {
 							platformBound.boundBox, intersection)) {
 						listener.ate();
 						snakeSystem.teleport(snake, platformBound.boundBox,
-								platformComponent.other.getComponent(
-										BoundsComponent.class).bounds);
+								ComponentRetriever.get(platformComponent.other,
+										DimensionsComponent.class).boundBox);
 					}
 					break;
 				} else if (type == PlatformType.FRUIT) {

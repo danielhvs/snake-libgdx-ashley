@@ -30,8 +30,7 @@ public class World1 extends World {
 
 	@Override
 	public void create() {
-		// snakeEntity.add(newCountComponent(3));
-		// engine.addEntity(snakeEntity);
+		ComponentRetriever.addMapper(PlatformComponent.class);
 		parseMap("map1.tmx");
 		// createCamera(snakeEntity);
 		snakeEntity = createSnake();
@@ -45,6 +44,8 @@ public class World1 extends World {
 				new PlatformComponent(0, PlatformType.BOING));
 		addComponentsByTagName("box",
 				new PlatformComponent(0, PlatformType.WALL));
+		addComponentsByTagName("hole",
+				new PlatformComponent(0, PlatformType.HOLE));
 		for (Entity entity : getEntitiesByTagName("bounded")) {
 			setBoundBox(entity);
 		}
@@ -61,6 +62,29 @@ public class World1 extends World {
 			entity.add(new PlatformComponent(0, PlatformType.SPEED));
 			new ItemWrapper(entity).addScript(new RotatingScript(3));
 		}
+		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
+		// FIXME: load all wormholes.
+		Entity entity = initWormHole(wrapper);
+		new ItemWrapper(entity).addScript(new RotatingScript(25));
+		PlatformComponent platform = ComponentRetriever.get(entity,
+				PlatformComponent.class);
+		platform.other = endWormHole(wrapper);
+		setZ(entity, 1);
+		setZ(platform.other, 1);
+	}
+
+	private void setZ(Entity entity, int z) {
+		ZIndexComponent zIndex = ComponentRetriever.get(entity,
+				ZIndexComponent.class);
+		zIndex.setZIndex(z);
+	}
+
+	private Entity initWormHole(ItemWrapper wrapper) {
+		return wrapper.getChild("init1").getEntity();
+	}
+
+	private Entity endWormHole(ItemWrapper wrapper) {
+		return wrapper.getChild("end1").getEntity();
 	}
 
 	private void setBoundBox(Entity entity) {
@@ -124,9 +148,7 @@ public class World1 extends World {
 		Entity entity = sl.entityFactory.createEntity(sl.getRoot(), pieceVo);
 		sl.entityFactory.initAllChildren(sl.getEngine(), entity,
 				pieceVo.composite);
-		ZIndexComponent zIndex = ComponentRetriever.get(entity,
-				ZIndexComponent.class);
-		zIndex.setZIndex(1);
+		setZ(entity, 2);
 		new ItemWrapper(entity).getChild("partImage")
 				.addScript(new RotatingScript(10));
 		entity.add(new PlatformComponent(0, PlatformType.SNAKE_HEAD));
