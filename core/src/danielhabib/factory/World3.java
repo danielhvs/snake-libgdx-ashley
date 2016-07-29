@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.uwsoft.editor.renderer.SceneLoader;
 
-import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.systems.EnemySystem;
@@ -18,9 +17,9 @@ public class World3 extends World {
 
 	@Override
 	public void create() {
-		snakeEntity = createSnake(10, 10, 10);
+		snakeEntity = createSnake();
 		snakeEntity.add(newCountComponent(1));
-		Entity enemy = createEntity(10, 15, -5f, 1.5f, Assets.partImg);
+		Entity enemy = createEnemy();
 		enemy.add(new PlatformComponent(0f, PlatformType.ENEMY));
 		EnemyComponent component = new EnemyComponent();
 		component.yVel = 6f;
@@ -32,6 +31,11 @@ public class World3 extends World {
 		createCamera(snakeEntity);
 
 		engine.addSystem(new EnemySystem());
+	}
+
+	private Entity createEnemy() {
+		// FIXME
+		return new Entity();
 	}
 
 }
