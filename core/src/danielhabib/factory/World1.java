@@ -64,13 +64,25 @@ public class World1 extends World {
 		}
 		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
 		// FIXME: load all wormholes.
-		Entity entity = initWormHole(wrapper);
-		new ItemWrapper(entity).addScript(new RotatingScript(25));
-		PlatformComponent platform = ComponentRetriever.get(entity,
-				PlatformComponent.class);
-		platform.other = endWormHole(wrapper);
-		setZ(entity, 1);
-		setZ(platform.other, 1);
+		int i = 0;
+		Entity entity;
+		do {
+			entity = loadWormHole(wrapper, ++i);
+		} while (entity != null);
+
+	}
+
+	private Entity loadWormHole(ItemWrapper wrapper, int i) {
+		Entity entity = initWormHole(wrapper, i);
+		if (entity != null) {
+			new ItemWrapper(entity).addScript(new RotatingScript(25));
+			PlatformComponent platform = ComponentRetriever.get(entity,
+					PlatformComponent.class);
+			platform.other = endWormHole(wrapper, i);
+			setZ(entity, 1);
+			setZ(platform.other, 1);
+		}
+		return entity;
 	}
 
 	private void setZ(Entity entity, int z) {
@@ -79,12 +91,12 @@ public class World1 extends World {
 		zIndex.setZIndex(z);
 	}
 
-	private Entity initWormHole(ItemWrapper wrapper) {
-		return wrapper.getChild("init1").getEntity();
+	private Entity initWormHole(ItemWrapper wrapper, int i) {
+		return wrapper.getChild("init" + i).getEntity();
 	}
 
-	private Entity endWormHole(ItemWrapper wrapper) {
-		return wrapper.getChild("end1").getEntity();
+	private Entity endWormHole(ItemWrapper wrapper, int i) {
+		return wrapper.getChild("end" + i).getEntity();
 	}
 
 	private void setBoundBox(Entity entity) {
