@@ -35,19 +35,27 @@ public class World1 extends World {
 		parseMap("map1.tmx");
 		// createCamera(snakeEntity);
 		snakeEntity = createSnake();
-		System.out.println("SNAKE: " + snakeEntity);
+		snakeEntity.add(newCountComponent(3));
 	}
 
 	@Override
 	protected void parseMap(String mapTmx) {
 		sl.loadScene("level1", new FitViewport(192, 120)); // 1920x1200
-
 		addComponentsByTagName("boing",
 				new PlatformComponent(0, PlatformType.BOING));
 		addComponentsByTagName("box",
 				new PlatformComponent(0, PlatformType.WALL));
 		for (Entity entity : getEntitiesByTagName("bounded")) {
 			setBoundBox(entity);
+		}
+		// FIXME: Rotate via tag or custom vars.
+		for (Entity entity : getEntitiesByTagName("poison")) {
+			entity.add(new PlatformComponent(0, PlatformType.POISON));
+			new ItemWrapper(entity).addScript(new RotatingScript(10));
+		}
+		for (Entity entity : getEntitiesByTagName("fruit")) {
+			entity.add(new PlatformComponent(0, PlatformType.FRUIT));
+			new ItemWrapper(entity).addScript(new RotatingScript(10));
 		}
 	}
 
