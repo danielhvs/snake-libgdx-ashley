@@ -31,23 +31,14 @@ public class BoundsSystem extends IteratingSystem {
 	public BoundsSystem() {
 		super(Family.all(DimensionsComponent.class, TransformComponent.class)
 				.get());
-
 		tm = ComponentMapper.getFor(TransformComponent.class);
 		bm = ComponentMapper.getFor(DimensionsComponent.class);
-	}
-
-	@Override
-	public void update(float deltaTime) {
-		System.out.println("------------");
-		super.update(deltaTime);
 	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
 		TransformComponent pos = tm.get(entity);
 		DimensionsComponent bounds = bm.get(entity);
-
-		System.out.println(entity + " - " + bounds.boundBox);
 		if (bounds.boundBox != null) {
 			bounds.boundBox.x = pos.x - bounds.boundBox.width * 0.5f;
 			bounds.boundBox.y = pos.y - bounds.boundBox.height * 0.5f;

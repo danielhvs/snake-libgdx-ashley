@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
+import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.components.ZIndexComponent;
 import com.uwsoft.editor.renderer.data.CompositeItemVO;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
@@ -43,10 +44,21 @@ public class World1 extends World {
 
 		addComponentsByTagName("boing",
 				new PlatformComponent(0, PlatformType.BOING));
-		// ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
-		// PlatformComponent component = wrapper.getChild("boing")
-		// .getComponent(PlatformComponent.class);
-		// component.type = PlatformType.BOING;
+		addComponentsByTagName("box",
+				new PlatformComponent(0, PlatformType.WALL));
+		for (Entity entity : getEntitiesByTagName("bounded")) {
+			setBoundBox(entity);
+		}
+	}
+
+	private void setBoundBox(Entity entity) {
+		TransformComponent transform = ComponentRetriever.get(entity,
+				TransformComponent.class);
+		DimensionsComponent dimensions = ComponentRetriever.get(entity,
+				DimensionsComponent.class);
+		dimensions.boundBox = new Rectangle(transform.x, transform.y,
+				dimensions.width * transform.scaleX,
+				dimensions.height * transform.scaleY);
 	}
 
 	private Entity createSnake() {
@@ -69,24 +81,27 @@ public class World1 extends World {
 		snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
-		DimensionsComponent component = ComponentRetriever.get(snakeEntity,
-				DimensionsComponent.class);
-		component.boundBox = new Rectangle(0, 0, component.width,
-				component.height);
-
 		return snakeEntity;
 	}
 
 	protected void addComponentsByTagName(String tagName, Component component) {
+		Array<Entity> filtered = getEntitiesByTagName(tagName);
+		for (Entity entity : filtered) {
+			entity.add(component);
+		}
+	}
+
+	protected Array<Entity> getEntitiesByTagName(String tagName) {
 		ImmutableArray<Entity> entities = sl.getEngine().getEntities();
+		Array<Entity> filtered = new Array<Entity>();
 		for (Entity entity : entities) {
 			MainItemComponent mainItemComponent = ComponentRetriever.get(entity,
 					MainItemComponent.class);
 			if (mainItemComponent.tags.contains(tagName)) {
-				System.out.println("added " + component);
-				entity.add(component);
+				filtered.add(entity);
 			}
 		}
+		return filtered;
 	}
 
 	@Override
@@ -103,9 +118,7 @@ public class World1 extends World {
 		new ItemWrapper(entity).getChild("partImage")
 				.addScript(new RotatingScript(10));
 		entity.add(new PlatformComponent(0, PlatformType.SNAKE_HEAD));
-		// FIXME: bounds
-		// BoundsComponent bounds = newBoundComponent(transform, texture);
-		// pieceEntity.add(bounds);
+		setBoundBox(entity);
 		return entity;
 	}
 
