@@ -51,11 +51,15 @@ public class World1 extends World {
 		// FIXME: Rotate via tag or custom vars.
 		for (Entity entity : getEntitiesByTagName("poison")) {
 			entity.add(new PlatformComponent(0, PlatformType.POISON));
-			new ItemWrapper(entity).addScript(new RotatingScript(10));
+			new ItemWrapper(entity).addScript(new RotatingScript(5));
 		}
 		for (Entity entity : getEntitiesByTagName("fruit")) {
 			entity.add(new PlatformComponent(0, PlatformType.FRUIT));
-			new ItemWrapper(entity).addScript(new RotatingScript(10));
+			new ItemWrapper(entity).addScript(new RotatingScript(-5));
+		}
+		for (Entity entity : getEntitiesByTagName("speed")) {
+			entity.add(new PlatformComponent(0, PlatformType.SPEED));
+			new ItemWrapper(entity).addScript(new RotatingScript(3));
 		}
 	}
 
