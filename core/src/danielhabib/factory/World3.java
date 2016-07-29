@@ -16,7 +16,7 @@ public class World3 extends World {
 
 	@Override
 	public void create() {
-		snakeEntity = createSnake();
+		Entity snakeEntity = parseMap("map3.tmx");
 		snakeEntity.add(newCountComponent(1));
 		Entity enemy = createEnemy();
 		enemy.add(new PlatformComponent(PlatformType.ENEMY));
@@ -26,7 +26,6 @@ public class World3 extends World {
 		enemy.add(component);
 		// engine.addEntity(enemy);
 		// engine.addEntity(snakeEntity);
-		parseMap("map3.tmx");
 		// createCamera(snakeEntity);
 		// engine.addSystem(new EnemySystem());
 	}

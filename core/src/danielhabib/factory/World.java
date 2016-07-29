@@ -3,6 +3,7 @@ package danielhabib.factory;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -11,12 +12,14 @@ import com.uwsoft.editor.renderer.SceneLoader;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.components.ViewPortComponent;
 import com.uwsoft.editor.renderer.components.ZIndexComponent;
 import com.uwsoft.editor.renderer.data.CompositeItemVO;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.Assets;
+import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -26,7 +29,6 @@ import danielhabib.sandbox.scripts.RotatingScript;
 import danielhabib.sandbox.types.PlatformType;
 
 public abstract class World {
-	protected Entity snakeEntity;
 	protected SceneLoader sl;
 
 	public World(SceneLoader sceneLoader) {
@@ -49,7 +51,7 @@ public abstract class World {
 
 	public abstract void create();
 
-	protected void parseMap(String map) {
+	protected Entity parseMap(String map) {
 		sl.loadScene(map, new FitViewport(192, 120)); // 1920x1200
 		addComponentsByTagName("boing", new PlatformComponent(PlatformType.BOING));
 		addComponentsByTagName("box", new PlatformComponent(PlatformType.WALL));
@@ -76,6 +78,7 @@ public abstract class World {
 		do {
 			entity = loadWormHole(wrapper, ++i);
 		} while (entity != null);
+		return createSnake();
 	}
 
 	protected CountComponent newCountComponent(int max) {
@@ -163,6 +166,14 @@ public abstract class World {
 			}
 		}
 		return filtered;
+	}
+
+	protected void addFollowingCameraTo(Entity entity) {
+		CameraComponent cameraComponent = new CameraComponent();
+		cameraComponent.target = entity;
+		cameraComponent.camera = (OrthographicCamera) ComponentRetriever.get(sl.getRoot(),
+				ViewPortComponent.class).viewPort.getCamera();
+		entity.add(cameraComponent);
 	}
 
 }

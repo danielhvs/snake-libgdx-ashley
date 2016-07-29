@@ -1,5 +1,6 @@
 package danielhabib.factory;
 
+import com.badlogic.ashley.core.Entity;
 import com.uwsoft.editor.renderer.SceneLoader;
 
 public class World2 extends World {
@@ -10,9 +11,9 @@ public class World2 extends World {
 
 	@Override
 	public void create() {
-		parseMap("level2");
-		snakeEntity = createSnake();
+		Entity snakeEntity = parseMap("level2");
 		snakeEntity.add(newCountComponent(28));
+		addFollowingCameraTo(snakeEntity);
 	}
 
 }

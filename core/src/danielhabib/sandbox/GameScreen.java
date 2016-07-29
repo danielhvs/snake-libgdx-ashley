@@ -22,6 +22,7 @@ import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.ControlSystem;
@@ -117,7 +118,7 @@ public class GameScreen extends AbstractScreen {
 				});
 		engine.addSystem(collisionSystem);
 		engine.addSystem(new SnakeSystem(world));
-		// engine.addSystem(new CameraSystem());
+		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 
 		ImmutableArray<Entity> entities = engine
