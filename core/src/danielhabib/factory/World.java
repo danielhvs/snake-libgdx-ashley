@@ -15,6 +15,7 @@ import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.components.ViewPortComponent;
 import com.uwsoft.editor.renderer.components.ZIndexComponent;
 import com.uwsoft.editor.renderer.data.CompositeItemVO;
+import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
@@ -85,7 +86,10 @@ public abstract class World {
 	protected CountComponent newCountComponent(int max) {
 		CountComponent countComponent = new CountComponent();
 		countComponent.maxFruits = max;
+		CompositeItemVO vo = sl.loadVoFromLibrary("appleCounter");
+		CompositeActor compositeActor = new CompositeActor(vo, sl.getRm());
 		countComponent.region = new TextureRegion(Assets.apple);
+		countComponent.compositeActor = compositeActor;
 		return countComponent;
 	}
 

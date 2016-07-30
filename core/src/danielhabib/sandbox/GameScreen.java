@@ -8,8 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,7 +30,6 @@ import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
-import danielhabib.sandbox.ui.TextureDrawer;
 
 public class GameScreen extends AbstractScreen {
 
@@ -127,14 +124,9 @@ public class GameScreen extends AbstractScreen {
 		for (Entity entity : entities) {
 			CountComponent component = entity
 					.getComponent(CountComponent.class);
-			addActor(component.fruitsLabel);
-			addActor(new TextureDrawer(component.region,
-					new Vector3(Gdx.graphics.getWidth() / 50,
-							Gdx.graphics.getHeight()
-									- Gdx.graphics.getHeight() / 18.75f,
-							0),
-					new Vector2(Gdx.graphics.getWidth() / 800f,
-							Gdx.graphics.getHeight() / 600f)));
+			CompositeActor compositeActor = component.compositeActor;
+			compositeActor.setPosition(0, getHeight() - compositeActor.getHeight());
+			addActor(compositeActor);
 		}
 		CompositeActor button = new CompositeActor(
 				sceneLoader.loadVoFromLibrary("smallButton"), sceneLoader.getRm());
