@@ -7,12 +7,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Array;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
@@ -125,10 +121,8 @@ public class CollisionSystem extends EntitySystem {
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
 					CountComponent countComponent = counts.get(snake);
-					Array<Actor> texts = countComponent.compositeActor
-							.getItemsByTag("text");
-					TextFactory.addCountingAnimation((Label) texts.get(0),
-							String.valueOf(++countComponent.fruits), Color.RED);
+					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
+							String.valueOf(++countComponent.fruits));
 					break;
 				} else if (type == PlatformType.POISON) {
 					listener.poison();

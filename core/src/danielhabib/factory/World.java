@@ -4,8 +4,8 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
@@ -20,7 +20,6 @@ import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
-import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
@@ -88,7 +87,7 @@ public abstract class World {
 		countComponent.maxFruits = max;
 		CompositeItemVO vo = sl.loadVoFromLibrary("appleCounter");
 		CompositeActor compositeActor = new CompositeActor(vo, sl.getRm());
-		countComponent.region = new TextureRegion(Assets.apple);
+		countComponent.fruitsLabel = (Label) compositeActor.getItemsByTag("text").get(0);
 		countComponent.compositeActor = compositeActor;
 		return countComponent;
 	}

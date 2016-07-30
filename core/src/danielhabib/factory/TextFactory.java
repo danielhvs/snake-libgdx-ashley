@@ -18,10 +18,9 @@ public class TextFactory {
 		label.addAction(Actions.fadeOut(1.5f));
 	}
 
-	public static void addCountingAnimation(Label label, String string, Color color) {
+	public static void addCountingAnimation(Label label, String string) {
 		label.addAction(Actions.alpha(0f));
 		label.setText(string);
-		label.setColor(color);
 		label.addAction(Actions.fadeIn(.75f));
 	}
 
