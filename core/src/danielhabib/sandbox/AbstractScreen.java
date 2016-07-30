@@ -3,24 +3,17 @@ package danielhabib.sandbox;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.uwsoft.editor.renderer.SceneLoader;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
-	static final float FRUSTUM_WIDTH = 25;
-	static final float FRUSTUM_HEIGHT = 20;
 	protected SceneLoader sceneLoader;
 
 	protected AbstractScreen() {
-		super(new ScalingViewport(Scaling.stretch, Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight(), new OrthographicCamera()),
-				new SpriteBatch());
+		super(new StretchViewport(1920, 1200));
 	}
 
 	public abstract void buildStage();
@@ -64,11 +57,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
 	@Override
 	public void resume() {
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 
 }

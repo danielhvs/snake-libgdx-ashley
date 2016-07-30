@@ -10,8 +10,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.uwsoft.editor.renderer.SceneLoader;
 import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 
@@ -118,6 +121,7 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 
+		// FIXME: migrate counting...
 		ImmutableArray<Entity> entities = engine
 				.getEntitiesFor(Family.one(CountComponent.class).get());
 		for (Entity entity : entities) {
@@ -133,9 +137,12 @@ public class GameScreen extends AbstractScreen {
 							Gdx.graphics.getHeight() / 600f)));
 		}
 		CompositeActor button = new CompositeActor(
-				sceneLoader.loadVoFromLibrary("button"), sceneLoader.getRm());
-		button.setX(getWidth() - button.getWidth());
-		button.setY(getHeight() - button.getHeight());
+				sceneLoader.loadVoFromLibrary("smallButton"), sceneLoader.getRm());
+		Array<Actor> texts = button.getItemsByLayer("text");
+		Label label = (Label) texts.get(0);
+		label.setText("II");
+		button.setX(getWidth() - label.getWidth());
+		button.setY(getHeight() - label.getHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {

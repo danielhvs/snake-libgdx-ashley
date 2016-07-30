@@ -41,7 +41,8 @@ public class ScreenManager {
 		game.setScreen(newScreen);
 
 		if (previousScreen != null) {
-			previousScreen.dispose();
+			// FIXME: leak....?
+			// previousScreen.dispose();
 		}
 	}
 
