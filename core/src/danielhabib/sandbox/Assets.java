@@ -20,7 +20,11 @@ import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
 import com.uwsoft.editor.renderer.components.label.LabelComponent;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
+import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
+import danielhabib.factory.World;
+import danielhabib.factory.World1;
+import danielhabib.factory.World2;
 import danielhabib.sandbox.ui.O2dClickListener;
 
 public class Assets {
@@ -38,6 +42,7 @@ public class Assets {
 	public static float fontScaleX;
 	public static float menuBarHeight;
 	public static ObjectMap<String, SceneLoader> scenes;
+	public static ObjectMap<String, World> worlds;
 
 	public static void load() {
 		manager = new AssetManager();
@@ -60,6 +65,61 @@ public class Assets {
 	private static void loadScenes() {
 		Viewport viewport = new FitViewport(192, 120);
 
+		SceneLoader sceneLoader1 = new SceneLoader();
+		SceneLoader sceneLoader2 = new SceneLoader();
+		World world1 = new World1(sceneLoader1);
+		world1.create();
+		World world2 = new World2(sceneLoader2);
+		world2.create();
+
+		scenes = new ObjectMap<String, SceneLoader>();
+		scenes.put("levelSelect", levelSelectScreen(viewport));
+		scenes.put("MainScene", loadMainMenu(viewport));
+		scenes.put("level1", sceneLoader1);
+		scenes.put("level2", sceneLoader2);
+
+		worlds = new ObjectMap<String, World>();
+		worlds.put("level1", world1);
+		worlds.put("level2", world2);
+
+		loadMainMenu(viewport);
+	}
+
+	private static SceneLoader loadMainMenu(Viewport viewport) {
+		SceneLoader sceneLoader = new SceneLoader();
+		sceneLoader.loadScene("MainScene", viewport);
+		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
+		ItemWrapper wrapper = new ItemWrapper(sceneLoader.getRoot());
+		ButtonComponent level = getButton("levelsButton", wrapper);
+		ButtonComponent quit = getButton("quitButton", wrapper);
+		ButtonComponent settings = getButton("settingsButton", wrapper);
+		level.addListener(new O2dClickListener() {
+			@Override
+			public void clicked() {
+				ScreenManager.getInstance().showScreen(ScreenEnum.LEVEL_SELECT);
+			}
+		});
+		quit.addListener(new O2dClickListener() {
+			@Override
+			public void clicked() {
+				Gdx.app.exit();
+			}
+		});
+		settings.addListener(new O2dClickListener() {
+			@Override
+			public void clicked() {
+				ScreenManager.getInstance().showScreen(ScreenEnum.CONFIG);
+			}
+		});
+		return sceneLoader;
+	}
+
+	private static ButtonComponent getButton(String id, ItemWrapper wrapper) {
+		return wrapper.getChild(id).getEntity()
+				.getComponent(ButtonComponent.class);
+	}
+
+	private static SceneLoader levelSelectScreen(Viewport viewport) {
 		SceneLoader sceneLoader = new SceneLoader();
 		sceneLoader.loadScene("levelSelect", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
@@ -127,8 +187,7 @@ public class Assets {
 		// return true;
 		// }
 		// });
-		scenes = new ObjectMap<String, SceneLoader>();
-		scenes.put("levelSelect", sceneLoader);
+		return sceneLoader;
 	}
 
 	protected static Array<Entity> getEntitiesByTagName(SceneLoader sceneLoader,
@@ -166,6 +225,10 @@ public class Assets {
 
 	public static SceneLoader getSceneLoader(String key) {
 		return scenes.get(key);
+	}
+
+	public static World getWorld(String key) {
+		return worlds.get(key);
 	}
 
 }

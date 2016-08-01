@@ -4,12 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.uwsoft.editor.renderer.SceneLoader;
 
 import danielhabib.factory.World;
-import danielhabib.factory.World1;
-import danielhabib.factory.World2;
-import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
@@ -45,16 +41,9 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void buildStage() {
-		sceneLoader = new SceneLoader();
-		if (level == 1) {
-			world = new World1(sceneLoader);
-		} else if (level == 2) {
-			world = new World2(sceneLoader);
-		} else {
-			world = new World3(sceneLoader);
-		}
-		// The engine is reloaded inside the loadScene()!
-		world.create();
+		String key = "level" + level;
+		sceneLoader = Assets.getSceneLoader(key);
+		world = Assets.getWorld(key);
 
 		Engine engine = sceneLoader.getEngine();
 		engine.addEntity(newControlEntity());
