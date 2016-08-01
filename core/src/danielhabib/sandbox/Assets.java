@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.uwsoft.editor.renderer.SceneLoader;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
+import com.uwsoft.editor.renderer.components.NodeComponent;
 import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
+import com.uwsoft.editor.renderer.components.label.LabelComponent;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 
@@ -67,14 +69,18 @@ public class Assets {
 			CustomVariables customVariables = new CustomVariables();
 			String variables = ComponentRetriever.get(entity,
 					MainItemComponent.class).customVars;
+			NodeComponent node = ComponentRetriever.get(entity,
+					NodeComponent.class);
+			LabelComponent labelComponent = ComponentRetriever
+					.get(node.children.get(2), LabelComponent.class);
 			customVariables.loadFromString(variables);
 			final Integer level = customVariables.getIntegerVariable("level");
+			labelComponent.setText(String.valueOf(level));
 			if (level != null) {
 				ComponentRetriever.get(entity, ButtonComponent.class)
 						.addListener(new O2dClickListener() {
 							@Override
 							public void clicked() {
-								System.out.println("clicked" + level);
 								ScreenManager.getInstance()
 										.showScreen(ScreenEnum.GAME, level);
 							}
