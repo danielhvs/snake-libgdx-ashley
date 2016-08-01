@@ -2,26 +2,15 @@ package danielhabib.sandbox;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.uwsoft.editor.renderer.SceneLoader;
-import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
 import danielhabib.factory.World3;
 import danielhabib.sandbox.components.ControlComponent;
-import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
@@ -30,12 +19,14 @@ import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
+import danielhabib.sandbox.ui.UIGameStage;
 
 public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
 	private World world;
 	private int level;
+	private UIGameStage uiStage;
 
 	public GameScreen(Integer[] params) {
 		this.level = params[0];
@@ -44,36 +35,12 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		getCamera().update(); // FIXME DRY
-		drawMenuBar();
-		super.render(delta);
-	}
-
-	@Override
-	public void act(float delta) {
 		if (Gdx.input.isKeyJustPressed(Keys.BACK)) {
 			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 		}
-		super.act(delta);
-	}
-
-	private void togglePause() {
-		SnakeSystem snakeSystem = sceneLoader.getEngine().getSystem(SnakeSystem.class);
-		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
-		MovementSystem movementSystem = sceneLoader.getEngine()
-				.getSystem(MovementSystem.class);
-		movementSystem.setProcessing(!movementSystem.checkProcessing());
-	}
-
-	private void drawMenuBar() {
-		ShapeRenderer shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setProjectionMatrix(getCamera().combined);
-		int width = Gdx.graphics.getWidth();
-		float height = Assets.menuBarHeight;
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(0, .2f, 0, 0);
-		shapeRenderer.rect(0, Gdx.graphics.getHeight() - height, width, height);
-		shapeRenderer.end();
+		sceneLoader.getEngine().update(delta);
+		uiStage.act();
+		uiStage.draw();
 	}
 
 	@Override
@@ -118,30 +85,7 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 
-		// FIXME: migrate counting...
-		ImmutableArray<Entity> entities = engine
-				.getEntitiesFor(Family.one(CountComponent.class).get());
-		for (Entity entity : entities) {
-			CountComponent component = entity
-					.getComponent(CountComponent.class);
-			CompositeActor compositeActor = component.compositeActor;
-			compositeActor.setPosition(0, getHeight() - compositeActor.getHeight());
-			addActor(compositeActor);
-		}
-		CompositeActor button = new CompositeActor(
-				sceneLoader.loadVoFromLibrary("smallButton"), sceneLoader.getRm());
-		Array<Actor> texts = button.getItemsByLayer("text");
-		Label label = (Label) texts.get(0);
-		label.setText("II");
-		button.setX(getWidth() - label.getWidth());
-		button.setY(getHeight() - label.getHeight());
-		button.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				togglePause();
-			}
-		});
-		addActor(button);
+		uiStage = new UIGameStage(sceneLoader);
 	}
 
 	private Entity newControlEntity() {
@@ -150,6 +94,11 @@ public class GameScreen extends AbstractScreen {
 		Entity entity = new Entity();
 		entity.add(controlComponent);
 		return entity;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
 	}
 
 }

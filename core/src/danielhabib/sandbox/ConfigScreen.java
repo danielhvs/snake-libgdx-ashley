@@ -19,8 +19,14 @@ public class ConfigScreen extends AbstractScreen {
 				Array.with(soundButton, musicButton, backButton));
 
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		// FIXME
+		// addActor(table);
+	}
 
-		addActor(table);
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

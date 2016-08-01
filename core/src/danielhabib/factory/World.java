@@ -42,9 +42,11 @@ public abstract class World {
 		pieceVo.x = x;
 		pieceVo.y = y;
 		Entity entity = sl.entityFactory.createEntity(sl.getRoot(), pieceVo);
-		sl.entityFactory.initAllChildren(sl.getEngine(), entity, pieceVo.composite);
+		sl.entityFactory.initAllChildren(sl.getEngine(), entity,
+				pieceVo.composite);
 		setZ(entity, 2);
-		new ItemWrapper(entity).getChild("partImage").addScript(new RotatingScript(10));
+		new ItemWrapper(entity).getChild("partImage")
+				.addScript(new RotatingScript(10));
 		entity.add(new PlatformComponent(PlatformType.SNAKE_HEAD));
 		setBoundBox(entity);
 		return entity;
@@ -54,9 +56,11 @@ public abstract class World {
 
 	protected Entity parseMap(String map) {
 		sl.loadScene(map, new FitViewport(192, 120)); // 1920x1200
-		addComponentsByTagName("boing", new PlatformComponent(PlatformType.BOING));
+		addComponentsByTagName("boing",
+				new PlatformComponent(PlatformType.BOING));
 		addComponentsByTagName("box", new PlatformComponent(PlatformType.WALL));
-		addComponentsByTagName("hole", new PlatformComponent(PlatformType.HOLE));
+		addComponentsByTagName("hole",
+				new PlatformComponent(PlatformType.HOLE));
 		for (Entity entity : getEntitiesByTagName("bounded")) {
 			setBoundBox(entity);
 		}
@@ -87,7 +91,8 @@ public abstract class World {
 		countComponent.maxFruits = max;
 		CompositeItemVO vo = sl.loadVoFromLibrary("appleCounter");
 		CompositeActor compositeActor = new CompositeActor(vo, sl.getRm());
-		countComponent.fruitsLabel = (Label) compositeActor.getItemsByTag("text").get(0);
+		countComponent.fruitsLabel = (Label) compositeActor
+				.getItemsByTag("text").get(0);
 		countComponent.compositeActor = compositeActor;
 		return countComponent;
 	}
@@ -106,7 +111,8 @@ public abstract class World {
 	}
 
 	private void setZ(Entity entity, int z) {
-		ZIndexComponent zIndex = ComponentRetriever.get(entity, ZIndexComponent.class);
+		ZIndexComponent zIndex = ComponentRetriever.get(entity,
+				ZIndexComponent.class);
 		zIndex.setZIndex(z);
 	}
 
@@ -164,6 +170,7 @@ public abstract class World {
 		}
 	}
 
+	// FIXME DRY
 	protected Array<Entity> getEntitiesByTagName(String tagName) {
 		ImmutableArray<Entity> entities = sl.getEngine().getEntities();
 		Array<Entity> filtered = new Array<Entity>();
@@ -180,8 +187,9 @@ public abstract class World {
 	protected void addFollowingCameraTo(Entity entity) {
 		CameraComponent cameraComponent = new CameraComponent();
 		cameraComponent.target = entity;
-		cameraComponent.camera = (OrthographicCamera) ComponentRetriever.get(sl.getRoot(),
-				ViewPortComponent.class).viewPort.getCamera();
+		cameraComponent.camera = (OrthographicCamera) ComponentRetriever
+				.get(sl.getRoot(), ViewPortComponent.class).viewPort
+						.getCamera();
 		entity.add(cameraComponent);
 	}
 

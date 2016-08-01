@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
+import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 public class Assets {
 	public static Sound hitSound;
@@ -35,6 +37,9 @@ public class Assets {
 		manager.load("default.fnt", BitmapFont.class);
 		manager.load("uiskin.json", Skin.class,
 				new SkinLoader.SkinParameter("uiskin.atlas"));
+
+		// FIXME: Change place.
+		ComponentRetriever.addMapper(ButtonComponent.class);
 	}
 
 	public static void finishLoading() {

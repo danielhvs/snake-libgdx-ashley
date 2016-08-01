@@ -5,8 +5,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.uwsoft.editor.renderer.SceneLoader;
 import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
-import com.uwsoft.editor.renderer.components.additional.ButtonComponent.ButtonListener;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
+
+import danielhabib.sandbox.ui.O2dClickListener;
 
 public class MainMenu extends AbstractScreen {
 
@@ -21,44 +22,19 @@ public class MainMenu extends AbstractScreen {
 		ButtonComponent level = getButton("levelsButton", wrapper);
 		ButtonComponent quit = getButton("quitButton", wrapper);
 		ButtonComponent settings = getButton("settingsButton", wrapper);
-		level.addListener(new ButtonListener() {
-			@Override
-			public void touchUp() {
-			}
-			
-			@Override
-			public void touchDown() {
-			}
-			
+		level.addListener(new O2dClickListener() {
 			@Override
 			public void clicked() {
 				ScreenManager.getInstance().showScreen(ScreenEnum.LEVEL_SELECT);
 			}
 		});
-		quit.addListener(new ButtonListener() {
-			@Override
-			public void touchUp() {
-			}
-
-			@Override
-			public void touchDown() {
-			}
-
+		quit.addListener(new O2dClickListener() {
 			@Override
 			public void clicked() {
 				Gdx.app.exit();
 			}
 		});
-		settings.addListener(new ButtonListener() {
-
-			@Override
-			public void touchUp() {
-			}
-
-			@Override
-			public void touchDown() {
-			}
-
+		settings.addListener(new O2dClickListener() {
 			@Override
 			public void clicked() {
 				ScreenManager.getInstance().showScreen(ScreenEnum.CONFIG);
@@ -67,12 +43,27 @@ public class MainMenu extends AbstractScreen {
 	}
 
 	private ButtonComponent getButton(String id, ItemWrapper wrapper) {
-		return wrapper.getChild(id).getEntity().getComponent(ButtonComponent.class);
+		return wrapper.getChild(id).getEntity()
+				.getComponent(ButtonComponent.class);
 	}
 
 	@Override
 	public void hide() {
 		dispose();
+	}
+
+	@Override
+	public void show() {
+
+	}
+
+	@Override
+	public void resize(int width, int height) {
+	}
+
+	@Override
+	public void dispose() {
+
 	}
 
 }

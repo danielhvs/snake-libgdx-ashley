@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.ScreenEnum;
@@ -92,11 +93,11 @@ public class UIFactory {
 	}
 
 	public static Table newSelectLevels(String titleText,
-			Array<Button> buttons) {
+			Array<CompositeActor> buttons) {
 		Table table = newTable();
 		int size = Gdx.graphics.getWidth() / 16;
 		for (int i = 0; i < buttons.size; i++) {
-			Button button = buttons.get(i);
+			CompositeActor button = buttons.get(i);
 			if (i % 5 == 0) {
 				table.row();
 			}
