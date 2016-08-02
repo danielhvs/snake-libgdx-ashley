@@ -8,12 +8,12 @@ import danielhabib.sandbox.control.ASandboxControl;
 
 public class SandboxGame extends Game {
 
-	public static ASandboxControl control;
+	public ASandboxControl control;
 	private boolean done;
 	private boolean showed;
 
 	public SandboxGame(ASandboxControl control) {
-		SandboxGame.control = control;
+		this.control = control;
 	}
 
 	@Override

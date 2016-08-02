@@ -3,7 +3,6 @@ package danielhabib.sandbox;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
-import danielhabib.factory.World;
 import danielhabib.sandbox.ui.UIGameStage;
 
 public class GameScreen extends AbstractScreen {
@@ -35,7 +34,6 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void resize(int width, int height) {
-
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package danielhabib.factory;
 import com.badlogic.ashley.core.Entity;
 import com.uwsoft.editor.renderer.SceneLoader;
 
-import danielhabib.sandbox.SandboxGame;
+import danielhabib.sandbox.ScreenManager;
 
 public class World2 extends World {
 
@@ -15,7 +15,8 @@ public class World2 extends World {
 	public void create() {
 		Entity snakeEntity = parseMap("level2");
 		// FIXME: template in world?
-		sl.getEngine().addEntity(newControlEntity(SandboxGame.control));
+		sl.getEngine().addEntity(newControlEntity(
+				ScreenManager.getInstance().getGame().control));
 		snakeEntity.add(newCountComponent(28));
 		addFollowingCameraTo(snakeEntity);
 	}
