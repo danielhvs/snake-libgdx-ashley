@@ -185,12 +185,10 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	private void showMainMenu() {
-		getEngine().removeAllEntities();
 		ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 	}
 
 	private void showNextLevel() {
-		getEngine().removeAllEntities();
 		ScreenManager.getInstance().showScreen(ScreenEnum.GAME,
 				SnakeSettings.level);
 	}

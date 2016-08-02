@@ -1,6 +1,7 @@
 package danielhabib.factory;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,6 +21,7 @@ import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
+import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
@@ -29,6 +31,14 @@ import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.control.ASandboxControl;
 import danielhabib.sandbox.scripts.RotatingScript;
+import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CameraSystem;
+import danielhabib.sandbox.systems.CollisionSystem;
+import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
+import danielhabib.sandbox.systems.ControlSystem;
+import danielhabib.sandbox.systems.CountSystem;
+import danielhabib.sandbox.systems.MovementSystem;
+import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.types.PlatformType;
 
 public abstract class World {
@@ -54,6 +64,34 @@ public abstract class World {
 	}
 
 	public abstract void create();
+
+	private void addGameSystems() {
+		Engine engine = sl.getEngine();
+		engine.addSystem(new ControlSystem());
+		engine.addSystem(new MovementSystem());
+		engine.addSystem(new BoundsSystem());
+		CollisionSystem collisionSystem = new CollisionSystem(
+				new CollisionListener() {
+					@Override
+					public void hit() {
+						Assets.playSound(Assets.hitSound);
+					}
+
+					@Override
+					public void ate() {
+						Assets.playSound(Assets.fruitSound);
+					}
+
+					@Override
+					public void poison() {
+						Assets.playSound(Assets.poisonSound);
+					}
+				});
+		engine.addSystem(collisionSystem);
+		engine.addSystem(new SnakeSystem(this));
+		engine.addSystem(new CameraSystem());
+		engine.addSystem(new CountSystem());
+	}
 
 	protected Entity parseMap(String map) {
 		sl.loadScene(map, new FitViewport(192, 120)); // 1920x1200
@@ -84,6 +122,7 @@ public abstract class World {
 		do {
 			entity = loadWormHole(wrapper, ++i);
 		} while (entity != null);
+		addGameSystems();
 		return createSnake();
 	}
 
