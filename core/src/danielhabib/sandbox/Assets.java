@@ -15,6 +15,7 @@ import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.NodeComponent;
 import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
 import com.uwsoft.editor.renderer.components.label.LabelComponent;
+import com.uwsoft.editor.renderer.data.ProjectInfoVO;
 import com.uwsoft.editor.renderer.resources.IResourceRetriever;
 import com.uwsoft.editor.renderer.resources.ResourceManager;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
@@ -42,8 +43,10 @@ public class Assets {
 	public static AssetManager manager;
 	public static ObjectMap<String, SceneLoader> scenes;
 	public static ObjectMap<String, World> worlds;
+	private static ResourceManager rm;
+	private static int step;
 
-	public static void load() {
+	public static SceneLoader load() {
 		manager = new AssetManager();
 		manager.load("hit.wav", Sound.class);
 		manager.load("apple.wav", Sound.class);
@@ -51,14 +54,17 @@ public class Assets {
 
 		ComponentRetriever.addMapper(PlatformComponent.class);
 		ComponentRetriever.addMapper(ButtonComponent.class);
-		loadScenes();
+		rm = new ResourceManager();
+		rm.loadProjectVO();
+		rm.initScene("splash");
+
+		SceneLoader sceneLoader = new SceneLoader(rm);
+		sceneLoader.loadScene("splash", new FitViewport(192, 120));
+		return sceneLoader;
 	}
 
 	private static void loadScenes() {
 		Viewport viewport = new FitViewport(192, 120);
-
-		ResourceManager rm = new ResourceManager();
-		rm.initAllResources();
 		SceneLoader sceneLoader1 = new SceneLoader(rm);
 		SceneLoader sceneLoader2 = new SceneLoader(rm);
 		World world1 = new World1(sceneLoader1);
@@ -229,6 +235,7 @@ public class Assets {
 		hitSound = manager.get("hit.wav", Sound.class);
 		fruitSound = manager.get("apple.wav", Sound.class);
 		poisonSound = manager.get("poison.mp3", Sound.class);
+		loadScenes();
 	}
 
 	public static void playSound(Sound sound) {
@@ -241,6 +248,45 @@ public class Assets {
 
 	public static World getWorld(String key) {
 		return worlds.get(key);
+	}
+
+	public static boolean update() {
+		boolean managerDone = manager.update();
+		boolean resourcesDone = tickUpdate();
+		boolean done = managerDone && resourcesDone;
+		return done;
+	}
+
+	private static boolean tickUpdate() {
+		++step;
+		if (step == 1) {
+			ProjectInfoVO projectVO = rm.getProjectVO();
+			for (int i = 0; i < projectVO.scenes.size(); i++) {
+				rm.loadSceneVO(projectVO.scenes.get(i).sceneName);
+				rm.scheduleScene(projectVO.scenes.get(i).sceneName);
+			}
+			rm.prepareAssetsToLoad();
+		} else if (step == 2) {
+			rm.loadAtlasPack();
+		} else if (step == 3) {
+			rm.loadParticleEffects();
+			rm.loadSpineAnimations();
+		} else if (step == 4) {
+			rm.loadSpriteAnimations();
+			rm.loadSpriterAnimations();
+		} else if (step == 5) {
+			rm.loadFonts();
+			rm.loadShaders();
+		}
+		return step >= 5;
+	}
+
+	public static float getProgress() {
+		if (step >= 5) {
+			return 1f;
+		} else {
+			return step / 5f;
+		}
 	}
 
 }
