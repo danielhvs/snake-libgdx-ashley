@@ -42,7 +42,7 @@ public class ScreenManager {
 
 		if (previousScreen != null) {
 			// FIXME: leak....?
-			// previousScreen.dispose();
+			previousScreen.dispose();
 		}
 	}
 

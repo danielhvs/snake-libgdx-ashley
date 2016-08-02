@@ -95,8 +95,6 @@ public class Assets {
 		worlds = new ObjectMap<String, World>();
 		worlds.put("level1", world1);
 		worlds.put("level2", world2);
-
-		loadMainMenu(viewport);
 	}
 
 	private static void addGameSystems(Engine engine, World world,
