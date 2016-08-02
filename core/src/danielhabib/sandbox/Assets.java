@@ -1,5 +1,6 @@
 package danielhabib.sandbox;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
@@ -25,6 +26,16 @@ import com.uwsoft.editor.renderer.utils.ItemWrapper;
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
+import danielhabib.sandbox.components.ControlComponent;
+import danielhabib.sandbox.control.ASandboxControl;
+import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CameraSystem;
+import danielhabib.sandbox.systems.CollisionSystem;
+import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
+import danielhabib.sandbox.systems.ControlSystem;
+import danielhabib.sandbox.systems.CountSystem;
+import danielhabib.sandbox.systems.MovementSystem;
+import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.ui.O2dClickListener;
 
 public class Assets {
@@ -44,8 +55,9 @@ public class Assets {
 	public static ObjectMap<String, SceneLoader> scenes;
 	public static ObjectMap<String, World> worlds;
 
-	public static void load() {
+	public static void load(ASandboxControl control) {
 		manager = new AssetManager();
+		// FIXME: remove
 		manager.load("circle32.png", Texture.class);
 		manager.load("apple32.png", Texture.class);
 		manager.load("head.png", Texture.class);
@@ -59,10 +71,10 @@ public class Assets {
 
 		// FIXME: Change place.
 		ComponentRetriever.addMapper(ButtonComponent.class);
-		loadScenes();
+		loadScenes(control);
 	}
 
-	private static void loadScenes() {
+	private static void loadScenes(ASandboxControl control) {
 		Viewport viewport = new FitViewport(192, 120);
 
 		SceneLoader sceneLoader1 = new SceneLoader();
@@ -71,6 +83,8 @@ public class Assets {
 		world1.create();
 		World world2 = new World2(sceneLoader2);
 		world2.create();
+		addGameSystems(sceneLoader1.getEngine(), world1, control);
+		addGameSystems(sceneLoader2.getEngine(), world2, control);
 
 		scenes = new ObjectMap<String, SceneLoader>();
 		scenes.put("levelSelect", levelSelectScreen(viewport));
@@ -83,6 +97,42 @@ public class Assets {
 		worlds.put("level2", world2);
 
 		loadMainMenu(viewport);
+	}
+
+	private static void addGameSystems(Engine engine, World world,
+			ASandboxControl control) {
+		engine.addEntity(newControlEntity(control));
+		engine.addSystem(new ControlSystem());
+		engine.addSystem(new MovementSystem());
+		engine.addSystem(new BoundsSystem());
+		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.hitSound);
+			}
+
+			@Override
+			public void ate() {
+				Assets.playSound(Assets.fruitSound);
+			}
+
+			@Override
+			public void poison() {
+				Assets.playSound(Assets.poisonSound);
+			}
+		});
+		engine.addSystem(collisionSystem);
+		engine.addSystem(new SnakeSystem(world));
+		engine.addSystem(new CameraSystem());
+		engine.addSystem(new CountSystem());
+	}
+
+	private static Entity newControlEntity(ASandboxControl control) {
+		ControlComponent controlComponent = new ControlComponent();
+		controlComponent.control = control;
+		Entity entity = new Entity();
+		entity.add(controlComponent);
+		return entity;
 	}
 
 	private static SceneLoader loadMainMenu(Viewport viewport) {

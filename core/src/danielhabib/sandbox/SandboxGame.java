@@ -18,7 +18,7 @@ public class SandboxGame extends Game {
 
 	@Override
 	public void create() {
-		Assets.load();
+		Assets.load(control);
 		SnakeSettings.load();
 		ScreenManager.getInstance().initialize(this);
 		Gdx.input.setCatchBackKey(true);
