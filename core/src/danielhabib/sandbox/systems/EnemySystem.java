@@ -4,11 +4,9 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -39,10 +37,9 @@ public class EnemySystem extends IteratingSystem {
 		if (time >= enemies.get(entity).timeout) {
 			PlatformType type = platforms.get(entity).type;
 			if (type == PlatformType.ENEMY) {
-				textures.get(entity).region = new TextureRegion(Assets.apple);
+				// FIXME: migrate
 				platforms.get(entity).type = PlatformType.FRUIT;
 			} else {
-				textures.get(entity).region = new TextureRegion(Assets.partImg);
 				platforms.get(entity).type = PlatformType.ENEMY;
 			}
 			time = 0;

@@ -5,11 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -19,6 +15,8 @@ import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.NodeComponent;
 import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
 import com.uwsoft.editor.renderer.components.label.LabelComponent;
+import com.uwsoft.editor.renderer.resources.IResourceRetriever;
+import com.uwsoft.editor.renderer.resources.ResourceManager;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
@@ -42,32 +40,15 @@ public class Assets {
 	public static Sound hitSound;
 	public static Sound fruitSound;
 	public static Sound poisonSound;
-	public static Texture partImg;
-	public static Texture partHead;
-	public static Texture holeImg;
-	public static Texture apple;
 	public static AssetManager manager;
-	public static BitmapFont font;
-	public static Skin skin;
-	public static float fontScaleY;
-	public static float fontScaleX;
-	public static float menuBarHeight;
 	public static ObjectMap<String, SceneLoader> scenes;
 	public static ObjectMap<String, World> worlds;
 
 	public static void load(ASandboxControl control) {
 		manager = new AssetManager();
-		// FIXME: remove
-		manager.load("circle32.png", Texture.class);
-		manager.load("apple32.png", Texture.class);
-		manager.load("head.png", Texture.class);
-		manager.load("hole.png", Texture.class);
 		manager.load("hit.wav", Sound.class);
 		manager.load("apple.wav", Sound.class);
 		manager.load("poison.mp3", Sound.class);
-		manager.load("default.fnt", BitmapFont.class);
-		manager.load("uiskin.json", Skin.class,
-				new SkinLoader.SkinParameter("uiskin.atlas"));
 
 		// FIXME: Change place.
 		ComponentRetriever.addMapper(ButtonComponent.class);
@@ -77,8 +58,10 @@ public class Assets {
 	private static void loadScenes(ASandboxControl control) {
 		Viewport viewport = new FitViewport(192, 120);
 
-		SceneLoader sceneLoader1 = new SceneLoader();
-		SceneLoader sceneLoader2 = new SceneLoader();
+		ResourceManager rm = new ResourceManager();
+		rm.initAllResources();
+		SceneLoader sceneLoader1 = new SceneLoader(rm);
+		SceneLoader sceneLoader2 = new SceneLoader(rm);
 		World world1 = new World1(sceneLoader1);
 		world1.create();
 		World world2 = new World2(sceneLoader2);
@@ -87,8 +70,8 @@ public class Assets {
 		addGameSystems(sceneLoader2.getEngine(), world2, control);
 
 		scenes = new ObjectMap<String, SceneLoader>();
-		scenes.put("levelSelect", levelSelectScreen(viewport));
-		scenes.put("MainScene", loadMainMenu(viewport));
+		scenes.put("levelSelect", levelSelectScreen(viewport, rm));
+		scenes.put("MainScene", loadMainMenu(viewport, rm));
 		scenes.put("level1", sceneLoader1);
 		scenes.put("level2", sceneLoader2);
 
@@ -103,22 +86,23 @@ public class Assets {
 		engine.addSystem(new ControlSystem());
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new BoundsSystem());
-		CollisionSystem collisionSystem = new CollisionSystem(new CollisionListener() {
-			@Override
-			public void hit() {
-				Assets.playSound(Assets.hitSound);
-			}
+		CollisionSystem collisionSystem = new CollisionSystem(
+				new CollisionListener() {
+					@Override
+					public void hit() {
+						Assets.playSound(Assets.hitSound);
+					}
 
-			@Override
-			public void ate() {
-				Assets.playSound(Assets.fruitSound);
-			}
+					@Override
+					public void ate() {
+						Assets.playSound(Assets.fruitSound);
+					}
 
-			@Override
-			public void poison() {
-				Assets.playSound(Assets.poisonSound);
-			}
-		});
+					@Override
+					public void poison() {
+						Assets.playSound(Assets.poisonSound);
+					}
+				});
 		engine.addSystem(collisionSystem);
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
@@ -133,8 +117,9 @@ public class Assets {
 		return entity;
 	}
 
-	private static SceneLoader loadMainMenu(Viewport viewport) {
-		SceneLoader sceneLoader = new SceneLoader();
+	private static SceneLoader loadMainMenu(Viewport viewport,
+			ResourceManager rm) {
+		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("MainScene", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
 		ItemWrapper wrapper = new ItemWrapper(sceneLoader.getRoot());
@@ -167,8 +152,9 @@ public class Assets {
 				.getComponent(ButtonComponent.class);
 	}
 
-	private static SceneLoader levelSelectScreen(Viewport viewport) {
-		SceneLoader sceneLoader = new SceneLoader();
+	private static SceneLoader levelSelectScreen(Viewport viewport,
+			IResourceRetriever rm) {
+		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("levelSelect", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
 
@@ -253,18 +239,9 @@ public class Assets {
 	}
 
 	public static void finishLoading() {
-		partImg = manager.get("circle32.png", Texture.class);
-		partHead = manager.get("head.png", Texture.class);
-		holeImg = manager.get("hole.png", Texture.class);
 		hitSound = manager.get("hit.wav", Sound.class);
 		fruitSound = manager.get("apple.wav", Sound.class);
 		poisonSound = manager.get("poison.mp3", Sound.class);
-		apple = manager.get("apple32.png", Texture.class);
-		font = manager.get("default.fnt", BitmapFont.class);
-		skin = manager.get("uiskin.json", Skin.class);
-		fontScaleX = Gdx.graphics.getWidth() / 450f;
-		fontScaleY = Gdx.graphics.getHeight() / 340f;
-		menuBarHeight = Gdx.graphics.getHeight() / 13f;
 	}
 
 	public static void playSound(Sound sound) {
