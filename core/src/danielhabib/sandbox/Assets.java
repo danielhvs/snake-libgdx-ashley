@@ -24,8 +24,7 @@ import com.uwsoft.editor.renderer.utils.ItemWrapper;
 import danielhabib.factory.World;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
-import danielhabib.sandbox.components.ControlComponent;
-import danielhabib.sandbox.control.ASandboxControl;
+import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
@@ -44,18 +43,18 @@ public class Assets {
 	public static ObjectMap<String, SceneLoader> scenes;
 	public static ObjectMap<String, World> worlds;
 
-	public static void load(ASandboxControl control) {
+	public static void load() {
 		manager = new AssetManager();
 		manager.load("hit.wav", Sound.class);
 		manager.load("apple.wav", Sound.class);
 		manager.load("poison.mp3", Sound.class);
 
-		// FIXME: Change place.
+		ComponentRetriever.addMapper(PlatformComponent.class);
 		ComponentRetriever.addMapper(ButtonComponent.class);
-		loadScenes(control);
+		loadScenes();
 	}
 
-	private static void loadScenes(ASandboxControl control) {
+	private static void loadScenes() {
 		Viewport viewport = new FitViewport(192, 120);
 
 		ResourceManager rm = new ResourceManager();
@@ -63,11 +62,9 @@ public class Assets {
 		SceneLoader sceneLoader1 = new SceneLoader(rm);
 		SceneLoader sceneLoader2 = new SceneLoader(rm);
 		World world1 = new World1(sceneLoader1);
-		world1.create();
 		World world2 = new World2(sceneLoader2);
-		world2.create();
-		addGameSystems(sceneLoader1.getEngine(), world1, control);
-		addGameSystems(sceneLoader2.getEngine(), world2, control);
+		addGameSystems(sceneLoader1.getEngine(), world1);
+		addGameSystems(sceneLoader2.getEngine(), world2);
 
 		scenes = new ObjectMap<String, SceneLoader>();
 		scenes.put("levelSelect", levelSelectScreen(viewport, rm));
@@ -80,9 +77,7 @@ public class Assets {
 		worlds.put("level2", world2);
 	}
 
-	private static void addGameSystems(Engine engine, World world,
-			ASandboxControl control) {
-		engine.addEntity(newControlEntity(control));
+	private static void addGameSystems(Engine engine, World world) {
 		engine.addSystem(new ControlSystem());
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new BoundsSystem());
@@ -107,14 +102,6 @@ public class Assets {
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
-	}
-
-	private static Entity newControlEntity(ASandboxControl control) {
-		ControlComponent controlComponent = new ControlComponent();
-		controlComponent.control = control;
-		Entity entity = new Entity();
-		entity.add(controlComponent);
-		return entity;
 	}
 
 	private static SceneLoader loadMainMenu(Viewport viewport,

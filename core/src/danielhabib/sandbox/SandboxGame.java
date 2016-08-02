@@ -8,17 +8,17 @@ import danielhabib.sandbox.control.ASandboxControl;
 
 public class SandboxGame extends Game {
 
-	public ASandboxControl control;
+	public static ASandboxControl control;
 	private boolean done;
 	private boolean showed;
 
 	public SandboxGame(ASandboxControl control) {
-		this.control = control;
+		SandboxGame.control = control;
 	}
 
 	@Override
 	public void create() {
-		Assets.load(control);
+		Assets.load();
 		SnakeSettings.load();
 		ScreenManager.getInstance().initialize(this);
 		Gdx.input.setCatchBackKey(true);

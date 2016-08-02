@@ -21,11 +21,13 @@ import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 import danielhabib.sandbox.components.CameraComponent;
+import danielhabib.sandbox.components.ControlComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.control.ASandboxControl;
 import danielhabib.sandbox.scripts.RotatingScript;
 import danielhabib.sandbox.types.PlatformType;
 
@@ -33,7 +35,6 @@ public abstract class World {
 	protected SceneLoader sl;
 
 	public World(SceneLoader sceneLoader) {
-		ComponentRetriever.addMapper(PlatformComponent.class);
 		this.sl = sceneLoader;
 	}
 
@@ -193,4 +194,11 @@ public abstract class World {
 		entity.add(cameraComponent);
 	}
 
+	protected Entity newControlEntity(ASandboxControl control) {
+		ControlComponent controlComponent = new ControlComponent();
+		controlComponent.control = control;
+		Entity entity = new Entity();
+		entity.add(controlComponent);
+		return entity;
+	}
 }

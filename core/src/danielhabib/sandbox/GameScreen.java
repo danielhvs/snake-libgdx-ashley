@@ -8,14 +8,11 @@ import danielhabib.sandbox.ui.UIGameStage;
 
 public class GameScreen extends AbstractScreen {
 
-	private SandboxGame game;
-	private World world;
 	private int level;
 	private UIGameStage uiStage;
 
 	public GameScreen(Integer[] params) {
 		this.level = params[0];
-		this.game = ScreenManager.getInstance().getGame();
 	}
 
 	@Override
@@ -32,13 +29,18 @@ public class GameScreen extends AbstractScreen {
 	public void buildStage() {
 		String key = "level" + level;
 		sceneLoader = Assets.getSceneLoader(key);
-		world = Assets.getWorld(key);
+		Assets.getWorld(key).create();
 		uiStage = new UIGameStage(sceneLoader);
 	}
 
 	@Override
 	public void resize(int width, int height) {
 
+	}
+
+	@Override
+	public void dispose() {
+		sceneLoader.getEngine().removeAllEntities();
 	}
 
 }
