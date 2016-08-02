@@ -244,11 +244,9 @@ public class Assets {
 	}
 
 	public static float getProgress() {
-		if (step >= 5) {
-			return 1f;
-		} else {
-			return step / 5f;
-		}
+		float p1 = step >= 5 ? 1f : step/5f;
+		float p2 = manager.getProgress();
+		return (p1 + p2) / 2f;
 	}
 
 }
