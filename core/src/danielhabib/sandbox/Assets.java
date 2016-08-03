@@ -72,8 +72,7 @@ public class Assets {
 		worlds.put("level2", world2);
 	}
 
-	private static SceneLoader loadMainMenu(Viewport viewport,
-			ResourceManager rm) {
+	private static SceneLoader loadMainMenu(Viewport viewport, ResourceManager rm) {
 		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("MainScene", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
@@ -103,8 +102,7 @@ public class Assets {
 	}
 
 	private static ButtonComponent getButton(String id, ItemWrapper wrapper) {
-		return wrapper.getChild(id).getEntity()
-				.getComponent(ButtonComponent.class);
+		return wrapper.getChild(id).getEntity().getComponent(ButtonComponent.class);
 	}
 
 	private static SceneLoader levelSelectScreen(Viewport viewport,
@@ -118,64 +116,34 @@ public class Assets {
 			CustomVariables customVariables = new CustomVariables();
 			String variables = ComponentRetriever.get(entity,
 					MainItemComponent.class).customVars;
-			NodeComponent node = ComponentRetriever.get(entity,
-					NodeComponent.class);
-			LabelComponent labelComponent = ComponentRetriever
-					.get(node.children.get(2), LabelComponent.class);
-			customVariables.loadFromString(variables);
-			final Integer level = customVariables.getIntegerVariable("level");
-			labelComponent.setText(String.valueOf(level));
-			if (level != null) {
-				ComponentRetriever.get(entity, ButtonComponent.class)
-						.addListener(new O2dClickListener() {
-							@Override
-							public void clicked() {
-								ScreenManager.getInstance()
-										.showScreen(ScreenEnum.GAME, level);
-							}
-						});
+			NodeComponent node = ComponentRetriever.get(entity, NodeComponent.class);
+			if (node != null && node.children.size >= 3) {
+				LabelComponent labelComponent = ComponentRetriever
+						.get(node.children.get(2), LabelComponent.class);
+				customVariables.loadFromString(variables);
+				final Integer level = customVariables.getIntegerVariable("level");
+				labelComponent.setText(String.valueOf(level));
+				if (level != null) {
+					ComponentRetriever.get(entity, ButtonComponent.class)
+							.addListener(new O2dClickListener() {
+								@Override
+								public void clicked() {
+									ScreenManager.getInstance()
+											.showScreen(ScreenEnum.GAME, level);
+								}
+							});
+				}
 			}
 		}
-		// // FIXME: Migrate
-		// final Array<InputListener> listeners = new Array<InputListener>();
-		// // final Array<Button> buttons = new Array<Button>();
-		// for (int i = 0; i < 25; i++) {
-		// int level = i + 1;
-		// Button button = ButtonFactory.newButton(level + "!");
-		// if (level <= SnakeSettings.level) {
-		// InputListener listener = UIFactory
-		// .createListener(ScreenEnum.GAME, level);
-		// listeners.add(listener);
-		// button.addListener(listener);
-		// } else {
-		// button.setColor(Color.GRAY);
-		// }
-		// buttons.add(button);
-		// }
-		// Button backButton = ButtonFactory.newButton("<-- Back");
-		// Button resetButton = ButtonFactory.newButton("Reset");
-		//
-		// backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
-		//
-		// resetButton.addListener(new InputListener() {
-		// @Override
-		// public void touchUp(InputEvent event, float x, float y, int pointer,
-		// int button) {
-		// SnakeSettings.reset();
-		// for (int i = 1; i < listeners.size; i++) {
-		// Button levelButton = buttons.get(i);
-		// levelButton.setColor(Color.GRAY);
-		// levelButton.removeListener(listeners.get(i));
-		// }
-		// super.touchUp(event, x, y, pointer, button);
-		// }
-		//
-		// @Override
-		// public boolean touchDown(InputEvent event, float x, float y,
-		// int pointer, int button) {
-		// return true;
-		// }
-		// });
+		Entity entity = new ItemWrapper(sceneLoader.getRoot()).getChild("back")
+				.getEntity();
+		ComponentRetriever.get(entity, ButtonComponent.class)
+				.addListener(new O2dClickListener() {
+					@Override
+					public void clicked() {
+						ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+					}
+				});
 		return sceneLoader;
 	}
 
@@ -244,7 +212,7 @@ public class Assets {
 	}
 
 	public static float getProgress() {
-		float p1 = step >= 5 ? 1f : step/5f;
+		float p1 = step >= 5 ? 1f : step / 5f;
 		float p2 = manager.getProgress();
 		return (p1 + p2) / 2f;
 	}
