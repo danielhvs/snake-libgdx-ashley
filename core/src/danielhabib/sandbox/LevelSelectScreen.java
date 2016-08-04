@@ -5,6 +5,8 @@ public class LevelSelectScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		sceneLoader = Assets.getSceneLoader("levelSelect");
+		// FIXME: not pretty...
+		Assets.refreshLevels(sceneLoader);
 	}
 
 	@Override

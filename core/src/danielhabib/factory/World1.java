@@ -16,7 +16,8 @@ public class World1 extends World {
 		Entity snakeEntity = parseMap("level1");
 		sl.getEngine().addEntity(newControlEntity(
 				ScreenManager.getInstance().getGame().control));
-		snakeEntity.add(newCountComponent(3));
+		snakeEntity.add(newCountComponent(
+				getCustomVars(snakeEntity).getIntegerVariable("apples")));
 		addFollowingCameraTo(snakeEntity);
 	}
 }

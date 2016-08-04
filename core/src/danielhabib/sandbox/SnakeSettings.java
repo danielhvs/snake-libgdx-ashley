@@ -5,7 +5,7 @@ import com.badlogic.gdx.Preferences;
 
 public class SnakeSettings {
 	public static int level;
-	public static final int MAX_LEVEL = 3;
+	public static final int MAX_LEVEL = 2;
 	private static final Preferences prefs;
 	static {
 		prefs = Gdx.app.getPreferences("snakeSettings");

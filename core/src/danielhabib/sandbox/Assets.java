@@ -49,6 +49,8 @@ public class Assets {
 		rm.loadProjectVO();
 		rm.initScene("splash");
 
+		SnakeSettings.load();
+
 		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("splash", new FitViewport(192, 120));
 		return sceneLoader;
@@ -72,7 +74,8 @@ public class Assets {
 		worlds.put("level2", world2);
 	}
 
-	private static SceneLoader loadMainMenu(Viewport viewport, ResourceManager rm) {
+	private static SceneLoader loadMainMenu(Viewport viewport,
+			ResourceManager rm) {
 		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("MainScene", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
@@ -95,14 +98,16 @@ public class Assets {
 		settings.addListener(new O2dClickListener() {
 			@Override
 			public void clicked() {
-				ScreenManager.getInstance().showScreen(ScreenEnum.CONFIG);
+				// FIXME
+				// ScreenManager.getInstance().showScreen(ScreenEnum.CONFIG);
 			}
 		});
 		return sceneLoader;
 	}
 
 	private static ButtonComponent getButton(String id, ItemWrapper wrapper) {
-		return wrapper.getChild(id).getEntity().getComponent(ButtonComponent.class);
+		return wrapper.getChild(id).getEntity()
+				.getComponent(ButtonComponent.class);
 	}
 
 	private static SceneLoader levelSelectScreen(Viewport viewport,
@@ -110,41 +115,53 @@ public class Assets {
 		SceneLoader sceneLoader = new SceneLoader(rm);
 		sceneLoader.loadScene("levelSelect", viewport);
 		sceneLoader.addComponentsByTagName("button", ButtonComponent.class);
-
-		Array<Entity> buttons = getEntitiesByTagName(sceneLoader, "button");
-		for (Entity entity : buttons) {
-			CustomVariables customVariables = new CustomVariables();
-			String variables = ComponentRetriever.get(entity,
-					MainItemComponent.class).customVars;
-			NodeComponent node = ComponentRetriever.get(entity, NodeComponent.class);
-			if (node != null && node.children.size >= 3) {
-				LabelComponent labelComponent = ComponentRetriever
-						.get(node.children.get(2), LabelComponent.class);
-				customVariables.loadFromString(variables);
-				final Integer level = customVariables.getIntegerVariable("level");
-				labelComponent.setText(String.valueOf(level));
-				if (level != null) {
-					ComponentRetriever.get(entity, ButtonComponent.class)
-							.addListener(new O2dClickListener() {
-								@Override
-								public void clicked() {
-									ScreenManager.getInstance()
-											.showScreen(ScreenEnum.GAME, level);
-								}
-							});
-				}
-			}
-		}
+		refreshLevels(sceneLoader);
 		Entity entity = new ItemWrapper(sceneLoader.getRoot()).getChild("back")
 				.getEntity();
 		ComponentRetriever.get(entity, ButtonComponent.class)
 				.addListener(new O2dClickListener() {
 					@Override
 					public void clicked() {
-						ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+						ScreenManager.getInstance()
+								.showScreen(ScreenEnum.MAIN_MENU);
 					}
 				});
 		return sceneLoader;
+	}
+
+	public static void refreshLevels(SceneLoader sceneLoader) {
+		Array<Entity> buttons = getEntitiesByTagName(sceneLoader, "button");
+		for (Entity entity : buttons) {
+			CustomVariables customVariables = new CustomVariables();
+			String variables = ComponentRetriever.get(entity,
+					MainItemComponent.class).customVars;
+			NodeComponent node = ComponentRetriever.get(entity,
+					NodeComponent.class);
+			if (node != null && node.children.size >= 3) {
+				LabelComponent labelComponent = ComponentRetriever
+						.get(node.children.get(2), LabelComponent.class);
+				customVariables.loadFromString(variables);
+				final Integer level = customVariables
+						.getIntegerVariable("level");
+				labelComponent.setText(String.valueOf(level));
+				if (level != null) {
+					// FIXME: show disabled buttons...
+					if (level <= SnakeSettings.level) {
+						ButtonComponent buttonComponent = ComponentRetriever
+								.get(entity, ButtonComponent.class);
+						buttonComponent.clearListeners();
+						buttonComponent.addListener(new O2dClickListener() {
+							@Override
+							public void clicked() {
+								System.out.println("clicked level " + level);
+								ScreenManager.getInstance()
+										.showScreen(ScreenEnum.GAME, level);
+							}
+						});
+					}
+				}
+			}
+		}
 	}
 
 	protected static Array<Entity> getEntitiesByTagName(SceneLoader sceneLoader,

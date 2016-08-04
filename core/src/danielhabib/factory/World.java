@@ -185,10 +185,7 @@ public abstract class World {
 
 		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
 		snakeBodyComponent.parts = new Array<Entity>();
-		CustomVariables customVariables = new CustomVariables();
-		String customVars = ComponentRetriever.get(snakeEntity,
-				MainItemComponent.class).customVars;
-		customVariables.loadFromString(customVars);
+		CustomVariables customVariables = getCustomVars(snakeEntity);
 		Integer size = customVariables.getIntegerVariable("size");
 		for (int i = 1; i <= size; i++) {
 			snakeBodyComponent.parts.add(newEntityPiece(0, 0));
@@ -201,6 +198,14 @@ public abstract class World {
 		snakeEntity.add(state);
 		setZ(snakeEntity, 3);
 		return snakeEntity;
+	}
+
+	protected CustomVariables getCustomVars(Entity snakeEntity) {
+		CustomVariables customVariables = new CustomVariables();
+		String customVars = ComponentRetriever.get(snakeEntity,
+				MainItemComponent.class).customVars;
+		customVariables.loadFromString(customVars);
+		return customVariables;
 	}
 
 	protected void addComponentsByTagName(String tagName, Component component) {
