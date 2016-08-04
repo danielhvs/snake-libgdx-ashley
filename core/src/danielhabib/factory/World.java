@@ -58,7 +58,6 @@ public abstract class World {
 		setZ(entity, 2);
 		new ItemWrapper(entity).getChild("partImage")
 				.addScript(new RotatingScript(10));
-		entity.add(new PlatformComponent(PlatformType.SNAKE_HEAD));
 		setBoundBox(entity);
 		return entity;
 	}
@@ -178,7 +177,7 @@ public abstract class World {
 		ItemWrapper wrapper = new ItemWrapper(sl.getRoot());
 		Entity snakeEntity = wrapper.getChild("head").getEntity();
 		MovementComponent movement = new MovementComponent();
-		movement.velocity.x = 16f;
+		movement.velocity.x = 32f;
 
 		StateComponent state = new StateComponent();
 		state.set(SnakeBodyComponent.State.MOVING);
