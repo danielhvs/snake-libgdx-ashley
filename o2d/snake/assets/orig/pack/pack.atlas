@@ -1,12 +1,12 @@
 
 pack.png
-size: 2048,2048
+size: 2048,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 ButtonSpellPressed
   rotate: false
-  xy: 1976, 1904
+  xy: 782, 11
   size: 36, 137
   split: 14, 14, 13, 15
   orig: 36, 137
@@ -14,42 +14,35 @@ ButtonSpellPressed
   index: -1
 apple32
   rotate: false
-  xy: 2014, 1907
+  xy: 156, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 armyIcon
   rotate: false
-  xy: 1874, 1618
+  xy: 643, 157
   size: 149, 147
   orig: 149, 147
   offset: 0, 0
   index: -1
 boing32
   rotate: false
-  xy: 2014, 2009
+  xy: 122, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 box32
   rotate: false
-  xy: 881, 495
+  xy: 1739, 358
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-bush3
-  rotate: false
-  xy: 1447, 939
-  size: 295, 200
-  orig: 295, 200
-  offset: 0, 0
-  index: -1
 buttonbg
   rotate: false
-  xy: 1168, 565
+  xy: 1527, 309
   size: 106, 106
   split: 47, 47, 47, 47
   orig: 106, 106
@@ -57,115 +50,52 @@ buttonbg
   index: -1
 circle32
   rotate: false
-  xy: 2014, 1975
+  xy: 156, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-cloud1
-  rotate: false
-  xy: 442, 36
-  size: 406, 196
-  orig: 406, 196
-  offset: 0, 0
-  index: -1
-cloud2
-  rotate: false
-  xy: 1432, 804
-  size: 333, 133
-  orig: 333, 133
-  offset: 0, 0
-  index: -1
 dialog
   rotate: false
-  xy: 442, 234
+  xy: 369, 306
   size: 471, 204
   split: 228, 229, 81, 84
   pad: 228, 230, 81, 85
   orig: 471, 204
   offset: 0, 0
   index: -1
-doghouse
+disabled
   rotate: false
-  xy: 915, 260
-  size: 256, 267
-  orig: 256, 267
-  offset: 0, 0
-  index: -1
-fence
-  rotate: false
-  xy: 1239, 813
-  size: 191, 152
-  orig: 191, 152
+  xy: 1129, 254
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1
 grayButton
   rotate: false
-  xy: 850, 78
+  xy: 794, 150
   size: 34, 154
   split: 11, 11, 11, 11
   orig: 34, 154
   offset: 0, 0
   index: -1
-ground2
-  rotate: false
-  xy: 2, 1800
-  size: 1698, 241
-  orig: 1698, 241
-  offset: 0, 0
-  index: -1
 head
   rotate: false
-  xy: 2014, 1584
+  xy: 122, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 hole
   rotate: false
-  xy: 2014, 1550
+  xy: 1213, 220
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-house10
-  rotate: false
-  xy: 587, 1338
-  size: 677, 460
-  orig: 677, 460
-  offset: 0, 0
-  index: -1
-house11
-  rotate: false
-  xy: 2, 932
-  size: 583, 866
-  orig: 583, 866
-  offset: 0, 0
-  index: -1
-house5
-  rotate: false
-  xy: 2, 493
-  size: 554, 437
-  orig: 554, 437
-  offset: 0, 0
-  index: -1
-house6
-  rotate: false
-  xy: 587, 871
-  size: 650, 465
-  orig: 650, 465
-  offset: 0, 0
-  index: -1
-house7
-  rotate: false
-  xy: 2, 99
-  size: 438, 392
-  orig: 438, 392
-  offset: 0, 0
-  index: -1
 hp
   rotate: false
-  xy: 1276, 611
+  xy: 1725, 353
   size: 12, 60
   split: 0, 0, 0, 0
   orig: 12, 60
@@ -173,7 +103,7 @@ hp
   index: -1
 hpbar
   rotate: false
-  xy: 1307, 705
+  xy: 1635, 307
   size: 88, 106
   split: 40, 40, 35, 35
   orig: 88, 106
@@ -181,14 +111,14 @@ hpbar
   index: -1
 menuBtn
   rotate: false
-  xy: 2, 4
+  xy: 1387, 417
   size: 252, 93
   orig: 252, 93
   offset: 0, 0
   index: -1
 menuSliderSwitch
   rotate: false
-  xy: 1664, 1169
+  xy: 2, 19
   size: 118, 49
   split: 42, 43, 0, 0
   orig: 118, 49
@@ -196,21 +126,14 @@ menuSliderSwitch
   index: -1
 menuX
   rotate: false
-  xy: 256, 2
+  xy: 1641, 415
   size: 96, 95
   orig: 96, 95
   offset: 0, 0
   index: -1
-menuXPressed
-  rotate: false
-  xy: 1870, 1146
-  size: 73, 72
-  orig: 73, 72
-  offset: 0, 0
-  index: -1
 miniSliderb
   rotate: false
-  xy: 354, 27
+  xy: 1129, 182
   size: 82, 70
   split: 29, 29, 29, 29
   orig: 82, 70
@@ -218,99 +141,64 @@ miniSliderb
   index: -1
 pausePlay
   rotate: false
-  xy: 1702, 1767
+  xy: 369, 30
   size: 272, 274
   orig: 272, 274
   offset: 0, 0
   index: -1
 poison32
   rotate: false
-  xy: 2014, 1941
+  xy: 1905, 478
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 restartLvl
   rotate: false
-  xy: 1168, 673
+  xy: 643, 17
   size: 137, 138
   orig: 137, 138
   offset: 0, 0
   index: -1
 run32
   rotate: false
-  xy: 881, 461
+  xy: 1739, 392
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 s2
   rotate: false
-  xy: 1784, 1154
+  xy: 1819, 446
   size: 84, 64
   orig: 84, 64
   offset: 0, 0
   index: -1
 s5
   rotate: false
-  xy: 1874, 1391
+  xy: 1739, 426
   size: 78, 84
   orig: 78, 84
   offset: 0, 0
   index: -1
 santaFront
   rotate: false
-  xy: 1266, 1358
+  xy: 2, 70
   size: 365, 440
   orig: 365, 440
   offset: 0, 0
   index: -1
-sleigh
-  rotate: false
-  xy: 1664, 1220
-  size: 287, 167
-  orig: 287, 167
-  offset: 0, 0
-  index: -1
 toMenu
   rotate: false
-  xy: 1874, 1477
+  xy: 1387, 276
   size: 138, 139
   orig: 138, 139
   offset: 0, 0
   index: -1
-tree1
-  rotate: false
-  xy: 1633, 1389
-  size: 239, 376
-  orig: 239, 376
-  offset: 0, 0
-  index: -1
-tree2
-  rotate: false
-  xy: 558, 440
-  size: 321, 429
-  orig: 321, 429
-  offset: 0, 0
-  index: -1
 tree3
   rotate: false
-  xy: 881, 529
+  xy: 842, 170
   size: 285, 340
   orig: 285, 340
-  offset: 0, 0
-  index: -1
-tree4
-  rotate: false
-  xy: 1239, 967
-  size: 206, 369
-  orig: 206, 369
-  offset: 0, 0
-  index: -1
-tw
-  rotate: false
-  xy: 1447, 1141
-  size: 215, 215
-  orig: 215, 215
   offset: 0, 0
   index: -1
