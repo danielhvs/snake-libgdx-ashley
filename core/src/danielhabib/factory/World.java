@@ -87,7 +87,7 @@ public abstract class World {
 					}
 				});
 
-		engine.addSystem(collisionSystem);
+		// engine.addSystem(collisionSystem);
 		engine.addSystem(new SnakeSystem2(sl.world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());

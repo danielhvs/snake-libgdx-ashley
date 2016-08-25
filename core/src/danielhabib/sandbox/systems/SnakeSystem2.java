@@ -82,14 +82,16 @@ public class SnakeSystem2 extends IteratingSystem {
 		return entity.getComponent(TransformComponent.class);
 	}
 
-	public void setXVel(float f, Entity snake) {
-		// TODO Auto-generated method stub
-
+	public void setYVel(float yVel, Entity entity) {
+		float degrees = -5f;
+		movements.get(entity).velocity.rotate(degrees);
+		transforms.get(entity).rotation += degrees;
 	}
 
-	public void setYVel(float speed, Entity snake) {
-		// TODO Auto-generated method stub
-
+	public void setXVel(float xVel, Entity entity) {
+		float degrees = 5f;
+		movements.get(entity).velocity.rotate(degrees);
+		transforms.get(entity).rotation += degrees;
 	}
 
 }
