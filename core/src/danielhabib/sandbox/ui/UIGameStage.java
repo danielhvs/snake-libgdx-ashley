@@ -19,8 +19,6 @@ import com.uwsoft.editor.renderer.scene2d.CompositeActor;
 
 import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.components.CountComponent;
-import danielhabib.sandbox.systems.MovementSystem;
-import danielhabib.sandbox.systems.SnakeSystem;
 
 public class UIGameStage extends Stage {
 
@@ -74,11 +72,11 @@ public class UIGameStage extends Stage {
 	}
 
 	private void togglePause(SceneLoader sceneLoader) {
-		SnakeSystem snakeSystem = sceneLoader.getEngine()
-				.getSystem(SnakeSystem.class);
-		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
-		MovementSystem movementSystem = sceneLoader.getEngine()
-				.getSystem(MovementSystem.class);
-		movementSystem.setProcessing(!movementSystem.checkProcessing());
+		// SnakeSystem snakeSystem = sceneLoader.getEngine()
+		// .getSystem(SnakeSystem.class);
+		// snakeSystem.setProcessing(!snakeSystem.checkProcessing());
+		// MovementSystem movementSystem = sceneLoader.getEngine()
+		// .getSystem(MovementSystem.class);
+		// movementSystem.setProcessing(!movementSystem.checkProcessing());
 	}
 }

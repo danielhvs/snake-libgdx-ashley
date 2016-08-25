@@ -38,7 +38,7 @@ import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
-import danielhabib.sandbox.systems.SnakeSystem;
+import danielhabib.sandbox.systems.SnakeSystem2;
 import danielhabib.sandbox.types.PlatformType;
 
 public abstract class World {
@@ -86,8 +86,9 @@ public abstract class World {
 						Assets.playSound(Assets.poisonSound);
 					}
 				});
+
 		engine.addSystem(collisionSystem);
-		engine.addSystem(new SnakeSystem(this));
+		engine.addSystem(new SnakeSystem2(sl.world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
 	}

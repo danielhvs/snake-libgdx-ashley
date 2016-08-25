@@ -27,7 +27,7 @@ public class ControlSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		SnakeSystem snakeSystem = getEngine().getSystem(SnakeSystem.class);
+		SnakeSystem2 snakeSystem = getSnakeSystem();
 		ImmutableArray<Entity> snakes = getEngine()
 				.getEntitiesFor(Family.one(SnakeBodyComponent.class).get());
 		ASandboxControl control = controls.get(entity).control;
@@ -44,9 +44,9 @@ public class ControlSystem extends IteratingSystem {
 			}
 
 			if (Gdx.input.isKeyJustPressed(Keys.A)) {
-				getEngine().getSystem(SnakeSystem.class).increaseSpeed(snake);
+				// getSnakeSystem().increaseSpeed(snake);
 			} else if (Gdx.input.isKeyJustPressed(Keys.D)) {
-				getEngine().getSystem(SnakeSystem.class).decreaseSpeed(snake);
+				// getSnakeSystem().decreaseSpeed(snake);
 			} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
 			} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
@@ -59,8 +59,12 @@ public class ControlSystem extends IteratingSystem {
 		}
 	}
 
+	private SnakeSystem2 getSnakeSystem() {
+		return getEngine().getSystem(SnakeSystem2.class);
+	}
+
 	private void togglePause() {
-		SnakeSystem snakeSystem = getEngine().getSystem(SnakeSystem.class);
+		SnakeSystem2 snakeSystem = getSnakeSystem();
 		snakeSystem.setProcessing(!snakeSystem.checkProcessing());
 		MovementSystem movementSystem = getEngine()
 				.getSystem(MovementSystem.class);
