@@ -9,11 +9,15 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.physics.PhysicsBodyLoader;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
-import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.MovementComponent;
@@ -41,9 +45,11 @@ public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<CountComponent> counts;
 	private ImmutableArray<Entity> enemies;
 	private ComponentMapper<MovementComponent> movements;
+	private World world;
 
-	public CollisionSystem(CollisionListener listener) {
+	public CollisionSystem(CollisionListener listener, World world) {
 		this.listener = listener;
+		this.world = world;
 
 		bounds = ComponentMapper.getFor(DimensionsComponent.class);
 		ComponentMapper.getFor(StateComponent.class);
@@ -71,7 +77,7 @@ public class CollisionSystem extends EntitySystem {
 			// FIXME: shouldnt care about state...
 			if (snake.getComponent(StateComponent.class)
 					.get() != State.MOVING_DESTINATION) {
-				checkSnakeCollision(snakeSystem, snake);
+				checkSnakeCollision(snakeSystem, snake, deltaTime);
 			}
 		}
 		for (Entity enemy : enemies) {
@@ -90,53 +96,83 @@ public class CollisionSystem extends EntitySystem {
 		}
 	}
 
-	private void checkSnakeCollision(SnakeSystem snakeSystem, Entity snake) {
-		for (Entity platform : platformComponents) {
-			DimensionsComponent snakeBound = bounds.get(snake);
-			DimensionsComponent platformBound = bounds.get(platform);
-			if (snakeBound.boundBox.overlaps(platformBound.boundBox)) {
-				PlatformComponent platformComponent = platform
-						.getComponent(PlatformComponent.class);
-				PlatformType type = platformComponent.type;
-				if (type == PlatformType.WALL || type == PlatformType.ENEMY) {
-					listener.ate();
-					snakeSystem.die(snake);
-					break;
-				} else if (type == PlatformType.BOING) {
-					listener.hit();
-					snakeSystem.revert(snake);
-					break;
-				} else if (type == PlatformType.HOLE) {
-					Rectangle intersection = new Rectangle();
-					if (isAlmostInside(snakeBound.boundBox,
-							platformBound.boundBox, intersection)) {
-						listener.ate();
-						snakeSystem.teleport(snake, platformBound.boundBox,
-								ComponentRetriever.get(platformComponent.other,
-										DimensionsComponent.class).boundBox);
-					}
-					break;
-				} else if (type == PlatformType.FRUIT) {
-					listener.ate();
-					engine.removeEntity(platform);
-					snakeSystem.grow(snake);
-					CountComponent countComponent = counts.get(snake);
-					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-							String.valueOf(++countComponent.fruits));
-					break;
-				} else if (type == PlatformType.POISON) {
-					listener.poison();
-					engine.removeEntity(platform);
-					snakeSystem.removeTail(snake);
-					break;
-				} else if (type == PlatformType.SPEED) {
-					listener.hit();
-					snakeSystem.increaseSpeed(snake);
-					engine.removeEntity(platform);
-					break;
-				}
-			}
-		}
+	private void checkSnakeCollision(SnakeSystem snakeSystem,
+			Entity snakeEntity, float deltaTime) {
+		DimensionsComponent dimensionsComponent = ComponentRetriever
+				.get(snakeEntity, DimensionsComponent.class);
+		float rayYGap = dimensionsComponent.height / 2;
+		float rayXGap = dimensionsComponent.width / 2;
+
+		Vector2 speed = movements.get(snakeEntity).velocity;
+		float rayYSize = speed.y * deltaTime;
+		float rayXSize = speed.x * deltaTime;
+
+		// if(raySize < 5f) raySize = 5f;
+
+		TransformComponent transformComponent = ComponentRetriever
+				.get(snakeEntity, TransformComponent.class);
+		// Vectors of ray from middle
+		float xCenter = (transformComponent.x + rayXGap)
+				* PhysicsBodyLoader.getScale();
+		float yUp = (transformComponent.y + rayYGap)
+				* PhysicsBodyLoader.getScale();
+		float yDown = (transformComponent.y - rayYGap)
+				* PhysicsBodyLoader.getScale();
+		float xRight = (transformComponent.x + rayXGap)
+				* PhysicsBodyLoader.getScale();
+		float xLeft = (transformComponent.x - rayXGap)
+				* PhysicsBodyLoader.getScale();
+
+		// FIXME: test
+		float yRayDown = (transformComponent.y - rayYSize) // considers next
+															// position
+				* PhysicsBodyLoader.getScale();
+		float yRayUp = (transformComponent.y + rayYSize)
+				* PhysicsBodyLoader.getScale();
+		float xRayLeft = (transformComponent.x - rayXSize)
+				* PhysicsBodyLoader.getScale();
+		float xRayRight = (transformComponent.x + rayXSize)
+				* PhysicsBodyLoader.getScale();
+
+		Vector2 up = new Vector2(xCenter, yUp);
+		Vector2 down = new Vector2(xCenter, yRayDown);
+		Vector2 right = new Vector2(xLeft, xRayRight);
+		Vector2 left = new Vector2(xRight, xRayLeft);
+		// Cast the ray
+		CollisionCallback collisionCallback = new CollisionCallback();
+		world.rayCast(collisionCallback, up, down);
+		world.rayCast(collisionCallback, down, up);
+		world.rayCast(collisionCallback, left, right);
+		world.rayCast(collisionCallback, right, left);
+
+		/*
+		 * for (Entity platform : platformComponents) { DimensionsComponent
+		 * snakeBound = bounds.get(snakeEntity); DimensionsComponent
+		 * platformBound = bounds.get(platform); if
+		 * (snakeBound.boundBox.overlaps(platformBound.boundBox)) {
+		 * PlatformComponent platformComponent = platform
+		 * .getComponent(PlatformComponent.class); PlatformType type =
+		 * platformComponent.type; if (type == PlatformType.WALL || type ==
+		 * PlatformType.ENEMY) { listener.ate(); snakeSystem.die(snakeEntity);
+		 * break; } else if (type == PlatformType.BOING) { listener.hit();
+		 * snakeSystem.revert(snakeEntity); break; } else if (type ==
+		 * PlatformType.HOLE) { Rectangle intersection = new Rectangle(); if
+		 * (isAlmostInside(snakeBound.boundBox, platformBound.boundBox,
+		 * intersection)) { listener.ate(); snakeSystem.teleport(snakeEntity,
+		 * platformBound.boundBox,
+		 * ComponentRetriever.get(platformComponent.other,
+		 * DimensionsComponent.class).boundBox); } break; } else if (type ==
+		 * PlatformType.FRUIT) { listener.ate(); engine.removeEntity(platform);
+		 * snakeSystem.grow(snakeEntity); CountComponent countComponent =
+		 * counts.get(snakeEntity);
+		 * TextFactory.addCountingAnimation(countComponent.fruitsLabel,
+		 * String.valueOf(++countComponent.fruits)); break; } else if (type ==
+		 * PlatformType.POISON) { listener.poison();
+		 * engine.removeEntity(platform); snakeSystem.removeTail(snakeEntity);
+		 * break; } else if (type == PlatformType.SPEED) { listener.hit();
+		 * snakeSystem.increaseSpeed(snakeEntity);
+		 * engine.removeEntity(platform); break; } } }
+		 */
 	}
 
 	// FIXME: DRY
@@ -149,5 +185,16 @@ public class CollisionSystem extends EntitySystem {
 			}
 		}
 		return false;
+	}
+
+	private class CollisionCallback implements RayCastCallback {
+
+		@Override
+		public float reportRayFixture(Fixture fixture, Vector2 point,
+				Vector2 normal, float fraction) {
+			System.out.println("Collided!!!");
+			return 0;
+		}
+
 	}
 }
