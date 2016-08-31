@@ -16,18 +16,22 @@ public class DebugSystem extends EntitySystem {
 
 	public DebugSystem(World world) {
 		this.world = world;
-		debugRenderer = new Box2DDebugRenderer();
+		this.debugRenderer = new Box2DDebugRenderer();
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		// FIXME: Not working.
 		ComponentMapper<ViewPortComponent> mapper = ComponentMapper
 				.getFor(ViewPortComponent.class);
-		ImmutableArray<Entity> viewPort = getEngine()
-				.getEntitiesFor(Family.all(ViewPortComponent.class).get());
-		ViewPortComponent viewPortComponent = mapper.get(viewPort.get(0));
-		Camera camera = viewPortComponent.viewPort.getCamera();
-		debugRenderer.render(world, camera.combined);
+		if (mapper != null) {
+			ImmutableArray<Entity> viewPort = getEngine()
+					.getEntitiesFor(Family.all(ViewPortComponent.class).get());
+			if (viewPort != null && viewPort.size() > 0) {
+				ViewPortComponent viewPortComponent = mapper
+						.get(viewPort.get(0));
+				Camera camera = viewPortComponent.viewPort.getCamera();
+				debugRenderer.render(world, camera.combined);
+			}
+		}
 	}
 }
