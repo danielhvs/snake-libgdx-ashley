@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.components.physics.PhysicsBodyComponent;
@@ -44,7 +45,7 @@ public class MovementSystem extends IteratingSystem {
 			physicsBodyComponent.body.setTransform(
 					(pos.x + pos.originX) * PhysicsBodyLoader.getScale(),
 					(pos.y + pos.originY) * PhysicsBodyLoader.getScale(),
-					physicsBodyComponent.body.getAngle());
+					pos.rotation * MathUtils.degreesToRadians);
 		}
 	}
 }
