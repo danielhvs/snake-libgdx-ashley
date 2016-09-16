@@ -1,6 +1,6 @@
 ## Goal
 
-Learn libgdx ashley framework.
+Learn libgdx ashley framework: a Component Based Entity System (ECS).
 
 ## Usage
 
