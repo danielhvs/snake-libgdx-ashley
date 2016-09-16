@@ -2,7 +2,7 @@
 
 Learn libgdx ashley framework: a Component Based Entity System (ECS).
 
-## Usage
+## Try it!
 
 ./gradlew desktop:run
 
