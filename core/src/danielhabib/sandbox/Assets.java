@@ -21,7 +21,7 @@ import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 import com.uwsoft.editor.renderer.utils.CustomVariables;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
-import danielhabib.factory.World;
+import danielhabib.factory.SnakeLevel;
 import danielhabib.factory.World1;
 import danielhabib.factory.World2;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -33,7 +33,7 @@ public class Assets {
 	public static Sound poisonSound;
 	public static AssetManager manager;
 	public static ObjectMap<String, SceneLoader> scenes;
-	public static ObjectMap<String, World> worlds;
+	public static ObjectMap<String, SnakeLevel> worlds;
 	private static ResourceManager rm;
 	private static int step;
 
@@ -60,8 +60,8 @@ public class Assets {
 		Viewport viewport = new FitViewport(192, 120);
 		SceneLoader sceneLoader1 = new SceneLoader(rm);
 		SceneLoader sceneLoader2 = new SceneLoader(rm);
-		World world1 = new World1(sceneLoader1);
-		World world2 = new World2(sceneLoader2);
+		SnakeLevel world1 = new World1(sceneLoader1);
+		SnakeLevel world2 = new World2(sceneLoader2);
 
 		scenes = new ObjectMap<String, SceneLoader>();
 		scenes.put("levelSelect", levelSelectScreen(viewport, rm));
@@ -69,7 +69,7 @@ public class Assets {
 		scenes.put("level1", sceneLoader1);
 		scenes.put("level2", sceneLoader2);
 
-		worlds = new ObjectMap<String, World>();
+		worlds = new ObjectMap<String, SnakeLevel>();
 		worlds.put("level1", world1);
 		worlds.put("level2", world2);
 	}
@@ -193,7 +193,7 @@ public class Assets {
 		return scenes.get(key);
 	}
 
-	public static World getWorld(String key) {
+	public static SnakeLevel getWorld(String key) {
 		return worlds.get(key);
 	}
 

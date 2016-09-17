@@ -5,7 +5,7 @@ import com.uwsoft.editor.renderer.SceneLoader;
 
 import danielhabib.sandbox.ScreenManager;
 
-public class World2 extends World {
+public class World2 extends SnakeLevel {
 
 	public World2(SceneLoader sceneLoader) {
 		super(sceneLoader);

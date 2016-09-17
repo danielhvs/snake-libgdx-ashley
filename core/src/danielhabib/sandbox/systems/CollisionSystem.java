@@ -9,17 +9,22 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
+import com.badlogic.gdx.physics.box2d.World;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
-import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
-import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
-import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.types.PlatformType;
 
@@ -41,9 +46,11 @@ public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<CountComponent> counts;
 	private ImmutableArray<Entity> enemies;
 	private ComponentMapper<MovementComponent> movements;
+	private World world;
 
-	public CollisionSystem(CollisionListener listener) {
+	public CollisionSystem(CollisionListener listener, World world) {
 		this.listener = listener;
+		this.world = world;
 
 		bounds = ComponentMapper.getFor(DimensionsComponent.class);
 		ComponentMapper.getFor(StateComponent.class);
@@ -62,18 +69,33 @@ public class CollisionSystem extends EntitySystem {
 		platformComponents = engine.getEntitiesFor(
 				Family.all(PlatformComponent.class, DimensionsComponent.class,
 						TransformComponent.class).get());
+
+		world.setContactListener(new ContactListener() {
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void endContact(Contact contact) {
+				System.out.println("end");
+			}
+
+			@Override
+			public void beginContact(Contact contact) {
+				System.out.println("begin");
+			}
+		});
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		for (Entity snake : snakes) {
-			// FIXME: shouldnt care about state...
-			if (snake.getComponent(StateComponent.class)
-					.get() != State.MOVING_DESTINATION) {
-				checkSnakeCollision(snakeSystem, snake);
-			}
-		}
 		for (Entity enemy : enemies) {
 			for (Entity platform : platformComponents) {
 				DimensionsComponent enemyBound = bounds.get(enemy);
@@ -90,55 +112,6 @@ public class CollisionSystem extends EntitySystem {
 		}
 	}
 
-	private void checkSnakeCollision(SnakeSystem snakeSystem, Entity snake) {
-		for (Entity platform : platformComponents) {
-			DimensionsComponent snakeBound = bounds.get(snake);
-			DimensionsComponent platformBound = bounds.get(platform);
-			if (snakeBound.boundBox.overlaps(platformBound.boundBox)) {
-				PlatformComponent platformComponent = platform
-						.getComponent(PlatformComponent.class);
-				PlatformType type = platformComponent.type;
-				if (type == PlatformType.WALL || type == PlatformType.ENEMY) {
-					listener.ate();
-					snakeSystem.die(snake);
-					break;
-				} else if (type == PlatformType.BOING) {
-					listener.hit();
-					snakeSystem.revert(snake);
-					break;
-				} else if (type == PlatformType.HOLE) {
-					Rectangle intersection = new Rectangle();
-					if (isAlmostInside(snakeBound.boundBox,
-							platformBound.boundBox, intersection)) {
-						listener.ate();
-						snakeSystem.teleport(snake, platformBound.boundBox,
-								ComponentRetriever.get(platformComponent.other,
-										DimensionsComponent.class).boundBox);
-					}
-					break;
-				} else if (type == PlatformType.FRUIT) {
-					listener.ate();
-					engine.removeEntity(platform);
-					snakeSystem.grow(snake);
-					CountComponent countComponent = counts.get(snake);
-					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-							String.valueOf(++countComponent.fruits));
-					break;
-				} else if (type == PlatformType.POISON) {
-					listener.poison();
-					engine.removeEntity(platform);
-					snakeSystem.removeTail(snake);
-					break;
-				} else if (type == PlatformType.SPEED) {
-					listener.hit();
-					snakeSystem.increaseSpeed(snake);
-					engine.removeEntity(platform);
-					break;
-				}
-			}
-		}
-	}
-
 	// FIXME: DRY
 	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
 			Rectangle intersect) {
@@ -149,5 +122,16 @@ public class CollisionSystem extends EntitySystem {
 			}
 		}
 		return false;
+	}
+
+	private class CollisionCallback implements RayCastCallback {
+
+		@Override
+		public float reportRayFixture(Fixture fixture, Vector2 point,
+				Vector2 normal, float fraction) {
+			System.out.println("Collided!!!");
+			return 0;
+		}
+
 	}
 }

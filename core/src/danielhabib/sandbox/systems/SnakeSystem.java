@@ -9,13 +9,15 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.components.physics.PhysicsBodyComponent;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
-import danielhabib.factory.World;
+import danielhabib.factory.SnakeLevel;
 import danielhabib.sandbox.ScreenEnum;
 import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.SnakeSettings;
@@ -29,22 +31,23 @@ public class SnakeSystem extends IteratingSystem {
 	private static final float REALLY_SMALL_SIZE = .001f;
 	private static final float REALLY_BIG_SIZE = 750f;
 	private ComponentMapper<StateComponent> states;
-	private ComponentMapper<MovementComponent> movements;
+	private ComponentMapper<PhysicsBodyComponent> physics;
 	private ComponentMapper<SnakeBodyComponent> snakes;
-	private World world;
+	private SnakeLevel snakeLevel;
 	private ComponentMapper<TransformComponent> transforms;
 	private Rectangle destination;
 	private Vector2 velocity;
 	private float rotation;
+	private boolean speedInitialized;
 
-	public SnakeSystem(World world) {
+	public SnakeSystem(SnakeLevel snakeLevel) {
 		super(Family
 				.all(SnakeBodyComponent.class, StateComponent.class,
-						TransformComponent.class, MovementComponent.class)
+				TransformComponent.class, PhysicsBodyComponent.class)
 				.get());
-		this.world = world;
+		this.snakeLevel = snakeLevel;
 		states = ComponentMapper.getFor(StateComponent.class);
-		movements = ComponentMapper.getFor(MovementComponent.class);
+		physics = ComponentMapper.getFor(PhysicsBodyComponent.class);
 		transforms = ComponentMapper.getFor(TransformComponent.class);
 		snakes = ComponentMapper.getFor(SnakeBodyComponent.class);
 	}
@@ -62,18 +65,19 @@ public class SnakeSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
+		PhysicsBodyComponent physicsBodyComponent = ComponentRetriever.get(entity,
+				PhysicsBodyComponent.class);
+		if (!speedInitialized && physicsBodyComponent != null
+				&& physicsBodyComponent.body != null) {
+			// We have to wait for the body initialization inside
+			// PhysicsSystem!
+			physicsBodyComponent.body.setLinearVelocity(2, 2);
+			speedInitialized = true;
+		}
+
 		StateComponent state = states.get(entity);
 		TransformComponent transformComponent = getTransformComponent(entity);
-		if (state.get() == State.REVERTING) {
-			movements.get(entity).velocity.rotate(90);
-			transformComponent.rotation += 90;
-			state.set(State.REVERTING2);
-			movePartsToFollowHead(entity);
-		} else if (state.get() == State.REVERTING2) {
-			// Force move trying not to enter in a reverting loop.
-			movePartsToFollowHead(entity);
-			state.set(State.MOVING);
-		} else if (state.get() == State.MOVING) {
+		if (state.get() == State.MOVING) {
 			movePartsToFollowHead(entity);
 		} else if (state.get() == State.DYING) {
 			getEngine()
@@ -132,7 +136,7 @@ public class SnakeSystem extends IteratingSystem {
 							destination.x - transformComponent.x);
 					headVelocity.setAngleRad(angleRad);
 					headVelocity.scl(6f);
-					movements.get(entity).velocity.set(headVelocity);
+					// FIXME:movements.get(entity).velocity.set(headVelocity);
 					getEngine().removeSystem(
 							getEngine().getSystem(ControlSystem.class));
 					setState(entity, State.MOVING_DESTINATION);
@@ -149,7 +153,7 @@ public class SnakeSystem extends IteratingSystem {
 				transformComponent.rotation = this.rotation;
 				transformComponent.x = destination.x + destination.width / 2;
 				transformComponent.y = destination.y + destination.height / 2;
-				movements.get(entity).velocity.set(this.velocity);
+				// FIXME:movements.get(entity).velocity.set(this.velocity);
 				for (Entity part : snakes.get(entity).parts) {
 					setVisible(part, true);
 					TransformComponent partPos = getTransformComponent(part);
@@ -266,20 +270,26 @@ public class SnakeSystem extends IteratingSystem {
 		return entity.getComponent(TransformComponent.class);
 	}
 
-	public void setYVel(float yVel, Entity entity) {
-		float degrees = -5f;
-		movements.get(entity).velocity.rotate(degrees);
-		transforms.get(entity).rotation += degrees;
+	public void turnRight(Entity entity) {
+		int degrees = -5;
+		float radians = degrees * MathUtils.degreesToRadians;
+		Body body = physics.get(entity).body;
+		Vector2 vector2 = body.getLinearVelocity().rotate(degrees);
+		body.setLinearVelocity(vector2);
+		body.setTransform(body.getPosition(), body.getAngle() + radians);
 	}
 
-	public void setXVel(float xVel, Entity entity) {
-		float degrees = 5f;
-		movements.get(entity).velocity.rotate(degrees);
-		transforms.get(entity).rotation += degrees;
+	public void turnLeft(Entity entity) {
+		int degrees = 5;
+		float radians = degrees * MathUtils.degreesToRadians;
+		Body body = physics.get(entity).body;
+		Vector2 vector2 = body.getLinearVelocity().rotate(degrees);
+		body.setLinearVelocity(vector2);
+		body.setTransform(body.getPosition(), body.getAngle() + radians);
 	}
 
 	public void grow(Entity entity) {
-		Entity part = world.newEntityPiece(0, 0);
+		Entity part = snakeLevel.newEntityPiece(0, 0);
 		snakes.get(entity).parts.add(part);
 		getEngine().addEntity(part);
 	}
@@ -307,11 +317,11 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void increaseSpeed(Entity entity) {
-		movements.get(entity).velocity.scl(2);
+		// FIXME:movements.get(entity).velocity.scl(2);
 	}
 
 	public void decreaseSpeed(Entity entity) {
-		movements.get(entity).velocity.scl(.5f);
+		// FIXME:movements.get(entity).velocity.scl(.5f);
 	}
 
 	public void teleport(Entity entity, Rectangle from, Rectangle destination) {
@@ -319,8 +329,8 @@ public class SnakeSystem extends IteratingSystem {
 		if (state != State.TELEPORTING && state != State.TELEPORTED
 				&& state != State.MOVING_DESTINATION) {
 			setState(entity, State.TELEPORTING);
-			this.velocity = movements.get(entity).velocity.cpy();
-			movements.get(entity).velocity.setZero();
+			// FIXME:this.velocity = movements.get(entity).velocity.cpy();
+			// FIXME:movements.get(entity).velocity.setZero();
 			TransformComponent pos = transforms.get(entity);
 			pos.x = from.x + from.width / 2;
 			pos.y = from.y + from.height / 2;

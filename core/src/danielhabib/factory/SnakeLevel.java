@@ -37,14 +37,15 @@ import danielhabib.sandbox.systems.CollisionSystem;
 import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.ControlSystem;
 import danielhabib.sandbox.systems.CountSystem;
+import danielhabib.sandbox.systems.DebugSystem;
 import danielhabib.sandbox.systems.MovementSystem;
-import danielhabib.sandbox.systems.SnakeSystem2;
+import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.types.PlatformType;
 
-public abstract class World {
+public abstract class SnakeLevel {
 	protected SceneLoader sl;
 
-	public World(SceneLoader sceneLoader) {
+	public SnakeLevel(SceneLoader sceneLoader) {
 		this.sl = sceneLoader;
 	}
 
@@ -85,12 +86,13 @@ public abstract class World {
 					public void poison() {
 						Assets.playSound(Assets.poisonSound);
 					}
-				});
+				}, sl.world);
 
-		// engine.addSystem(collisionSystem);
-		engine.addSystem(new SnakeSystem2(sl.world));
+		engine.addSystem(collisionSystem);
+		engine.addSystem(new SnakeSystem(this));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
+		engine.addSystem(new DebugSystem(sl.world));
 	}
 
 	protected Entity parseMap(String map) {
@@ -193,7 +195,7 @@ public abstract class World {
 		for (Entity part : snakeBodyComponent.parts) {
 			sl.getEngine().addEntity(part);
 		}
-		snakeEntity.add(movement);
+		// snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
 		setZ(snakeEntity, 3);
