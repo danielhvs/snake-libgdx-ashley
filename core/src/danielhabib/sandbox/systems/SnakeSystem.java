@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
@@ -270,15 +271,21 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void turnRight(Entity entity) {
-		float degrees = -5f;
-		physics.get(entity).body.getLinearVelocity().rotate(degrees);
-		// transforms.get(entity).rotation += degrees;
+		int degrees = -5;
+		float radians = degrees * MathUtils.degreesToRadians;
+		Body body = physics.get(entity).body;
+		Vector2 vector2 = body.getLinearVelocity().rotate(degrees);
+		body.setLinearVelocity(vector2);
+		body.setTransform(body.getPosition(), body.getAngle() + radians);
 	}
 
 	public void turnLeft(Entity entity) {
-		float degrees = 5f;
-		physics.get(entity).body.getLinearVelocity().rotate(degrees);
-		// transforms.get(entity).rotation += degrees;
+		int degrees = 5;
+		float radians = degrees * MathUtils.degreesToRadians;
+		Body body = physics.get(entity).body;
+		Vector2 vector2 = body.getLinearVelocity().rotate(degrees);
+		body.setLinearVelocity(vector2);
+		body.setTransform(body.getPosition(), body.getAngle() + radians);
 	}
 
 	public void grow(Entity entity) {
