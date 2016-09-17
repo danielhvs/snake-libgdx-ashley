@@ -28,14 +28,14 @@ armyIcon
   index: -1
 boing32
   rotate: false
-  xy: 122, 36
+  xy: 122, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 box32
   rotate: false
-  xy: 1739, 358
+  xy: 122, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -50,7 +50,7 @@ buttonbg
   index: -1
 circle32
   rotate: false
-  xy: 156, 2
+  xy: 1213, 220
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -81,14 +81,14 @@ grayButton
   index: -1
 head
   rotate: false
-  xy: 122, 2
+  xy: 156, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 hole
   rotate: false
-  xy: 1213, 220
+  xy: 1739, 358
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

@@ -42,10 +42,10 @@ import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.types.PlatformType;
 
-public abstract class World {
+public abstract class SnakeLevel {
 	protected SceneLoader sl;
 
-	public World(SceneLoader sceneLoader) {
+	public SnakeLevel(SceneLoader sceneLoader) {
 		this.sl = sceneLoader;
 	}
 
@@ -195,7 +195,7 @@ public abstract class World {
 		for (Entity part : snakeBodyComponent.parts) {
 			sl.getEngine().addEntity(part);
 		}
-		snakeEntity.add(movement);
+		// snakeEntity.add(movement);
 		snakeEntity.add(snakeBodyComponent);
 		snakeEntity.add(state);
 		setZ(snakeEntity, 3);

@@ -8,7 +8,7 @@ import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.types.PlatformType;
 
-public class World3 extends World {
+public class World3 extends SnakeLevel {
 
 	public World3(SceneLoader sceneLoader) {
 		super(sceneLoader);

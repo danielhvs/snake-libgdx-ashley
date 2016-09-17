@@ -10,20 +10,21 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
-import com.uwsoft.editor.renderer.physics.PhysicsBodyLoader;
-import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.EnemyComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
-import danielhabib.sandbox.components.SnakeBodyComponent.State;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.types.PlatformType;
 
@@ -68,18 +69,34 @@ public class CollisionSystem extends EntitySystem {
 		platformComponents = engine.getEntitiesFor(
 				Family.all(PlatformComponent.class, DimensionsComponent.class,
 						TransformComponent.class).get());
+
+		world.setContactListener(new ContactListener() {
+			@Override
+			public void preSolve(Contact contact, Manifold oldManifold) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void postSolve(Contact contact, ContactImpulse impulse) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void endContact(Contact contact) {
+				System.out.println("end");
+			}
+
+			@Override
+			public void beginContact(Contact contact) {
+				System.out.println("begin");
+			}
+		});
 	}
 
 	@Override
 	public void update(float deltaTime) {
-		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		for (Entity snake : snakes) {
-			// FIXME: shouldnt care about state...
-			if (snake.getComponent(StateComponent.class)
-					.get() != State.MOVING_DESTINATION) {
-				checkSnakeCollision(snakeSystem, snake, deltaTime);
-			}
-		}
 		for (Entity enemy : enemies) {
 			for (Entity platform : platformComponents) {
 				DimensionsComponent enemyBound = bounds.get(enemy);
@@ -94,85 +111,6 @@ public class CollisionSystem extends EntitySystem {
 				}
 			}
 		}
-	}
-
-	private void checkSnakeCollision(SnakeSystem snakeSystem,
-			Entity snakeEntity, float deltaTime) {
-		DimensionsComponent dimensionsComponent = ComponentRetriever
-				.get(snakeEntity, DimensionsComponent.class);
-		float rayYGap = dimensionsComponent.height / 2;
-		float rayXGap = dimensionsComponent.width / 2;
-
-		Vector2 speed = movements.get(snakeEntity).velocity;
-		float rayYSize = speed.y * deltaTime;
-		float rayXSize = speed.x * deltaTime;
-
-		// if(raySize < 5f) raySize = 5f;
-
-		TransformComponent transformComponent = ComponentRetriever
-				.get(snakeEntity, TransformComponent.class);
-		// Vectors of ray from middle
-		float xCenter = (transformComponent.x + rayXGap)
-				* PhysicsBodyLoader.getScale();
-		float yUp = (transformComponent.y + rayYGap)
-				* PhysicsBodyLoader.getScale();
-		float yDown = (transformComponent.y - rayYGap)
-				* PhysicsBodyLoader.getScale();
-		float xRight = (transformComponent.x + rayXGap)
-				* PhysicsBodyLoader.getScale();
-		float xLeft = (transformComponent.x - rayXGap)
-				* PhysicsBodyLoader.getScale();
-
-		// FIXME: test
-		float yRayDown = (transformComponent.y - rayYSize) // considers next
-															// position
-				* PhysicsBodyLoader.getScale();
-		float yRayUp = (transformComponent.y + rayYSize)
-				* PhysicsBodyLoader.getScale();
-		float xRayLeft = (transformComponent.x - rayXSize)
-				* PhysicsBodyLoader.getScale();
-		float xRayRight = (transformComponent.x + rayXSize)
-				* PhysicsBodyLoader.getScale();
-
-		Vector2 up = new Vector2(xCenter, yUp);
-		Vector2 down = new Vector2(xCenter, yRayDown);
-		Vector2 right = new Vector2(xLeft, xRayRight);
-		Vector2 left = new Vector2(xRight, xRayLeft);
-		// Cast the ray
-		CollisionCallback collisionCallback = new CollisionCallback();
-		world.rayCast(collisionCallback, up, down);
-		world.rayCast(collisionCallback, down, up);
-		world.rayCast(collisionCallback, left, right);
-		world.rayCast(collisionCallback, right, left);
-
-		/*
-		 * for (Entity platform : platformComponents) { DimensionsComponent
-		 * snakeBound = bounds.get(snakeEntity); DimensionsComponent
-		 * platformBound = bounds.get(platform); if
-		 * (snakeBound.boundBox.overlaps(platformBound.boundBox)) {
-		 * PlatformComponent platformComponent = platform
-		 * .getComponent(PlatformComponent.class); PlatformType type =
-		 * platformComponent.type; if (type == PlatformType.WALL || type ==
-		 * PlatformType.ENEMY) { listener.ate(); snakeSystem.die(snakeEntity);
-		 * break; } else if (type == PlatformType.BOING) { listener.hit();
-		 * snakeSystem.revert(snakeEntity); break; } else if (type ==
-		 * PlatformType.HOLE) { Rectangle intersection = new Rectangle(); if
-		 * (isAlmostInside(snakeBound.boundBox, platformBound.boundBox,
-		 * intersection)) { listener.ate(); snakeSystem.teleport(snakeEntity,
-		 * platformBound.boundBox,
-		 * ComponentRetriever.get(platformComponent.other,
-		 * DimensionsComponent.class).boundBox); } break; } else if (type ==
-		 * PlatformType.FRUIT) { listener.ate(); engine.removeEntity(platform);
-		 * snakeSystem.grow(snakeEntity); CountComponent countComponent =
-		 * counts.get(snakeEntity);
-		 * TextFactory.addCountingAnimation(countComponent.fruitsLabel,
-		 * String.valueOf(++countComponent.fruits)); break; } else if (type ==
-		 * PlatformType.POISON) { listener.poison();
-		 * engine.removeEntity(platform); snakeSystem.removeTail(snakeEntity);
-		 * break; } else if (type == PlatformType.SPEED) { listener.hit();
-		 * snakeSystem.increaseSpeed(snakeEntity);
-		 * engine.removeEntity(platform); break; } } }
-		 */
 	}
 
 	// FIXME: DRY
