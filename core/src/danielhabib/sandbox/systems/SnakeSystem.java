@@ -37,6 +37,7 @@ public class SnakeSystem extends IteratingSystem {
 	private Rectangle destination;
 	private Vector2 velocity;
 	private float rotation;
+	private boolean speedInitialized;
 
 	public SnakeSystem(SnakeLevel snakeLevel) {
 		super(Family
@@ -65,10 +66,12 @@ public class SnakeSystem extends IteratingSystem {
 	protected void processEntity(Entity entity, float deltaTime) {
 		PhysicsBodyComponent physicsBodyComponent = ComponentRetriever.get(entity,
 				PhysicsBodyComponent.class);
-		if (physicsBodyComponent != null && physicsBodyComponent.body != null) {
+		if (!speedInitialized && physicsBodyComponent != null
+				&& physicsBodyComponent.body != null) {
 			// We have to wait for the body initialization inside
 			// PhysicsSystem!
-			physicsBodyComponent.body.setLinearVelocity(1, 1);
+			physicsBodyComponent.body.setLinearVelocity(2, 2);
+			speedInitialized = true;
 		}
 
 		StateComponent state = states.get(entity);

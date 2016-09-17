@@ -74,7 +74,6 @@ public class CollisionSystem extends EntitySystem {
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
