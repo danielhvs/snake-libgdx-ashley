@@ -43,7 +43,7 @@ public class SnakeSystem extends IteratingSystem {
 	public SnakeSystem(SnakeLevel snakeLevel) {
 		super(Family
 				.all(SnakeBodyComponent.class, StateComponent.class,
-				TransformComponent.class, PhysicsBodyComponent.class)
+						TransformComponent.class, PhysicsBodyComponent.class)
 				.get());
 		this.snakeLevel = snakeLevel;
 		states = ComponentMapper.getFor(StateComponent.class);
@@ -65,8 +65,8 @@ public class SnakeSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		PhysicsBodyComponent physicsBodyComponent = ComponentRetriever.get(entity,
-				PhysicsBodyComponent.class);
+		PhysicsBodyComponent physicsBodyComponent = ComponentRetriever
+				.get(entity, PhysicsBodyComponent.class);
 		if (!speedInitialized && physicsBodyComponent != null
 				&& physicsBodyComponent.body != null) {
 			// We have to wait for the body initialization inside
@@ -317,7 +317,10 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void increaseSpeed(Entity entity) {
-		// FIXME:movements.get(entity).velocity.scl(2);
+		PhysicsBodyComponent physicsBodyComponent = ComponentRetriever
+				.get(entity, PhysicsBodyComponent.class);
+		Body body = physicsBodyComponent.body;
+		body.applyForceToCenter(body.getLinearVelocity().scl(2), false);
 	}
 
 	public void decreaseSpeed(Entity entity) {

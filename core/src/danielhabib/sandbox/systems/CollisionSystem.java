@@ -64,29 +64,26 @@ public class CollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		enemies = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-		snakes = engine
-				.getEntitiesFor(Family
-						.all(SnakeBodyComponent.class, StateComponent.class,
-								DimensionsComponent.class, TransformComponent.class)
-						.get());
-		platformComponents = engine.getEntitiesFor(Family.all(PlatformComponent.class,
-				DimensionsComponent.class, TransformComponent.class).get());
+		snakes = engine.getEntitiesFor(Family
+				.all(SnakeBodyComponent.class, StateComponent.class,
+						DimensionsComponent.class, TransformComponent.class)
+				.get());
+		platformComponents = engine.getEntitiesFor(
+				Family.all(PlatformComponent.class, DimensionsComponent.class,
+						TransformComponent.class).get());
 
 		world.setContactListener(new ContactListener() {
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void postSolve(Contact contact, ContactImpulse impulse) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void endContact(Contact contact) {
-				System.out.println("end");
 			}
 
 			@Override
@@ -100,22 +97,29 @@ public class CollisionSystem extends EntitySystem {
 							MainItemComponent.class);
 					MainItemComponent bComponent = ComponentRetriever.get(b,
 							MainItemComponent.class);
-					System.out.println(aComponent.itemIdentifier);
-					System.out.println(bComponent.itemIdentifier);
 					if (aComponent.itemIdentifier.equals("head")) {
-						MainItemComponent other = bComponent;
-						if (other.tags.contains("fruit")) {
-							getEngine().getSystem(SnakeSystem.class).grow(a);
-							getEngine().removeEntity(b);
-						}
+						collide(a, b);
 					} else if (bComponent.itemIdentifier.equals("head")) {
-						MainItemComponent other = aComponent;
-						if (other.tags.contains("fruit")) {
-							getEngine().getSystem(SnakeSystem.class).grow(b);
-							getEngine().removeEntity(a);
-						}
+						collide(b, a);
 					}
 				}
+			}
+
+			private void collide(Entity snake, Entity entity) {
+				MainItemComponent mainItem = ComponentRetriever.get(entity,
+						MainItemComponent.class);
+				if (mainItem.tags.contains("fruit")) {
+					getEngine().getSystem(SnakeSystem.class).grow(snake);
+					getEngine().removeEntity(entity);
+				} else if (mainItem.tags.contains("speed")) {
+					getEngine().getSystem(SnakeSystem.class)
+							.increaseSpeed(snake);
+					getEngine().removeEntity(entity);
+				} else if (mainItem.tags.contains("poison")) {
+					getEngine().getSystem(SnakeSystem.class).removeTail(snake);
+					getEngine().removeEntity(entity);
+				}
+
 			}
 		});
 	}
@@ -139,7 +143,8 @@ public class CollisionSystem extends EntitySystem {
 	}
 
 	// FIXME: DRY
-	private boolean isAlmostInside(Rectangle r1, Rectangle r2, Rectangle intersect) {
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
+			Rectangle intersect) {
 		if (Intersector.intersectRectangles(r1, r2, intersect)) {
 			float factor = intersect.area() / r2.area();
 			if (factor > .6f) {
@@ -152,8 +157,8 @@ public class CollisionSystem extends EntitySystem {
 	private class CollisionCallback implements RayCastCallback {
 
 		@Override
-		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal,
-				float fraction) {
+		public float reportRayFixture(Fixture fixture, Vector2 point,
+				Vector2 normal, float fraction) {
 			System.out.println("Collided!!!");
 			return 0;
 		}
