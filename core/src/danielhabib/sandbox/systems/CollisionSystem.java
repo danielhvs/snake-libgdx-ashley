@@ -18,7 +18,9 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.uwsoft.editor.renderer.components.DimensionsComponent;
+import com.uwsoft.editor.renderer.components.MainItemComponent;
 import com.uwsoft.editor.renderer.components.TransformComponent;
+import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.EnemyComponent;
@@ -62,13 +64,13 @@ public class CollisionSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		this.engine = engine;
 		enemies = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-		snakes = engine.getEntitiesFor(Family
-				.all(SnakeBodyComponent.class, StateComponent.class,
-						DimensionsComponent.class, TransformComponent.class)
-				.get());
-		platformComponents = engine.getEntitiesFor(
-				Family.all(PlatformComponent.class, DimensionsComponent.class,
-						TransformComponent.class).get());
+		snakes = engine
+				.getEntitiesFor(Family
+						.all(SnakeBodyComponent.class, StateComponent.class,
+								DimensionsComponent.class, TransformComponent.class)
+						.get());
+		platformComponents = engine.getEntitiesFor(Family.all(PlatformComponent.class,
+				DimensionsComponent.class, TransformComponent.class).get());
 
 		world.setContactListener(new ContactListener() {
 			@Override
@@ -89,7 +91,31 @@ public class CollisionSystem extends EntitySystem {
 
 			@Override
 			public void beginContact(Contact contact) {
-				System.out.println("begin");
+				Fixture fixtureA = contact.getFixtureA();
+				Fixture fixtureB = contact.getFixtureB();
+				Entity a = (Entity) fixtureA.getBody().getUserData();
+				Entity b = (Entity) fixtureB.getBody().getUserData();
+				if (a != null && b != null) {
+					MainItemComponent aComponent = ComponentRetriever.get(a,
+							MainItemComponent.class);
+					MainItemComponent bComponent = ComponentRetriever.get(b,
+							MainItemComponent.class);
+					System.out.println(aComponent.itemIdentifier);
+					System.out.println(bComponent.itemIdentifier);
+					if (aComponent.itemIdentifier.equals("head")) {
+						MainItemComponent other = bComponent;
+						if (other.tags.contains("fruit")) {
+							getEngine().getSystem(SnakeSystem.class).grow(a);
+							getEngine().removeEntity(b);
+						}
+					} else if (bComponent.itemIdentifier.equals("head")) {
+						MainItemComponent other = aComponent;
+						if (other.tags.contains("fruit")) {
+							getEngine().getSystem(SnakeSystem.class).grow(b);
+							getEngine().removeEntity(a);
+						}
+					}
+				}
 			}
 		});
 	}
@@ -113,8 +139,7 @@ public class CollisionSystem extends EntitySystem {
 	}
 
 	// FIXME: DRY
-	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
-			Rectangle intersect) {
+	private boolean isAlmostInside(Rectangle r1, Rectangle r2, Rectangle intersect) {
 		if (Intersector.intersectRectangles(r1, r2, intersect)) {
 			float factor = intersect.area() / r2.area();
 			if (factor > .6f) {
@@ -127,8 +152,8 @@ public class CollisionSystem extends EntitySystem {
 	private class CollisionCallback implements RayCastCallback {
 
 		@Override
-		public float reportRayFixture(Fixture fixture, Vector2 point,
-				Vector2 normal, float fraction) {
+		public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal,
+				float fraction) {
 			System.out.println("Collided!!!");
 			return 0;
 		}
