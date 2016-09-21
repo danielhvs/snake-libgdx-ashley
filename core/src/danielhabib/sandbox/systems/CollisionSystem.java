@@ -1,38 +1,19 @@
 
 package danielhabib.sandbox.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
-import com.uwsoft.editor.renderer.components.DimensionsComponent;
 import com.uwsoft.editor.renderer.components.MainItemComponent;
-import com.uwsoft.editor.renderer.components.TransformComponent;
 import com.uwsoft.editor.renderer.utils.ComponentRetriever;
 
-import danielhabib.sandbox.components.CountComponent;
-import danielhabib.sandbox.components.EnemyComponent;
-import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.PlatformComponent;
-import danielhabib.sandbox.components.SnakeBodyComponent;
-import danielhabib.sandbox.components.StateComponent;
-import danielhabib.sandbox.types.PlatformType;
-
 public class CollisionSystem extends EntitySystem {
-	private ComponentMapper<DimensionsComponent> bounds;
-
 	public static interface CollisionListener {
 		public void hit();
 
@@ -41,37 +22,16 @@ public class CollisionSystem extends EntitySystem {
 		public void poison();
 	}
 
-	private Engine engine;
-	private CollisionListener listener;
-	private ImmutableArray<Entity> snakes;
-	private ImmutableArray<Entity> platformComponents;
-	private ComponentMapper<CountComponent> counts;
-	private ImmutableArray<Entity> enemies;
-	private ComponentMapper<MovementComponent> movements;
 	private World world;
+	private CollisionListener listener;
 
 	public CollisionSystem(CollisionListener listener, World world) {
 		this.listener = listener;
 		this.world = world;
-
-		bounds = ComponentMapper.getFor(DimensionsComponent.class);
-		ComponentMapper.getFor(StateComponent.class);
-		counts = ComponentMapper.getFor(CountComponent.class);
-		movements = ComponentMapper.getFor(MovementComponent.class);
 	}
 
 	@Override
 	public void addedToEngine(Engine engine) {
-		this.engine = engine;
-		enemies = engine.getEntitiesFor(Family.all(EnemyComponent.class).get());
-		snakes = engine.getEntitiesFor(Family
-				.all(SnakeBodyComponent.class, StateComponent.class,
-						DimensionsComponent.class, TransformComponent.class)
-				.get());
-		platformComponents = engine.getEntitiesFor(
-				Family.all(PlatformComponent.class, DimensionsComponent.class,
-						TransformComponent.class).get());
-
 		world.setContactListener(new ContactListener() {
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {
@@ -108,60 +68,25 @@ public class CollisionSystem extends EntitySystem {
 			private void collide(Entity snake, Entity entity) {
 				MainItemComponent mainItem = ComponentRetriever.get(entity,
 						MainItemComponent.class);
+				Engine engine = getEngine();
+				SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 				if (mainItem.tags.contains("fruit")) {
-					getEngine().getSystem(SnakeSystem.class).grow(snake);
-					getEngine().removeEntity(entity);
+					snakeSystem.grow(snake);
+					listener.ate();
+					engine.removeEntity(entity);
 				} else if (mainItem.tags.contains("speed")) {
-					getEngine().getSystem(SnakeSystem.class)
+					snakeSystem
 							.increaseSpeed(snake);
-					getEngine().removeEntity(entity);
+					listener.hit();
+					engine.removeEntity(entity);
 				} else if (mainItem.tags.contains("poison")) {
-					getEngine().getSystem(SnakeSystem.class).removeTail(snake);
-					getEngine().removeEntity(entity);
+					snakeSystem.removeTail(snake);
+					listener.poison();
+					engine.removeEntity(entity);
 				}
 
 			}
 		});
 	}
 
-	@Override
-	public void update(float deltaTime) {
-		for (Entity enemy : enemies) {
-			for (Entity platform : platformComponents) {
-				DimensionsComponent enemyBound = bounds.get(enemy);
-				DimensionsComponent platformBound = bounds.get(platform);
-				// FIXME: performance via mapper.
-				if (platform.getComponent(
-						PlatformComponent.class).type == PlatformType.BOING) {
-					if (platformBound.boundBox.overlaps(enemyBound.boundBox)) {
-						movements.get(enemy).velocity.x *= -1f;
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	// FIXME: DRY
-	private boolean isAlmostInside(Rectangle r1, Rectangle r2,
-			Rectangle intersect) {
-		if (Intersector.intersectRectangles(r1, r2, intersect)) {
-			float factor = intersect.area() / r2.area();
-			if (factor > .6f) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private class CollisionCallback implements RayCastCallback {
-
-		@Override
-		public float reportRayFixture(Fixture fixture, Vector2 point,
-				Vector2 normal, float fraction) {
-			System.out.println("Collided!!!");
-			return 0;
-		}
-
-	}
 }
