@@ -16,30 +16,21 @@
 
 package danielhabib.sandbox.systems;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import danielhabib.sandbox.components.PlatformComponent;
-import danielhabib.sandbox.components.TransformComponent;
 
 public class PlatformSystem extends IteratingSystem {
-	private static final Family family = Family.all(PlatformComponent.class, TransformComponent.class).get();
-	private ComponentMapper<TransformComponent> tm;
-	private ComponentMapper<PlatformComponent> pm;
+	private static final Family family = Family.all(PlatformComponent.class).get();
 
 	public PlatformSystem() {
 		super(family);
-
-		tm = ComponentMapper.getFor(TransformComponent.class);
-		pm = ComponentMapper.getFor(PlatformComponent.class);
 	}
 
 	@Override
 	public void processEntity(Entity entity, float deltaTime) {
-		TransformComponent pos = tm.get(entity);
-		pos.rotation += pm.get(entity).rotation;
 	}
 
 }

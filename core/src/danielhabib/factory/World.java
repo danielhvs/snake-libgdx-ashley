@@ -1,7 +1,5 @@
 package danielhabib.factory;
 
-import java.util.Random;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +16,7 @@ import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.sandbox.components.RotationComponent;
 import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TextureComponent;
@@ -35,33 +34,36 @@ public class World {
 	}
 
 	public void addPoison(int x, int y, Texture texture) {
-		Entity fruit = createEntity(x, y, 0, 0, texture);
-		fruit.add(new PlatformComponent(.1f, PlatformType.POISON));
-		engine.addEntity(fruit);
+		Entity entity = createEntity(x, y, 0, 0, texture);
+		entity.add(new PlatformComponent(PlatformType.POISON));
+		entity.add(new RotationComponent(.1f));
+		engine.addEntity(entity);
 	}
 
 	public void addFruit(int x, int y, Texture texture) {
-		Entity fruit = createEntity(x, y, 0, 0, texture);
-		fruit.add(new PlatformComponent(.1f, PlatformType.FRUIT));
-		engine.addEntity(fruit);
+		Entity entity = createEntity(x, y, 0, 0, texture);
+		entity.add(new PlatformComponent(PlatformType.FRUIT));
+		entity.add(new RotationComponent(.1f));
+		engine.addEntity(entity);
 	}
 
 	private void addSpeed(int x, int y, Texture texture) {
-		Entity speed = createEntity(x, y, 0, 0, texture);
-		speed.add(new PlatformComponent(.1f, PlatformType.SPEED));
-		engine.addEntity(speed);
+		Entity entity = createEntity(x, y, 0, 0, texture);
+		entity.add(new PlatformComponent(PlatformType.SPEED));
+		entity.add(new RotationComponent(.1f));
+		engine.addEntity(entity);
 	}
 
 	public void addBoing(int x, int y, Texture texture) {
-		Entity boing = createEntity(x, y, 0, 0, texture);
-		boing.add(new PlatformComponent(0f, PlatformType.BOING));
-		engine.addEntity(boing);
+		Entity entity = createEntity(x, y, 0, 0, texture);
+		entity.add(new PlatformComponent(PlatformType.BOING));
+		engine.addEntity(entity);
 	}
 
 	public void addWall(int x, int y, Texture texture) {
-		Entity wall = createEntity(x, y, 0, 0, texture);
-		wall.add(new PlatformComponent(0f, PlatformType.WALL));
-		engine.addEntity(wall);
+		Entity entity = createEntity(x, y, 0, 0, texture);
+		entity.add(new PlatformComponent(PlatformType.WALL));
+		engine.addEntity(entity);
 	}
 
 	public Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
@@ -117,13 +119,11 @@ public class World {
 		texture.region = new TextureRegion(Assets.partImg);
 		transform.pos.x = x;
 		transform.pos.y = y;
-		Random random = new Random();
-		float nextFloat = random.nextFloat();
-		int factor = nextFloat < .5 ? -1 : 1;
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-		pieceEntity.add(new PlatformComponent(.125f * factor, PlatformType.SNAKE_HEAD));
+		pieceEntity.add(new PlatformComponent(PlatformType.SNAKE_HEAD));
+		pieceEntity.add(new RotationComponent(.125f));
 
 		return pieceEntity;
 	}
