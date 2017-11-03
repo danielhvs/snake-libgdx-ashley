@@ -18,7 +18,7 @@ import danielhabib.sandbox.components.CollisionListener;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.RotationComponent;
-import danielhabib.sandbox.components.SnakeBodyComponent;
+import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
@@ -28,7 +28,6 @@ import danielhabib.sandbox.types.PlatformType;
 public class World {
 	private PooledEngine engine;
 	private Entity snakeEntity;
-	private Entity ai;
 
 	public World(PooledEngine engine) {
 		this.engine = engine;
@@ -121,26 +120,26 @@ public class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
+		Entity entity = createEntity(x, y, Parameters.SPEED, 0,
 				Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
-		state.set(SnakeBodyComponent.STATE_MOVING);
+		state.set(SnakeComponent.STATE_MOVING);
 
-		SnakeBodyComponent snakeBodyComponent = new SnakeBodyComponent();
-		snakeBodyComponent.parts = new Array<Entity>();
+		SnakeComponent snakeComponent = new SnakeComponent();
+		snakeComponent.parts = new Array<Entity>();
 		for (int i = 1; i <= 1; i++) {
-			snakeBodyComponent.parts.add(newEntityPiece(x - i, y));
+			snakeComponent.parts.add(newEntityPart(x - i, y));
 		}
-		for (Entity part : snakeBodyComponent.parts) {
+		for (Entity part : snakeComponent.parts) {
 			engine.addEntity(part);
 		}
 		// for collision
-		snakeEntity.add(snakeBodyComponent);
-		snakeEntity.add(state);
-		return snakeEntity;
+		entity.add(snakeComponent);
+		entity.add(state);
+		return entity;
 	}
 
-	public Entity newEntityPiece(float x, float y) {
+	public Entity newEntityPart(float x, float y) {
 		TransformComponent transform = engine.createComponent(TransformComponent.class);
 		TextureComponent texture = engine.createComponent(TextureComponent.class);
 		Entity pieceEntity = engine.createEntity();
@@ -208,10 +207,6 @@ public class World {
 
 	public Entity getSnake() {
 		return snakeEntity;
-	}
-
-	public Entity getAi() {
-		return ai;
 	}
 
 }
