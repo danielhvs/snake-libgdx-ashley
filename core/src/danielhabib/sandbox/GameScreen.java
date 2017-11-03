@@ -13,7 +13,6 @@ import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
-import danielhabib.sandbox.systems.CollisionSystem.CollisionListener;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
@@ -38,22 +37,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(batch));
 		engine.addSystem(new BoundsSystem());
-		engine.addSystem(new CollisionSystem(new CollisionListener() {
-			@Override
-			public void hit() {
-				Assets.playSound(Assets.hitSound);
-			}
-
-			@Override
-			public void ate() {
-				Assets.playSound(Assets.fruitSound);
-			}
-
-			@Override
-			public void poison() {
-				Assets.playSound(Assets.poisonSound);
-			}
-		}));
+		engine.addSystem(new CollisionSystem());
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new RotationSystem());

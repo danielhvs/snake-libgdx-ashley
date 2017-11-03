@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
+import danielhabib.sandbox.components.CollisionListener;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.RotationComponent;
@@ -35,42 +36,69 @@ public class World {
 
 	public void addPoison(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.POISON));
+		entity.add(new PlatformComponent(PlatformType.POISON, new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.poisonSound);
+			}
+		}));
 		entity.add(new RotationComponent(.1f));
 		engine.addEntity(entity);
 	}
 
 	public void addFruit(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.FRUIT));
+		entity.add(new PlatformComponent(PlatformType.FRUIT, new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.fruitSound);
+			}
+		}));
 		entity.add(new RotationComponent(.1f));
 		engine.addEntity(entity);
 	}
 
 	private void addSpeed(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.SPEED));
+		entity.add(new PlatformComponent(PlatformType.SPEED, new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.hitSound);
+			}
+		}));
 		entity.add(new RotationComponent(.1f));
 		engine.addEntity(entity);
 	}
 
 	public void addBoing(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.BOING));
+		entity.add(new PlatformComponent(PlatformType.BOING, new CollisionListener() {
+			@Override
+			public void hit() {
+				Assets.playSound(Assets.hitSound);
+			}
+		}));
 		engine.addEntity(entity);
 	}
 
 	public void addWall(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.WALL));
+		entity.add(new PlatformComponent(PlatformType.WALL, new CollisionListener() {
+			@Override
+			public void hit() {
+				// TODO
+			}
+		}));
 		engine.addEntity(entity);
 	}
 
-	public Entity createEntity(float xPos, float yPos, float xVel, float yVel, Texture texture) {
+	public Entity createEntity(float xPos, float yPos, float xVel, float yVel,
+			Texture texture) {
 		Entity entity = engine.createEntity();
 		TransformComponent transform = engine.createComponent(TransformComponent.class);
 		MovementComponent movement = engine.createComponent(MovementComponent.class);
-		TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
+		TextureComponent textureComponent = engine
+				.createComponent(TextureComponent.class);
 		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
 		textureComponent.region = new TextureRegion(texture);
@@ -93,7 +121,8 @@ public class World {
 
 	public Entity createSnake(int x, int y) {
 		// World
-		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0, Assets.partHead);
+		Entity snakeEntity = createEntity(x, y, SnakeBodyComponent.SPEED, 0,
+				Assets.partHead);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeBodyComponent.STATE_MOVING);
 
@@ -122,7 +151,6 @@ public class World {
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-		pieceEntity.add(new PlatformComponent(PlatformType.SNAKE_HEAD));
 		pieceEntity.add(new RotationComponent(.125f));
 
 		return pieceEntity;

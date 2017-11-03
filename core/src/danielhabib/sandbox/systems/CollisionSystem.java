@@ -19,21 +19,11 @@ public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<BoundsComponent> bounds;
 	private ComponentMapper<StateComponent> states;
 
-	public static interface CollisionListener {
-		public void hit();
-
-		public void ate();
-
-		public void poison();
-	}
-
 	private Engine engine;
-	private CollisionListener listener;
 	private ImmutableArray<Entity> snakes;
 	private ImmutableArray<Entity> platformComponents;
 
-	public CollisionSystem(CollisionListener listener) {
-		this.listener = listener;
+	public CollisionSystem() {
 
 		bounds = ComponentMapper.getFor(BoundsComponent.class);
 		states = ComponentMapper.getFor(StateComponent.class);
@@ -65,23 +55,22 @@ public class CollisionSystem extends EntitySystem {
 			BoundsComponent snakeBound = bounds.get(snake);
 			BoundsComponent platformBound = bounds.get(platform);
 			if (snakeBound.bounds.overlaps(platformBound.bounds)) {
-				PlatformType type = platform.getComponent(PlatformComponent.class).type;
+				PlatformComponent platformComponent = platform
+						.getComponent(PlatformComponent.class);
+				PlatformType type = platformComponent.type;
+				platformComponent.hit();
 				if (type == PlatformType.BOING) {
-					listener.hit();
 					snakeSystem.revert(snake);
 				} else if (type == PlatformType.FRUIT) {
-					listener.ate();
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
 				} else if (type == PlatformType.POISON) {
-					listener.poison();
 					engine.removeEntity(platform);
 					snakeSystem.removeTail(snake);
 				} else if (type == PlatformType.WALL) {
 					// listener.hit();
 					// snakeSystem.stop(snake);
 				} else if (type == PlatformType.SPEED) {
-					listener.hit();
 					snakeSystem.increaseSpeed(snake);
 				}
 			}
