@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
+import danielhabib.sandbox.GameScreen;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CollisionListener;
@@ -28,9 +29,11 @@ import danielhabib.sandbox.types.PlatformType;
 public class World {
 	private PooledEngine engine;
 	private Entity snakeEntity;
+	private GameScreen gameScreen;
 
-	public World(PooledEngine engine) {
+	public World(PooledEngine engine, GameScreen gameScreen) {
 		this.engine = engine;
+		this.gameScreen = gameScreen;
 	}
 
 	public void addPoison(int x, int y, Texture texture) {
@@ -85,7 +88,9 @@ public class World {
 		entity.add(new PlatformComponent(PlatformType.WALL, new CollisionListener() {
 			@Override
 			public void hit() {
-				// TODO
+				Assets.playSound(Assets.hitSound);
+				engine.removeAllEntities();
+				gameScreen.reload();
 			}
 		}));
 		engine.addEntity(entity);

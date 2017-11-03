@@ -24,13 +24,12 @@ public class GameScreen extends ScreenAdapter {
 	private SandboxGame game;
 	private PooledEngine engine;
 	private SpriteBatch batch;
-	private float time;
 	private World world;
 
 	public GameScreen(SandboxGame game) {
 		this.game = game;
 		engine = new PooledEngine();
-		world = new World(engine);
+		world = new World(engine, this);
 		batch = new SpriteBatch();
 
 		engine.addSystem(new PlatformSystem());
@@ -75,6 +74,10 @@ public class GameScreen extends ScreenAdapter {
 		}
 
 		engine.update(delta);
+	}
+
+	public void reload() {
+		game.setScreen(new GameScreen(game));
 	}
 
 }
