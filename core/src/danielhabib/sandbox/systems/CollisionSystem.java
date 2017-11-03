@@ -59,19 +59,15 @@ public class CollisionSystem extends EntitySystem {
 						.getComponent(PlatformComponent.class);
 				PlatformType type = platformComponent.type;
 				platformComponent.hit();
-				if (type == PlatformType.BOING) {
-					snakeSystem.revert(snake);
-				} else if (type == PlatformType.FRUIT) {
+				if (type == PlatformType.FRUIT) {
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
 				} else if (type == PlatformType.POISON) {
 					engine.removeEntity(platform);
 					snakeSystem.removeTail(snake);
-				} else if (type == PlatformType.WALL) {
-					// listener.hit();
-					// snakeSystem.stop(snake);
 				} else if (type == PlatformType.SPEED) {
 					snakeSystem.increaseSpeed(snake);
+					getEngine().removeEntity(platform);
 				}
 			}
 		}

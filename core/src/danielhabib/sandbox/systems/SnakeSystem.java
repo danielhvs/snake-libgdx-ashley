@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -23,21 +24,13 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<TransformComponent> transforms;
 
 	public SnakeSystem(World world) {
-		super(Family.all(SnakeComponent.class, StateComponent.class, TransformComponent.class, MovementComponent.class)
-				.get());
+		super(Family.all(SnakeComponent.class, StateComponent.class,
+				TransformComponent.class, MovementComponent.class).get());
 		this.world = world;
 		states = ComponentMapper.getFor(StateComponent.class);
 		movements = ComponentMapper.getFor(MovementComponent.class);
 		transforms = ComponentMapper.getFor(TransformComponent.class);
 		snakes = ComponentMapper.getFor(SnakeComponent.class);
-	}
-
-	public void revert(Entity entity) {
-		SnakeComponent component = entity.getComponent(SnakeComponent.class);
-		SnakeComponent snakeComponent = snakes.get(entity);
-		if (snakeComponent.equals(component)) {
-			setState(entity, SnakeComponent.STATE_REVERTING);
-		}
 	}
 
 	@Override
@@ -47,28 +40,25 @@ public class SnakeSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		StateComponent state = states.get(entity);
-		MovementComponent movement = movements.get(entity);
-		if (state.get() == SnakeComponent.STATE_REVERTING) {
-			movement.velocity.scl(-1);
-			state.set(SnakeComponent.STATE_MOVING);
-		}
-
-		if (state.get() != SnakeComponent.STATE_STOP) {
-			movePartsToFollowHead(entity);
-		}
+		movePartsToFollowHead(entity);
 	}
 
 	private void movePartsToFollowHead(Entity entity) {
 		SnakeComponent snakeBodyComponent = snakes.get(entity);
+		if (snakeBodyComponent.parts.size == 0) {
+			return;
+		}
 		Vector3 head = transforms.get(entity).pos;
-		Vector3 firstPiece = snakeBodyComponent.parts.get(0).getComponent(TransformComponent.class).pos;
+		Vector3 firstPiece = snakeBodyComponent.parts.get(0)
+				.getComponent(TransformComponent.class).pos;
 		firstPiece.interpolate(head, .5f, Interpolation.linear);
-		
+
 		int len = snakeBodyComponent.parts.size - 1;
 		for (int i = len; i > 0; i--) {
-			Vector3 before = snakeBodyComponent.parts.get(i - 1).getComponent(TransformComponent.class).pos;
-			Vector3 part = snakeBodyComponent.parts.get(i).getComponent(TransformComponent.class).pos;
+			Vector3 before = snakeBodyComponent.parts.get(i - 1)
+					.getComponent(TransformComponent.class).pos;
+			Vector3 part = snakeBodyComponent.parts.get(i)
+					.getComponent(TransformComponent.class).pos;
 			part.interpolate(before, 0.5f, Interpolation.linear);
 		}
 	}
@@ -76,13 +66,13 @@ public class SnakeSystem extends IteratingSystem {
 	public void setYVel(float yVel, Entity snake) {
 		snake.getComponent(MovementComponent.class).velocity.x = 0;
 		snake.getComponent(MovementComponent.class).velocity.y = yVel;
-		setState(snake, SnakeComponent.STATE_MOVING);
+		transforms.get(snake).rotation = yVel > 0 ? MathUtils.PI / 2 : -MathUtils.PI / 2;
 	}
 
 	public void setXVel(float xVel, Entity snake) {
 		snake.getComponent(MovementComponent.class).velocity.x = xVel;
 		snake.getComponent(MovementComponent.class).velocity.y = 0;
-		setState(snake, SnakeComponent.STATE_MOVING);
+		transforms.get(snake).rotation = xVel > 0 ? 0 : MathUtils.PI;
 	}
 
 	public void grow(Entity snake) {
@@ -90,12 +80,6 @@ public class SnakeSystem extends IteratingSystem {
 		Entity part = world.newEntityPart(0, 0);
 		snakeComponent.parts.add(part);
 		getEngine().addEntity(part);
-	}
-
-	public void stop(Entity snake) {
-		setState(snake, SnakeComponent.STATE_STOP);
-		snake.getComponent(MovementComponent.class).velocity.x = 0;
-		snake.getComponent(MovementComponent.class).velocity.y = 0;
 	}
 
 	private void setState(Entity snake, int snakeState) {
@@ -106,7 +90,7 @@ public class SnakeSystem extends IteratingSystem {
 	public void removeTail(Entity snake) {
 		SnakeComponent snakeComponent = snakes.get(snake);
 		Array<Entity> parts = snakeComponent.parts;
-		if (parts.size > 1) {
+		if (parts.size > 0) {
 			Entity removedIndex = parts.removeIndex(parts.size - 1);
 			getEngine().removeEntity(removedIndex);
 		}
@@ -114,7 +98,7 @@ public class SnakeSystem extends IteratingSystem {
 
 	public void increaseSpeed(Entity snake) {
 		MovementComponent movement = movements.get(snake);
-		movement.velocity.scl(1.125f);
+		movement.velocity.scl(1.5f);
 	}
 
 }

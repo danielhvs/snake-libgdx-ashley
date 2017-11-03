@@ -72,23 +72,12 @@ public class World {
 		engine.addEntity(entity);
 	}
 
-	public void addBoing(int x, int y, Texture texture) {
-		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.BOING, new CollisionListener() {
-			@Override
-			public void hit() {
-				Assets.playSound(Assets.hitSound);
-			}
-		}));
-		engine.addEntity(entity);
-	}
-
 	public void addWall(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
 		entity.add(new PlatformComponent(PlatformType.WALL, new CollisionListener() {
 			@Override
 			public void hit() {
-				Assets.playSound(Assets.hitSound);
+				Assets.playSound(Assets.diedSound);
 				engine.removeAllEntities();
 				gameScreen.reload();
 			}
@@ -123,16 +112,15 @@ public class World {
 		return entity;
 	}
 
-	public Entity createSnake(int x, int y) {
+	public Entity createSnake(int x, int y, Texture texture) {
 		// World
-		Entity entity = createEntity(x, y, Parameters.SPEED, 0,
-				Assets.partHead);
+		Entity entity = createEntity(x, y, Parameters.SPEED, 0, texture);
 		StateComponent state = engine.createComponent(StateComponent.class);
 		state.set(SnakeComponent.STATE_MOVING);
 
 		SnakeComponent snakeComponent = new SnakeComponent();
 		snakeComponent.parts = new Array<Entity>();
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= 10; i++) {
 			snakeComponent.parts.add(newEntityPart(x - i, y));
 		}
 		for (Entity part : snakeComponent.parts) {
@@ -161,10 +149,7 @@ public class World {
 	}
 
 	public void create() {
-		snakeEntity = createSnake(0, 10);
-		engine.addEntity(snakeEntity);
 		parseMap();
-		createCamera(snakeEntity);
 	}
 
 	private void createCamera(Entity target) {
@@ -200,14 +185,20 @@ public class World {
 					} else if ("identityRule".equals(rule.toString())) {
 						addWall(x, y, texture);
 					} else if ("boingRule".equals(rule.toString())) {
-						addBoing(x, y, texture);
 					} else if ("head".equals(rule.toString())) {
+						addSnake(x, y, texture);
 					} else if ("piece".equals(rule.toString())) {
 					} else if ("tail".equals(rule.toString())) {
 					}
 				}
 			}
 		}
+	}
+
+	private void addSnake(int x, int y, Texture texture) {
+		snakeEntity = createSnake(x, y, texture);
+		engine.addEntity(snakeEntity);
+		createCamera(snakeEntity);
 	}
 
 	public Entity getSnake() {

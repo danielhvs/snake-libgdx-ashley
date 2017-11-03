@@ -10,6 +10,7 @@ public class Assets {
 	public static Sound poisonSound;
 	public static Texture partImg;
 	public static Texture partHead;
+	public static Sound diedSound;
 
 	public static void load() {
 		partImg = new Texture("circle32.png");
@@ -17,6 +18,7 @@ public class Assets {
 		hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.wav"));
 		fruitSound = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
 		poisonSound = Gdx.audio.newSound(Gdx.files.internal("poison.mp3"));
+		diedSound = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
 	}
 
 	public static void playSound(Sound sound) {
