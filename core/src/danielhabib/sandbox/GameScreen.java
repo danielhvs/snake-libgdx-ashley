@@ -1,7 +1,5 @@
 package danielhabib.sandbox;
 
-import java.util.Random;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
-import danielhabib.sandbox.components.SnakeBodyComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
 import danielhabib.sandbox.systems.CollisionSystem;
@@ -91,45 +88,7 @@ public class GameScreen extends ScreenAdapter {
 			engine.getSystem(RenderingSystem.class).zoomOut();
 		}
 
-		updateAi(delta);
 		engine.update(delta);
-	}
-
-	private void updateAi(float delta) {
-		Random random = new Random();
-		float nextFloat = random.nextFloat();
-		float limit;
-		if (nextFloat < .3f) {
-			limit = .5f;
-		} else if (nextFloat < .7f) {
-			limit = 1f;
-		} else {
-			limit = 3f;
-		}
-		aiMove(delta, limit);
-	}
-
-	private void aiMove(float delta, float limit) {
-		time += delta;
-		if (time < limit) {
-			return;
-		}
-
-		time = 0;
-		Random random = new Random();
-		float nextFloat = random.nextFloat();
-		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		float speed = SnakeBodyComponent.SPEED;
-		if (nextFloat < .25f) {
-			snakeSystem.setXVel(speed, world.getAi());
-		} else if (nextFloat < .5f) {
-			snakeSystem.setXVel(-speed, world.getAi());
-		} else if (nextFloat < .75f) {
-			snakeSystem.setYVel(-speed, world.getAi());
-		} else {
-			snakeSystem.setYVel(speed, world.getAi());
-		}
-
 	}
 
 }
