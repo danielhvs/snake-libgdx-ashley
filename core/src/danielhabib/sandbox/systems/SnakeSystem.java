@@ -24,6 +24,7 @@ public class SnakeSystem extends IteratingSystem {
 	private ComponentMapper<SnakeComponent> snakes;
 	private World world;
 	private ComponentMapper<TransformComponent> transforms;
+	private static int idTemprarySpeedComponent = -1;
 
 	public SnakeSystem(World world) {
 		super(Family.all(SnakeComponent.class, StateComponent.class,
@@ -95,16 +96,22 @@ public class SnakeSystem extends IteratingSystem {
 
 	public void increaseSpeed(Entity snake) {
 		TemporarySpeedComponent component = snake.getComponent(TemporarySpeedComponent.class);
+		idTemprarySpeedComponent++;
 		if (component == null) {
 			TemporarySpeedComponent newComponent = new TemporarySpeedComponent();
 			newComponent.factor = new ArrayMap<Integer, Float>();
-			newComponent.factor.put(0, 1.5f);
 			newComponent.timeout = new ArrayMap<Integer, Float>();
-			newComponent.timeout.put(0, 3f);
+			newComponent.init = new ArrayMap<Integer, Boolean>();
+			newComponent.timePassed = new ArrayMap<Integer, Float>();
+			
+			newComponent.factor.put(idTemprarySpeedComponent, 1.5f);
+			newComponent.timeout.put(idTemprarySpeedComponent, 3f);
+			newComponent.init.put(idTemprarySpeedComponent, false);
 			snake.add(newComponent);
 		} else {
-			component.factor.put(component.factor.size, 1.5f);
-			component.timeout.put(component.timeout.size, 3f);
+			component.factor.put(idTemprarySpeedComponent, 2.5f);
+			component.timeout.put(idTemprarySpeedComponent, 5f);
+			component.init.put(idTemprarySpeedComponent, false);
 		}
 	}
 
