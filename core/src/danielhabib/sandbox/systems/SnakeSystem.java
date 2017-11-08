@@ -13,6 +13,7 @@ import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.components.TemporarySpeedComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
 public class SnakeSystem extends IteratingSystem {
@@ -92,8 +93,20 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void increaseSpeed(Entity snake) {
-		MovementComponent movement = movements.get(snake);
-		movement.velocity.scl(1.5f);
+		// MovementComponent movement = movements.get(snake);
+		TemporarySpeedComponent component = snake.getComponent(TemporarySpeedComponent.class);
+		if (component == null) {
+			TemporarySpeedComponent newComponent = new TemporarySpeedComponent();
+			newComponent.factor = new Array<Float>();
+			newComponent.factor.add(1.5f);
+			newComponent.timeout = new Array<Float>();
+			newComponent.timeout.add(2f);
+			snake.add(newComponent);
+		} else {
+			component.factor.add(1.5f);
+			component.timeout.add(.5f);
+		}
+		// movement.velocity.scl(1.5f);
 	}
 
 }

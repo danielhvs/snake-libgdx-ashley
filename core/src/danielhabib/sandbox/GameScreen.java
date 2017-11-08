@@ -18,6 +18,7 @@ import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
+import danielhabib.sandbox.systems.TemporarySpeedSystem;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -40,6 +41,7 @@ public class GameScreen extends ScreenAdapter {
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new RotationSystem());
+		engine.addSystem(new TemporarySpeedSystem());
 		world.create();
 	}
 
