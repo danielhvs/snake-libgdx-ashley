@@ -140,10 +140,11 @@ public class World {
 		texture.region = new TextureRegion(Assets.partImg);
 		transform.pos.x = x;
 		transform.pos.y = y;
+		transform.pos.z = 1;
+		transform.rotation = 0.0f;
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-		pieceEntity.add(new RotationComponent(.125f));
 
 		return pieceEntity;
 	}

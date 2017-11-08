@@ -82,11 +82,6 @@ public class SnakeSystem extends IteratingSystem {
 		getEngine().addEntity(part);
 	}
 
-	private void setState(Entity snake, int snakeState) {
-		StateComponent state = states.get(snake);
-		state.set(snakeState);
-	}
-
 	public void removeTail(Entity snake) {
 		SnakeComponent snakeComponent = snakes.get(snake);
 		Array<Entity> parts = snakeComponent.parts;
