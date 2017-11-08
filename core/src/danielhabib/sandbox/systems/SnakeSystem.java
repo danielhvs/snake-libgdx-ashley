@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
 
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.MovementComponent;
@@ -93,20 +94,18 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void increaseSpeed(Entity snake) {
-		// MovementComponent movement = movements.get(snake);
 		TemporarySpeedComponent component = snake.getComponent(TemporarySpeedComponent.class);
 		if (component == null) {
 			TemporarySpeedComponent newComponent = new TemporarySpeedComponent();
-			newComponent.factor = new Array<Float>();
-			newComponent.factor.add(1.5f);
-			newComponent.timeout = new Array<Float>();
-			newComponent.timeout.add(2f);
+			newComponent.factor = new ArrayMap<Integer, Float>();
+			newComponent.factor.put(0, 1.5f);
+			newComponent.timeout = new ArrayMap<Integer, Float>();
+			newComponent.timeout.put(0, 3f);
 			snake.add(newComponent);
 		} else {
-			component.factor.add(1.5f);
-			component.timeout.add(.5f);
+			component.factor.put(component.factor.size, 1.5f);
+			component.timeout.put(component.timeout.size, 3f);
 		}
-		// movement.velocity.scl(1.5f);
 	}
 
 }

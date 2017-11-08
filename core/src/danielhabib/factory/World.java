@@ -77,9 +77,9 @@ public class World {
 		entity.add(new PlatformComponent(PlatformType.WALL, new CollisionListener() {
 			@Override
 			public void hit() {
-				Assets.playSound(Assets.diedSound);
-				engine.removeAllEntities();
-				gameScreen.reload();
+				// Assets.playSound(Assets.diedSound);
+				// engine.removeAllEntities();
+				// gameScreen.reload();
 			}
 		}));
 		engine.addEntity(entity);

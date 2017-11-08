@@ -25,12 +25,9 @@ public class TemporarySpeedSystem extends IteratingSystem {
 				.getComponent(TemporarySpeedComponent.class);
 		MovementComponent movementComponent = entity
 				.getComponent(MovementComponent.class);
-		System.out.println("timeouts: " + temporaryComponent.timeout);
-
 		if (temporaryComponent.factor.size > i) {
-			System.out.println("i = " + i + "timeout " + temporaryComponent.timeout.get(i)
-					+
-					 " aumentando velocidade: " + temporaryComponent.factor.get(i));
+			// FIXME: manage init with temporaryComponent.factor.containsKey
+			// (managedKeys)?
 			movementComponent.velocity.scl(temporaryComponent.factor.get(i));
 			initialized.put(i, deltaTime);
 			i = i + 1;
@@ -40,14 +37,10 @@ public class TemporarySpeedSystem extends IteratingSystem {
 				initialized.put(j, initialized.get(j) + deltaTime);
 				Float timePassed = initialized.get(j);
 				if (timePassed >= temporaryComponent.timeout.get(j)) {
-					System.out.println(
-							"j = " + j + " timeout " + temporaryComponent.timeout.get(j)
-							+ " reduzindo velocidade: "
-							+ temporaryComponent.factor.get(j));
 					movementComponent.velocity.scl(1 / temporaryComponent.factor.get(j));
 					initialized.removeKey(j);
-					temporaryComponent.factor.removeIndex(j);
-					temporaryComponent.timeout.removeIndex(j);
+					temporaryComponent.factor.removeKey(j);
+					temporaryComponent.timeout.removeKey(j);
 					i = i - 1;
 					if (initialized.size == 0) {
 						entity.remove(TemporarySpeedComponent.class);

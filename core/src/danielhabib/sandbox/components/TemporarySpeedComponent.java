@@ -1,9 +1,9 @@
 package danielhabib.sandbox.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
 
 public class TemporarySpeedComponent implements Component {
-	public Array<Float> factor;
-	public Array<Float> timeout;
+	public ArrayMap<Integer, Float> factor;
+	public ArrayMap<Integer, Float> timeout;
 }
