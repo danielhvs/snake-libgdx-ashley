@@ -20,7 +20,6 @@ import danielhabib.sandbox.types.PlatformType;
 
 public class CollisionSystem extends EntitySystem {
 	private ComponentMapper<BoundsComponent> bounds;
-	private ComponentMapper<StateComponent> states;
 
 	private Engine engine;
 	private ImmutableArray<Entity> snakes;
@@ -30,7 +29,6 @@ public class CollisionSystem extends EntitySystem {
 	public CollisionSystem() {
 
 		bounds = ComponentMapper.getFor(BoundsComponent.class);
-		states = ComponentMapper.getFor(StateComponent.class);
 		counts = ComponentMapper.getFor(CountComponent.class);
 	}
 
@@ -48,10 +46,7 @@ public class CollisionSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		for (Entity snake : snakes) {
-			StateComponent state = states.get(snake);
-			if (state.get() != SnakeComponent.STATE_REVERTING && state.get() != SnakeComponent.STATE_STOP) {
-				checkSnakeCollision(snakeSystem, snake);
-			}
+			checkSnakeCollision(snakeSystem, snake);
 		}
 	}
 

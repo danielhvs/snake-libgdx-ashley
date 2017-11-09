@@ -16,7 +16,7 @@ public class SandboxGame extends Game {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(0, 0, 0, 0);
+		Gdx.gl.glClearColor(0, 0, .2f, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		super.render();
 		if (!done) {

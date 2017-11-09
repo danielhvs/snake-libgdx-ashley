@@ -8,10 +8,12 @@ import danielhabib.sandbox.Assets;
 public class ButtonFactory {
 
 	public static TextButton newButton(String text) {
-		TextButtonStyle style = Assets.skin.get("default", TextButtonStyle.class);
+		TextButtonStyle style = Assets.skin.get("default",
+				TextButtonStyle.class);
 		TextButton textButton = new TextButton(text, style);
-		textButton.getLabel().setFontScale(1.5f);
+		// FIXME: Use freetype font fixing size with Gdx.getDensity()
+		textButton.getLabel().setFontScale(Assets.fontScaleX,
+				Assets.fontScaleY);
 		return textButton;
 	}
-
 }

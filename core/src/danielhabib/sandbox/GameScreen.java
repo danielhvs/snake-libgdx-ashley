@@ -37,7 +37,6 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void render(float delta) {
-		super.render(delta);
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		Entity snake = world.getSnake();
 		MovementComponent movement = snake.getComponent(MovementComponent.class);
@@ -73,6 +72,7 @@ public class GameScreen extends AbstractScreen {
 		}
 
 		engine.update(delta);
+		super.render(delta);
 	}
 
 	@Override

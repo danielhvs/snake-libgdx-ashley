@@ -38,23 +38,29 @@ public class UIFactory {
 
 	private static void addButtonToTable(Button playButton, Table table) {
 		int width = Gdx.graphics.getWidth() / 4;
-		int height = Gdx.graphics.getHeight() / 10;
+		int height = Gdx.graphics.getHeight() / 8;
 		table.row();
 		table.add(playButton).width(width).height(height);
-		table.getCell(playButton).spaceBottom(30f);
+		float spaceBottom = Gdx.graphics.getHeight() / 25f;
+		table.getCell(playButton).spaceBottom(spaceBottom);
 	}
 
 	public static Label newLabel() {
 		LabelStyle labelStyle = new LabelStyle(Assets.font, Color.WHITE);
-		return new Label("", labelStyle);
+		Label label = new Label("", labelStyle);
+		label.setFontScale(Assets.fontScaleX, Assets.fontScaleY);
+		return label;
 	}
 
 	private static void setTitle(Label title, Table table) {
-		title.setFontScale(2.5f);
+		float fontScaleX = Gdx.graphics.getWidth() / 200f;
+		float fontScaleY = Gdx.graphics.getHeight() / 150f;
+		title.setFontScale(fontScaleX, fontScaleY);
 		table.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 		table.add(title);
-		table.getCell(title).spaceBottom(100);
+		int spaceBottom = Gdx.graphics.getHeight() / 12;
+		table.getCell(title).spaceBottom(spaceBottom);
 	}
 
 	public static Table newMenu(String titleText, Button... buttons) {
