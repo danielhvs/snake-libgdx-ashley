@@ -15,6 +15,7 @@ import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CollisionListener;
+import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.RotationComponent;
@@ -126,6 +127,7 @@ public abstract class World {
 		// for collision
 		entity.add(snakeComponent);
 		entity.add(state);
+		entity.add(engine.createComponent(CountComponent.class));
 		return entity;
 	}
 
