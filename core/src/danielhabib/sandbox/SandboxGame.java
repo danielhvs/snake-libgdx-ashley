@@ -3,8 +3,7 @@ package danielhabib.sandbox;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.VisUI.SkinScale;
+
 public class SandboxGame extends Game {
 	private boolean done;
 	private boolean showed;
@@ -12,7 +11,6 @@ public class SandboxGame extends Game {
 	@Override
 	public void create() {
 		Assets.load();
-		VisUI.load(SkinScale.X2);
 		ScreenManager.getInstance().initialize(this);
 	}
 
