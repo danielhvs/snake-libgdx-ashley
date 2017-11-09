@@ -37,11 +37,6 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	@Override
-	public void update(float deltaTime) {
-		super.update(deltaTime);
-	}
-
-	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		movePartsToFollowHead(entity);
 	}

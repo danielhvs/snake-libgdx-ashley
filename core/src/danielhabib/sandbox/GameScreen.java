@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,15 +19,15 @@ import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.systems.TemporarySpeedSystem;
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends AbstractScreen {
 
 	private SandboxGame game;
 	private PooledEngine engine;
 	private SpriteBatch batch;
 	private World world;
 
-	public GameScreen(SandboxGame game) {
-		this.game = game;
+	public GameScreen(Object[] params) {
+		this.game = (SandboxGame) ScreenManager.getInstance().getGame();
 		engine = new PooledEngine();
 		world = new World(engine, this);
 		batch = new SpriteBatch();
@@ -64,9 +63,11 @@ public class GameScreen extends ScreenAdapter {
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.A)) {
 			engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
-		} else if (Gdx.input.isKeyJustPressed(Keys.W)) {
-			engine.getSystem(SnakeSystem.class).grow(snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+			ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+		} else if (Gdx.input.isKeyJustPressed(Keys.E)) {
+			engine.getSystem(SnakeSystem.class).grow(snake);
+		} else if (Gdx.input.isKeyJustPressed(Keys.W)) {
 			engine.getSystem(SnakeSystem.class).removeTail(snake);
 		} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(false);
@@ -83,8 +84,8 @@ public class GameScreen extends ScreenAdapter {
 		engine.update(delta);
 	}
 
-	public void reload() {
-		game.setScreen(new GameScreen(game));
+	@Override
+	public void buildStage() {
 	}
 
 }
