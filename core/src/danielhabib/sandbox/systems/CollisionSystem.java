@@ -7,7 +7,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
 
+import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -65,7 +67,9 @@ public class CollisionSystem extends EntitySystem {
 				if (type == PlatformType.FRUIT) {
 					engine.removeEntity(platform);
 					snakeSystem.grow(snake);
-					counts.get(snake).fruits++;
+					CountComponent countComponent = counts.get(snake);
+					TextFactory.addCountingAnimation(countComponent.fruitsLabel,
+							String.valueOf(++countComponent.fruits), Color.WHITE, 5, 15);
 				} else if (type == PlatformType.POISON) {
 					engine.removeEntity(platform);
 					snakeSystem.removeTail(snake);
