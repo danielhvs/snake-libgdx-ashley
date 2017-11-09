@@ -23,7 +23,6 @@ public class SandboxGame extends Game {
 		super.render();
 		if (!done) {
 			done = Assets.manager.update();
-			System.out.println(Assets.manager.getProgress());
 		}
 		if (done && !showed) {
 			Assets.finishLoading();

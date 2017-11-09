@@ -10,14 +10,17 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 public class ButtonFactory {
 
 	public static VisTextButton newButton(String text) {
-		return new VisTextButton(text);
+		VisTextButton visTextButton = new VisTextButton(text);
+		visTextButton.getLabel().setFontScale(1.5f);
+		visTextButton.setStyle(getStyle());
+		return visTextButton;
 	}
 
-	private static TextButtonStyle newSnakeButtonStyle(Skin skin2) {
+	private static TextButtonStyle newSnakeButtonStyle(Skin skin) {
 		TextButtonStyle buttonStyle = new TextButtonStyle();
-		buttonStyle.up = skin2.getDrawable("button");
-		buttonStyle.over = skin2.getDrawable("buttonpressed");
-		buttonStyle.down = skin2.getDrawable("buttonpressed");
+		buttonStyle.up = skin.getDrawable("button");
+		buttonStyle.over = skin.getDrawable("buttonpressed");
+		buttonStyle.down = skin.getDrawable("buttonpressed");
 		buttonStyle.font = new BitmapFont(Gdx.files.internal("font.fnt"));
 		return buttonStyle;
 	}

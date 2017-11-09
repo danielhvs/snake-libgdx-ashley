@@ -96,8 +96,9 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new TemporarySpeedSystem());
 		world.create();
 
-		 ImmutableArray<Entity> entities = engine .getEntitiesFor(Family.one(CountComponent.class).get());
-		 for (Entity entity : entities) {
+		ImmutableArray<Entity> entities = engine
+				.getEntitiesFor(Family.one(CountComponent.class).get());
+		for (Entity entity : entities) {
 			addActor(entity.getComponent(CountComponent.class).fruitsLabel);
 		}
 	}
