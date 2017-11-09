@@ -62,8 +62,13 @@ public class GameScreen extends ScreenAdapter {
 		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
 			snakeSystem.setXVel(speed, snake);
 		}
-
-		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+		if (Gdx.input.isKeyJustPressed(Keys.A)) {
+			engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
+		} else if (Gdx.input.isKeyJustPressed(Keys.W)) {
+			engine.getSystem(SnakeSystem.class).grow(snake);
+		} else if (Gdx.input.isKeyJustPressed(Keys.Q)) {
+			engine.getSystem(SnakeSystem.class).removeTail(snake);
+		} else if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			engine.getSystem(SnakeSystem.class).setProcessing(false);
 			engine.getSystem(MovementSystem.class).setProcessing(false);
 		} else if (Gdx.input.isKeyJustPressed(Keys.SPACE)) {
