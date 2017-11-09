@@ -1,6 +1,6 @@
 package danielhabib.sandbox;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -11,14 +11,25 @@ public class Assets {
 	public static Texture partImg;
 	public static Texture partHead;
 	public static Sound diedSound;
+	public static AssetManager manager;
 
 	public static void load() {
-		partImg = new Texture("circle32.png");
-		partHead = new Texture("head.png");
-		hitSound = Gdx.audio.newSound(Gdx.files.internal("hit.wav"));
-		fruitSound = Gdx.audio.newSound(Gdx.files.internal("apple.wav"));
-		poisonSound = Gdx.audio.newSound(Gdx.files.internal("poison.mp3"));
-		diedSound = Gdx.audio.newSound(Gdx.files.internal("dead.mp3"));
+		manager = new AssetManager();
+		manager.load("circle32.png", Texture.class);
+		manager.load("head.png", Texture.class);
+		manager.load("dead.mp3", Sound.class);
+		manager.load("hit.wav", Sound.class);
+		manager.load("apple.wav", Sound.class);
+		manager.load("poison.mp3", Sound.class);
+	}
+
+	public static void finishLoading() {
+		partImg = manager.get("circle32.png", Texture.class);
+		partHead = manager.get("head.png", Texture.class);
+		diedSound = manager.get("dead.mp3", Sound.class);
+		hitSound = manager.get("hit.wav", Sound.class);
+		fruitSound = manager.get("apple.wav", Sound.class);
+		poisonSound = manager.get("poison.mp3", Sound.class);
 	}
 
 	public static void playSound(Sound sound) {
