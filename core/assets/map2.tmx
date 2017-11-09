@@ -58,13 +58,7 @@
  </tileset>
  <layer name="Tile Layer 1" width="20" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFIwEwAzErELMMtENGwSigAAAAJdwADQ==
+   eJxjZGBgYKQyphYg1TyYWjYkjCxOiXnINCnmYQsbarkPBtDNQ7cbGbBQ2Txqu4/W5tEyPqiRXnCZR830gs8+WphHTQwAcNoBAQ==
   </data>
  </layer>
- <objectgroup name="Camada de Objetos 1" width="20" height="15">
-  <object name="init1" x="64" y="64" width="32" height="32"/>
-  <object name="end1" x="224" y="416" width="32" height="32"/>
-  <object name="init0" x="512" y="64" width="32" height="32"/>
-  <object name="end0" x="352" y="224" width="32" height="32"/>
- </objectgroup>
 </map>

@@ -12,7 +12,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
-import danielhabib.sandbox.GameScreen;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
 import danielhabib.sandbox.components.CollisionListener;
@@ -26,14 +25,12 @@ import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.types.PlatformType;
 
-public class World {
+public abstract class World {
 	private PooledEngine engine;
 	private Entity snakeEntity;
-	private GameScreen gameScreen;
 
-	public World(PooledEngine engine, GameScreen gameScreen) {
+	public World(PooledEngine engine) {
 		this.engine = engine;
-		this.gameScreen = gameScreen;
 	}
 
 	public void addPoison(int x, int y, Texture texture) {
@@ -149,9 +146,7 @@ public class World {
 		return pieceEntity;
 	}
 
-	public void create() {
-		parseMap();
-	}
+	public abstract void create();
 
 	private void createCamera(Entity target) {
 		Entity entity = engine.createEntity();
@@ -165,8 +160,8 @@ public class World {
 		engine.addEntity(entity);
 	}
 
-	private void parseMap() {
-		TiledMap map = new TmxMapLoader().load("map1.tmx");
+	protected void parseMap(String mapTmx) {
+		TiledMap map = new TmxMapLoader().load(mapTmx);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 
 		Texture texture;

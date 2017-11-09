@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
+import danielhabib.factory.World1;
+import danielhabib.factory.World2;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CameraSystem;
@@ -21,15 +23,18 @@ import danielhabib.sandbox.systems.TemporarySpeedSystem;
 
 public class GameScreen extends AbstractScreen {
 
-	private SandboxGame game;
 	private PooledEngine engine;
 	private SpriteBatch batch;
 	private World world;
 
 	public GameScreen(Object[] params) {
-		this.game = (SandboxGame) ScreenManager.getInstance().getGame();
+		int level = (int) params[0];
 		engine = new PooledEngine();
-		world = new World(engine, this);
+		if (level == 1) {
+			world = new World1(engine);
+		} else {
+			world = new World2(engine);
+		}
 		batch = new SpriteBatch();
 
 		engine.addSystem(new PlatformSystem());
