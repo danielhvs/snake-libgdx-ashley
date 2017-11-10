@@ -8,5 +8,6 @@
 	<inherits name='SandboxGame' />
 	<entry-point class='danielhabib.sandbox.client.HtmlLauncher' />
 	
+	
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

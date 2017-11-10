@@ -86,8 +86,10 @@ public abstract class World {
 	public Entity createEntity(float xPos, float yPos, float xVel, float yVel,
 			Texture texture) {
 		Entity entity = engine.createEntity();
-		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		MovementComponent movement = engine.createComponent(MovementComponent.class);
+		TransformComponent transform = engine
+				.createComponent(TransformComponent.class);
+		MovementComponent movement = engine
+				.createComponent(MovementComponent.class);
 		TextureComponent textureComponent = engine
 				.createComponent(TextureComponent.class);
 		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
@@ -98,8 +100,10 @@ public abstract class World {
 		movement.velocity.x = xVel;
 		movement.velocity.y = yVel;
 
-		bounds.bounds.width = textureComponent.region.getRegionWidth() * 0.03125f;
-		bounds.bounds.height = textureComponent.region.getRegionHeight() * 0.03125f;
+		bounds.bounds.width = textureComponent.region.getRegionWidth()
+				* RenderingSystem.PIXELS_TO_METER;
+		bounds.bounds.height = textureComponent.region.getRegionHeight()
+				* RenderingSystem.PIXELS_TO_METER;
 		bounds.bounds.x = transform.pos.x;
 		bounds.bounds.y = transform.pos.y;
 
@@ -144,7 +148,6 @@ public abstract class World {
 
 		pieceEntity.add(texture);
 		pieceEntity.add(transform);
-
 		return pieceEntity;
 	}
 

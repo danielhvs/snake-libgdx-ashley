@@ -7,10 +7,10 @@ import danielhabib.sandbox.SandboxGame;
 
 public class HtmlLauncher extends GwtApplication {
 
-        @Override
-        public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(480, 320);
-        }
+	@Override
+	public GwtApplicationConfiguration getConfig() {
+		return new GwtApplicationConfiguration(800, 600);
+	}
 
         @Override
         public ApplicationListener createApplicationListener () {
