@@ -1,6 +1,9 @@
 package danielhabib.factory;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+
+import danielhabib.sandbox.components.CountComponent;
 
 public class World1 extends World {
 
@@ -10,7 +13,9 @@ public class World1 extends World {
 
 	@Override
 	public void create() {
-		parseMap("map1.tmx");
+		// Idea: put metadata elsewhere, maybe inside map.tmx
+		Entity snake = parseMap("map1.tmx");
+		snake.getComponent(CountComponent.class).maxFruits = 15;
 	}
 
 }

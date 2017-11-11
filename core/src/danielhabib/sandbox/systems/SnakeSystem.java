@@ -110,4 +110,8 @@ public class SnakeSystem extends IteratingSystem {
 		}
 	}
 
+	public void win(Entity snake) {
+		System.out.println("WON!!!");
+	}
+
 }

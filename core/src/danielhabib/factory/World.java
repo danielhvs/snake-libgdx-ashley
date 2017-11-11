@@ -165,11 +165,12 @@ public abstract class World {
 		engine.addEntity(entity);
 	}
 
-	protected void parseMap(String mapTmx) {
+	protected Entity parseMap(String mapTmx) {
 		TiledMap map = new TmxMapLoader().load(mapTmx);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 
 		Texture texture;
+		Entity snake = null;
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
 				Cell cell = layer.getCell(x, y);
@@ -187,19 +188,21 @@ public abstract class World {
 						addWall(x, y, texture);
 					} else if ("boingRule".equals(rule.toString())) {
 					} else if ("head".equals(rule.toString())) {
-						addSnake(x, y, texture);
+						snake = addSnake(x, y, texture);
 					} else if ("piece".equals(rule.toString())) {
 					} else if ("tail".equals(rule.toString())) {
 					}
 				}
 			}
 		}
+		return snake;
 	}
 
-	private void addSnake(int x, int y, Texture texture) {
+	private Entity addSnake(int x, int y, Texture texture) {
 		snakeEntity = createSnake(x, y, texture);
 		engine.addEntity(snakeEntity);
 		createCamera(snakeEntity);
+		return snakeEntity;
 	}
 
 	public Entity getSnake() {
