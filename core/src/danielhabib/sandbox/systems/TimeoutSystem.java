@@ -25,7 +25,6 @@ public class TimeoutSystem extends IteratingSystem {
 		}
 
 		Float time = timePassed.get(entity);
-		System.out.println(time);
 		TimeoutComponent component = entity.getComponent(TimeoutComponent.class);
 		if (time > component.timeout) {
 			component.generalCallback.execute();

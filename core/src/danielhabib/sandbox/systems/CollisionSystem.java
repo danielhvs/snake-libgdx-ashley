@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.factory.TextFactory;
 import danielhabib.sandbox.ScreenEnum;
@@ -79,15 +79,16 @@ public class CollisionSystem extends EntitySystem {
 					snakeSystem.increaseSpeed(snake);
 					getEngine().removeEntity(platform);
 				} else if (type == PlatformType.WALL) {
-					ImmutableArray<Entity> entities = getEngine().getEntities();
-					for (Entity entity : entities) {
-						float random = MathUtils.random();
-						entity.add(
-								new RotationComponent(random < 0.5f ? random : -random));
-						entity.remove(SnakeComponent.class);
-						entity.remove(MovementComponent.class
-);
+					platform.remove(PlatformComponent.class);
+					platform.add(new RotationComponent(.25f));
+					snake.add(new RotationComponent(-.625f));
+					Array<Entity> parts = snake.getComponent(SnakeComponent.class).parts;
+					int i = 0;
+					for (Entity part : parts) {
+						int factor = (++i) % 2 == 0 ? 1 : -1;
+						part.add(new RotationComponent(factor * .25f));
 					}
+					snake.remove(MovementComponent.class);
 					snake.add(new TimeoutComponent(2f,
 							new GeneralCallback() {
 						@Override

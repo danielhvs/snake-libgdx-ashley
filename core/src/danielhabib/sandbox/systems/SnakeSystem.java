@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -11,16 +12,20 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 
 import danielhabib.factory.World;
+import danielhabib.sandbox.ScreenEnum;
+import danielhabib.sandbox.ScreenManager;
+import danielhabib.sandbox.components.GeneralCallback;
 import danielhabib.sandbox.components.MovementComponent;
+import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.sandbox.components.RotationComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
 import danielhabib.sandbox.components.TemporarySpeedComponent;
+import danielhabib.sandbox.components.TimeoutComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
 public class SnakeSystem extends IteratingSystem {
 
-	private ComponentMapper<StateComponent> states;
-	private ComponentMapper<MovementComponent> movements;
 	private ComponentMapper<SnakeComponent> snakes;
 	private World world;
 	private ComponentMapper<TransformComponent> transforms;
@@ -30,8 +35,6 @@ public class SnakeSystem extends IteratingSystem {
 		super(Family.all(SnakeComponent.class, StateComponent.class,
 				TransformComponent.class, MovementComponent.class).get());
 		this.world = world;
-		states = ComponentMapper.getFor(StateComponent.class);
-		movements = ComponentMapper.getFor(MovementComponent.class);
 		transforms = ComponentMapper.getFor(TransformComponent.class);
 		snakes = ComponentMapper.getFor(SnakeComponent.class);
 	}
@@ -111,7 +114,41 @@ public class SnakeSystem extends IteratingSystem {
 	}
 
 	public void win(Entity snake) {
-		System.out.println("WON!!!");
+		ImmutableArray<Entity> entities = getEngine().getEntities();
+		MovementComponent movementComponent = snake.getComponent(MovementComponent.class);
+		getEngine().removeSystem(getEngine().getSystem(CameraSystem.class));
+		if (movementComponent == null) {
+			return;
+		}
+		for (Entity entity : entities) {
+			float random = MathUtils.random();
+			entity.remove(PlatformComponent.class);
+			if (entity != snake) {
+				MovementComponent component = new MovementComponent();
+				int velocityFactor = 3;
+				component.velocity.x = random < 0.25 ? 0
+						: random < 0.5 ? velocityFactor * random
+								: -velocityFactor * random;
+				if (component.velocity.x != 0) {
+					component.velocity.y = random < 0.5 ? velocityFactor * random
+							: -velocityFactor * random;
+				} else {
+					component.velocity.y = random < 0.25 ? 0
+							: random < 0.5 ? velocityFactor * random
+									: -velocityFactor * random;
+				}
+				entity.add(component);
+				entity.add(new RotationComponent(.25f));
+			}
+		}
+		snake.remove(MovementComponent.class);
+		snake.add(new TimeoutComponent(3f, new GeneralCallback() {
+			@Override
+			public void execute() {
+				getEngine().removeAllEntities();
+				ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+			}
+		}));
 	}
 
 }
