@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
-import danielhabib.sandbox.components.CollisionListener;
+import danielhabib.sandbox.components.GeneralCallback;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
@@ -36,9 +36,9 @@ public abstract class World {
 
 	public void addPoison(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.POISON, new CollisionListener() {
+		entity.add(new PlatformComponent(PlatformType.POISON, new GeneralCallback() {
 			@Override
-			public void hit() {
+			public void execute() {
 				Assets.playSound(Assets.poisonSound);
 			}
 		}));
@@ -48,9 +48,9 @@ public abstract class World {
 
 	public void addFruit(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.FRUIT, new CollisionListener() {
+		entity.add(new PlatformComponent(PlatformType.FRUIT, new GeneralCallback() {
 			@Override
-			public void hit() {
+			public void execute() {
 				Assets.playSound(Assets.fruitSound);
 			}
 		}));
@@ -60,9 +60,9 @@ public abstract class World {
 
 	private void addSpeed(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.SPEED, new CollisionListener() {
+		entity.add(new PlatformComponent(PlatformType.SPEED, new GeneralCallback() {
 			@Override
-			public void hit() {
+			public void execute() {
 				Assets.playSound(Assets.hitSound);
 			}
 		}));
@@ -72,10 +72,10 @@ public abstract class World {
 
 	public void addWall(int x, int y, Texture texture) {
 		Entity entity = createEntity(x, y, 0, 0, texture);
-		entity.add(new PlatformComponent(PlatformType.WALL, new CollisionListener() {
+		entity.add(new PlatformComponent(PlatformType.WALL, new GeneralCallback() {
 			@Override
-			public void hit() {
-				// Assets.playSound(Assets.diedSound);
+			public void execute() {
+				Assets.playSound(Assets.diedSound);
 				// engine.removeAllEntities();
 				// gameScreen.reload();
 			}

@@ -8,13 +8,20 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 
 import danielhabib.factory.TextFactory;
+import danielhabib.sandbox.ScreenEnum;
+import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CountComponent;
+import danielhabib.sandbox.components.GeneralCallback;
+import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
+import danielhabib.sandbox.components.RotationComponent;
 import danielhabib.sandbox.components.SnakeComponent;
 import danielhabib.sandbox.components.StateComponent;
+import danielhabib.sandbox.components.TimeoutComponent;
 import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.types.PlatformType;
 
@@ -71,6 +78,24 @@ public class CollisionSystem extends EntitySystem {
 				} else if (type == PlatformType.SPEED) {
 					snakeSystem.increaseSpeed(snake);
 					getEngine().removeEntity(platform);
+				} else if (type == PlatformType.WALL) {
+					ImmutableArray<Entity> entities = getEngine().getEntities();
+					for (Entity entity : entities) {
+						float random = MathUtils.random();
+						entity.add(
+								new RotationComponent(random < 0.5f ? random : -random));
+						entity.remove(SnakeComponent.class);
+						entity.remove(MovementComponent.class
+);
+					}
+					snake.add(new TimeoutComponent(2f,
+							new GeneralCallback() {
+						@Override
+						public void execute() {
+							getEngine().removeAllEntities();
+							ScreenManager.getInstance().showScreen(ScreenEnum.MAIN_MENU);
+						}
+					}));
 				}
 			}
 		}

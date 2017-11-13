@@ -5,16 +5,16 @@ import com.badlogic.ashley.core.Component;
 import danielhabib.sandbox.types.PlatformType;
 
 public class PlatformComponent implements Component {
-	public CollisionListener collisionListener;
+	public GeneralCallback generalCallback;
 	public PlatformType type;
 
-	public PlatformComponent(PlatformType type, CollisionListener collisionListener) {
+	public PlatformComponent(PlatformType type, GeneralCallback generalCallback) {
 		this.type = type;
-		this.collisionListener = collisionListener;
+		this.generalCallback = generalCallback;
 	}
 
 	public void hit() {
-		collisionListener.hit();
+		generalCallback.execute();
 	}
 
 }

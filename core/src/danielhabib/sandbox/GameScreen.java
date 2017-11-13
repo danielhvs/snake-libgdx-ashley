@@ -21,8 +21,10 @@ import danielhabib.sandbox.systems.CountSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
+import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.SnakeSystem;
 import danielhabib.sandbox.systems.TemporarySpeedSystem;
+import danielhabib.sandbox.systems.TimeoutSystem;
 
 public class GameScreen extends AbstractScreen {
 
@@ -40,16 +42,18 @@ public class GameScreen extends AbstractScreen {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
 		Entity snake = world.getSnake();
 		MovementComponent movement = snake.getComponent(MovementComponent.class);
-		Vector2 velocity = movement.velocity;
-		float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
-		if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
-			snakeSystem.setYVel(speed, snake);
-		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
-			snakeSystem.setYVel(-speed, snake);
-		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
-			snakeSystem.setXVel(-speed, snake);
-		} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
-			snakeSystem.setXVel(speed, snake);
+		if (movement != null) {
+			Vector2 velocity = movement.velocity;
+			float speed = Math.max(Math.abs(velocity.x), Math.abs(velocity.y));
+			if (Gdx.input.isKeyJustPressed(Keys.DPAD_UP)) {
+				snakeSystem.setYVel(speed, snake);
+			} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_DOWN)) {
+				snakeSystem.setYVel(-speed, snake);
+			} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_LEFT)) {
+				snakeSystem.setXVel(-speed, snake);
+			} else if (Gdx.input.isKeyJustPressed(Keys.DPAD_RIGHT)) {
+				snakeSystem.setXVel(speed, snake);
+			}
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.A)) {
 			engine.getSystem(SnakeSystem.class).increaseSpeed(snake);
@@ -90,6 +94,8 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new RenderingSystem(gameBatch));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new CollisionSystem());
+		engine.addSystem(new RotationSystem());
+		engine.addSystem(new TimeoutSystem());
 		engine.addSystem(new SnakeSystem(world));
 		engine.addSystem(new CameraSystem());
 		engine.addSystem(new CountSystem());
