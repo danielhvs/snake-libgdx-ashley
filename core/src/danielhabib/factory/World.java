@@ -78,8 +78,6 @@ public class World {
 			@Override
 			public void execute() {
 				Assets.playSound(Assets.diedSound);
-				// engine.removeAllEntities();
-				// gameScreen.reload();
 			}
 		}));
 		engine.addEntity(entity);
