@@ -28,6 +28,7 @@
   <image source="head.png" width="32" height="32"/>
   <tile id="0">
    <properties>
+    <property name="goal" value="apples:28"/>
     <property name="rule" value="head"/>
    </properties>
   </tile>

@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.CameraComponent;
-import danielhabib.sandbox.components.GeneralCallback;
 import danielhabib.sandbox.components.CountComponent;
+import danielhabib.sandbox.components.GeneralCallback;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.PlatformComponent;
 import danielhabib.sandbox.components.RotationComponent;
@@ -26,12 +26,14 @@ import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.types.PlatformType;
 
-public abstract class World {
+public class World {
 	private PooledEngine engine;
 	private Entity snakeEntity;
+	private String mapName;
 
-	public World(PooledEngine engine) {
+	public World(PooledEngine engine, String mapName) {
 		this.engine = engine;
+		this.mapName = mapName;
 	}
 
 	public void addPoison(int x, int y, Texture texture) {
@@ -151,7 +153,9 @@ public abstract class World {
 		return pieceEntity;
 	}
 
-	public abstract void create();
+	public void create() {
+		parseMap(mapName);
+	}
 
 	private void createCamera(Entity target) {
 		Entity entity = engine.createEntity();
@@ -189,6 +193,14 @@ public abstract class World {
 					} else if ("boingRule".equals(rule.toString())) {
 					} else if ("head".equals(rule.toString())) {
 						snake = addSnake(x, y, texture);
+						String[] goals = tile.getProperties().get("goal").toString()
+								.split(":");
+						if ("apples".equals(goals[0])) {
+							Integer valueOf = Integer
+									.valueOf(goals[1]);
+							snake.getComponent(CountComponent.class).maxFruits = valueOf;
+						}
+
 					} else if ("piece".equals(rule.toString())) {
 					} else if ("tail".equals(rule.toString())) {
 					}

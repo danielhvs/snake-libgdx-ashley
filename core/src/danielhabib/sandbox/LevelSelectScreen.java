@@ -13,7 +13,7 @@ public class LevelSelectScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		Array<Array<Button>> buttons = new Array<Array<Button>>();
-		int numRows = 4; // == numColumns
+		int numRows = 2; // == numColumns
 		int level = 1;
 		for (int r = 0; r < numRows; r++) {
 			buttons.add(new Array<Button>());

@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import danielhabib.factory.World;
-import danielhabib.factory.World1;
-import danielhabib.factory.World2;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
@@ -83,11 +81,7 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		engine = new PooledEngine();
-		if (level == 1) {
-			world = new World1(engine);
-		} else {
-			world = new World2(engine);
-		}
+		world = new World(engine, "map" + level + ".tmx");
 		gameBatch = new SpriteBatch();
 
 		engine.addSystem(new PlatformSystem());
