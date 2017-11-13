@@ -35,6 +35,7 @@ public class MainMenu extends AbstractScreen {
 		});
 
 		addActor(table);
+		Assets.loop(Assets.menuSound);
 	}
 
 	@Override

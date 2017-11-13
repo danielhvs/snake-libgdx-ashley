@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 
 import danielhabib.factory.World;
+import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.ScreenEnum;
 import danielhabib.sandbox.ScreenManager;
 import danielhabib.sandbox.components.GeneralCallback;
@@ -120,6 +121,7 @@ public class SnakeSystem extends IteratingSystem {
 		if (movementComponent == null) {
 			return;
 		}
+		Assets.loop(Assets.winSound);
 		for (Entity entity : entities) {
 			float random = MathUtils.random();
 			entity.remove(PlatformComponent.class);

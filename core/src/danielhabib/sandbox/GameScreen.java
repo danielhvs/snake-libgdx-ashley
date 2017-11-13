@@ -35,6 +35,7 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(Integer[] params) {
 		this.level = params[0];
+		Assets.loop(Assets.backgroundSound);
 	}
 
 	@Override
