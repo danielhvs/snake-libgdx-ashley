@@ -107,7 +107,7 @@ public class UIFactory {
 	}
 
 	private static LabelStyle labelStyle() {
-		return new LabelStyle(Assets.font, Color.WHITE);
+		return new LabelStyle(Assets.font, Color.YELLOW);
 	}
 
 }

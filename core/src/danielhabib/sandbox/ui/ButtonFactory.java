@@ -11,7 +11,6 @@ public class ButtonFactory {
 		TextButtonStyle style = Assets.skin.get("default",
 				TextButtonStyle.class);
 		TextButton textButton = new TextButton(text, style);
-		// FIXME: Use freetype font fixing size with Gdx.getDensity()
 		textButton.getLabel().setFontScale(Assets.fontScaleX,
 				Assets.fontScaleY);
 		return textButton;

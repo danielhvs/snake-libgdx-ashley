@@ -6,6 +6,9 @@ import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class Assets {
@@ -42,6 +45,18 @@ public class Assets {
 		manager.load("default.fnt", BitmapFont.class);
 		manager.load("uiskin.json", Skin.class,
 				new SkinLoader.SkinParameter("uiskin.atlas"));
+
+
+	}
+
+	private static BitmapFont ttfFont(String fileName, int size) {
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+				Gdx.files.internal(fileName));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = size;
+		BitmapFont font = generator.generateFont(parameter);
+		generator.dispose();
+		return font;
 	}
 
 	public static void finishLoading() {
@@ -54,10 +69,16 @@ public class Assets {
 		backgroundSound = manager.get(BACKGROUND_SOUND, Sound.class);
 		menuSound = manager.get(MENU_SOUND, Sound.class);
 		poisonSound = manager.get("poison.mp3", Sound.class);
-		font = manager.get("default.fnt", BitmapFont.class);
 		skin = manager.get("uiskin.json", Skin.class);
 		fontScaleX = Gdx.graphics.getWidth() / 450f;
 		fontScaleY = Gdx.graphics.getHeight() / 340f;
+		font = manager.get("default.fnt", BitmapFont.class);
+
+		skin.remove("default-font", BitmapFont.class);
+		skin.add("deafult-font", ttfFont("arial.ttf", 16), BitmapFont.class);
+		skin.addRegions(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		skin.load(Gdx.files.internal("uiskin.json"));
+		font = skin.get("default-font", BitmapFont.class);
 	}
 
 	public static void playSound(Sound sound) {
