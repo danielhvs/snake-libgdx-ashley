@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.ScreenEnum;
@@ -71,6 +73,35 @@ public class UIFactory {
 		for (Button button : buttons) {
 			addButtonToTable(button, table);
 		}
+
+		return table;
+	}
+
+	public static Table newLevelsMenu(String titleText, TextButton backButton,
+			Array<Array<Button>> buttons) {
+
+		Table table = new Table();
+		Label title = new Label(titleText, labelStyle());
+		UIFactory.setTitle(title, table);
+
+		int width = Gdx.graphics.getWidth() / 4;
+		int height = Gdx.graphics.getHeight() / 8;
+		int pad = Gdx.graphics.getHeight() * Gdx.graphics.getWidth() / 32768;
+
+		Table levelsTable = new Table();
+		table.row();
+		for (Array<Button> buttonsInLine : buttons) {
+			for (Button button : buttonsInLine) {
+				levelsTable.add(button).width(width / 2).height(height).pad(pad);
+			}
+			levelsTable.row();
+		}
+		table.add(levelsTable);
+		table.row();
+		float spaceBottom = Gdx.graphics.getHeight() / 25f;
+		table.getCell(levelsTable).spaceBottom(spaceBottom);
+		table.add(backButton).width(width).height(height);
+		table.getCell(backButton).spaceBottom(spaceBottom);
 
 		return table;
 	}
