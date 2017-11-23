@@ -8,7 +8,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ArrayMap;
 
+import danielhabib.factory.AEntityBuilder;
+import danielhabib.factory.FruitBuilder;
+import danielhabib.factory.PoisonBuilder;
+import danielhabib.factory.SnakeBuilder;
+import danielhabib.factory.SpeedBuilder;
+import danielhabib.factory.WallBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.CountComponent;
 import danielhabib.sandbox.components.MovementComponent;
@@ -39,7 +46,7 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		SnakeSystem snakeSystem = engine.getSystem(SnakeSystem.class);
-		Entity snake = world.getSnake();
+		Entity snake = world.entities.get("head").get(0);
 		MovementComponent movement = snake.getComponent(MovementComponent.class);
 		if (movement != null) {
 			Vector2 velocity = movement.velocity;
@@ -81,7 +88,16 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void buildStage() {
 		engine = new PooledEngine();
-		world = new World(engine, "map" + level + ".tmx");
+
+		ArrayMap<String, AEntityBuilder> builders;
+		builders = new ArrayMap<String, AEntityBuilder>();
+		builders.put("fruit", new FruitBuilder(engine));
+		builders.put("poison", new PoisonBuilder(engine));
+		builders.put("speed", new SpeedBuilder(engine));
+		builders.put("identityRule", new WallBuilder(engine));
+		builders.put("head", new SnakeBuilder(engine));
+
+		world = new World(builders, "map" + level + ".tmx");
 		gameBatch = new SpriteBatch();
 
 		engine.addSystem(new PlatformSystem());

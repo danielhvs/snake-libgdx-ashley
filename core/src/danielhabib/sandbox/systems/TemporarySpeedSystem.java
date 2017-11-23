@@ -3,7 +3,6 @@ package danielhabib.sandbox.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.ArrayMap.Keys;
 
 import danielhabib.sandbox.components.MovementComponent;
