@@ -46,6 +46,7 @@ project(":desktop") {
     }
 }
 
+/*
 project(":android") {
     apply plugin: "android"
 
@@ -69,7 +70,9 @@ project(":android") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }
+*/
 
+/*
 project(":html") {
     apply plugin: "gwt"
     apply plugin: "war"
@@ -85,6 +88,7 @@ project(":html") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
     }
 }
+*/
 
 project(":core") {
     apply plugin: "java"
