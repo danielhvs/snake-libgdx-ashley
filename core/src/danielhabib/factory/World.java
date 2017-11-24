@@ -41,8 +41,4 @@ public class World {
 		}
 	}
 
-	public Entity newEntityPart(int x, int y) {
-		return ((SnakeBuilder) builders.get("head")).newEntityPart(x, y);
-	}
-
 }
