@@ -25,7 +25,7 @@ public class CharBuilder extends AEntityBuilder {
 	protected Entity buildInternal(int x, int y, TiledMapTile tile) {
 		Entity entity = createEntity(x, y, 0, 0);
 		LabelComponent labelComponent = engine.createComponent(LabelComponent.class);
-		LabelStyle labelStyle = new LabelStyle(Assets.font, Color.WHITE);
+		LabelStyle labelStyle = new LabelStyle(Assets.blockFont, Color.WHITE);
 		Label label = new Label(alphabet[MathUtils.random(25)], labelStyle);
 		label.setFontScale(FONT_SCALE_X, FONT_SCALE_Y);
 		

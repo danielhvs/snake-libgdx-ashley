@@ -86,7 +86,7 @@ public class RenderingSystem extends IteratingSystem {
 					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
 
 			Label label = labelM.get(entity).label;
-			label.draw(batch, 1.0f);
+			label.draw(batch, 1f);
 		}
 
 		batch.end();

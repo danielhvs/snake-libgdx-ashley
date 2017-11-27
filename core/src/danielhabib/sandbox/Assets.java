@@ -6,7 +6,6 @@ import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -29,6 +28,7 @@ public class Assets {
 	public static Sound winSound;
 	public static Sound backgroundSound;
 	private static Sound loopingSound;
+	public static BitmapFont blockFont;
 
 	public static void load() {
 		manager = new AssetManager();
@@ -71,11 +71,12 @@ public class Assets {
 		fontScaleY = Gdx.graphics.getHeight() / 340f;
 		font = manager.get("default.fnt", BitmapFont.class);
 
-		skin.remove("default-font", BitmapFont.class);
-		skin.add("deafult-font", ttfFont("arial.ttf", 16), BitmapFont.class);
-		skin.addRegions(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
-		skin.load(Gdx.files.internal("uiskin.json"));
+		// skin.remove("default-font", BitmapFont.class);
+		// skin.add("deafult-font", ttfFont("arial.ttf", 16), BitmapFont.class);
+		// skin.addRegions(new TextureAtlas(Gdx.files.internal("uiskin.atlas")));
+		// skin.load(Gdx.files.internal("uiskin.json"));
 		font = skin.get("default-font", BitmapFont.class);
+		blockFont = ttfFont("baby-blocks.ttf", 16);
 	}
 
 	public static void playSound(Sound sound) {
