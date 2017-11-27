@@ -30,7 +30,6 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(this);
 		Gdx.input.setInputProcessor(multiplexer);
-
 	}
 
 	@Override

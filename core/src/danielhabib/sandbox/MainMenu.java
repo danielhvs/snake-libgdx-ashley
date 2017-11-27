@@ -18,7 +18,7 @@ public class MainMenu extends AbstractScreen {
 		TextButton configButton = ButtonFactory.newButton("Change stuff...");
 		TextButton quitButton = ButtonFactory.newButton("I'm out!");
 
-		Table table = UIFactory.newMenu("OMG! Crazy Snakes!", playButton,
+		Table table = UIFactory.newMenu("OMG! Crazy Words!", playButton,
 				levelButton, configButton, quitButton);
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));

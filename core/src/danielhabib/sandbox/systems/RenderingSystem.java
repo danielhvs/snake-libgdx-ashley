@@ -11,8 +11,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 
+import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
 
@@ -27,12 +29,14 @@ public class RenderingSystem extends IteratingSystem {
 
 	private ComponentMapper<TextureComponent> textureM;
 	private ComponentMapper<TransformComponent> transformM;
+	private ComponentMapper<LabelComponent> labelM;
 
 	public RenderingSystem(SpriteBatch batch) {
-		super(Family.all(TransformComponent.class, TextureComponent.class).get());
+		super(Family.all(TransformComponent.class, TextureComponent.class, LabelComponent.class).get());
 
 		textureM = ComponentMapper.getFor(TextureComponent.class);
 		transformM = ComponentMapper.getFor(TransformComponent.class);
+		labelM = ComponentMapper.getFor(LabelComponent.class);
 
 		renderQueue = new Array<Entity>();
 
@@ -80,6 +84,9 @@ public class RenderingSystem extends IteratingSystem {
 			float y = t.pos.y - originY;
 			batch.draw(tex.region, x, y, originX, originY, width, height, t.scale.x * PIXELS_TO_METER,
 					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
+
+			Label label = labelM.get(entity).label;
+			label.draw(batch, 1.0f);
 		}
 
 		batch.end();
