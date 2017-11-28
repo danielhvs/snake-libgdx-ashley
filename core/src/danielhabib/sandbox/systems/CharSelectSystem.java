@@ -34,12 +34,11 @@ public class CharSelectSystem extends IteratingSystem {
 			System.out.println("  label x=" + labelComponent.label.getX() + " y=" + labelY);
 			System.out.println("Bounds: " + bounds);
 			if (bounds.bounds.contains(click.x, click.y)) {
-				labelComponent.label.setColor(Color.YELLOW);
-			}
-			if (click.x < labelComponent.label.getX()) {
-				labelComponent.label.setColor(Color.RED);
-			} else if (click.y < labelY) {
-				labelComponent.label.setColor(Color.GREEN);
+				if (labelComponent.label.getColor().equals(Color.WHITE)) {
+					labelComponent.label.setColor(Color.YELLOW);
+				} else {
+					labelComponent.label.setColor(Color.WHITE);
+				}
 			}
 		}
 		getEngine().removeEntity(entity);

@@ -41,7 +41,7 @@ public class BoundsSystem extends IteratingSystem {
 		TransformComponent pos = tm.get(entity);
 		BoundsComponent bounds = bm.get(entity);
 
-		bounds.bounds.x = pos.pos.x - bounds.bounds.width * 0.5f;
-		bounds.bounds.y = pos.pos.y - bounds.bounds.height * 0.5f;
+		bounds.bounds.x = pos.pos.x;
+		bounds.bounds.y = pos.pos.y;
 	}
 }
