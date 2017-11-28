@@ -1,5 +1,6 @@
 package danielhabib.sandbox;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,7 +11,9 @@ import com.badlogic.gdx.utils.ArrayMap;
 import danielhabib.factory.AEntityBuilder;
 import danielhabib.factory.CharBuilder;
 import danielhabib.factory.World;
+import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
+import danielhabib.sandbox.systems.CharSelectSystem;
 import danielhabib.sandbox.systems.DevSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
@@ -56,7 +59,12 @@ public class GameScreen extends AbstractScreen {
 		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			float x = Gdx.input.getX();
 			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
-			System.out.println("x=" + x + " y=" + y);
+			Entity entity = engine.createEntity();
+			ClickComponent click = engine.createComponent(ClickComponent.class);
+			click.x = x;
+			click.y = y;
+			entity.add(click);
+			engine.addEntity(entity);
 		}
 		engine.update(delta);
 		super.render(delta);
@@ -77,6 +85,7 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new RenderingSystem(gameBatch));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new RotationSystem());
+		engine.addSystem(new CharSelectSystem());
 		engine.addSystem(new TimeoutSystem());
 		engine.addSystem(new TemporarySpeedSystem());
 		engine.addSystem(new DevSystem());
