@@ -66,7 +66,7 @@ public class GameScreen extends AbstractScreen {
 		builders.put("fruit", new NOPEntityBuilder(engine));
 		builders.put("poison", new NOPEntityBuilder(engine));
 		builders.put("speed", new NOPEntityBuilder(engine));
-		builders.put("identityRule", new CharBuilder(engine));
+		builders.put("transparent", new CharBuilder(engine));
 		builders.put("head", new NOPEntityBuilder(engine));
 
 		world = new World(builders, "map" + level + ".tmx");

@@ -11,7 +11,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.LabelComponent;
@@ -82,11 +81,10 @@ public class RenderingSystem extends IteratingSystem {
 
 			float x = t.pos.x - originX;
 			float y = t.pos.y - originY;
+			LabelComponent labelComponent = labelM.get(entity);
+			labelComponent.font.draw(batch, labelComponent.text, labelComponent.x, labelComponent.y);
 			batch.draw(tex.region, x, y, originX, originY, width, height, t.scale.x * PIXELS_TO_METER,
 					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
-
-			Label label = labelM.get(entity).label;
-			label.draw(batch, 1f);
 		}
 
 		batch.end();
