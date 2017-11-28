@@ -9,12 +9,10 @@ import com.badlogic.gdx.utils.ArrayMap;
 
 import danielhabib.factory.AEntityBuilder;
 import danielhabib.factory.CharBuilder;
-import danielhabib.factory.NOPEntityBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.DevSystem;
 import danielhabib.sandbox.systems.MovementSystem;
-import danielhabib.sandbox.systems.PlatformSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.TemporarySpeedSystem;
@@ -70,16 +68,11 @@ public class GameScreen extends AbstractScreen {
 
 		ArrayMap<String, AEntityBuilder> builders;
 		builders = new ArrayMap<String, AEntityBuilder>();
-		builders.put("fruit", new NOPEntityBuilder(engine));
-		builders.put("poison", new NOPEntityBuilder(engine));
-		builders.put("speed", new NOPEntityBuilder(engine));
 		builders.put("transparent", new CharBuilder(engine));
-		builders.put("head", new NOPEntityBuilder(engine));
 
 		world = new World(builders, "map" + level + ".tmx");
 		gameBatch = new SpriteBatch();
 
-		engine.addSystem(new PlatformSystem());
 		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(gameBatch));
 		engine.addSystem(new BoundsSystem());
