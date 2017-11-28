@@ -2,6 +2,7 @@ package danielhabib.sandbox;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -52,6 +53,12 @@ public class GameScreen extends AbstractScreen {
 			} else if (Gdx.input.isKeyJustPressed(Keys.Z)) {
 				engine.getSystem(DevSystem.class).incSclX(offsetScl2);
 			}
+		}
+
+		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			float x = Gdx.input.getX();
+			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			System.out.println("x=" + x + " y=" + y);
 		}
 		engine.update(delta);
 		super.render(delta);
