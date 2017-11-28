@@ -7,6 +7,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.Color;
 
+import danielhabib.factory.CharBuilder;
+import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.components.LabelComponent;
 
@@ -25,11 +27,19 @@ public class CharSelectSystem extends IteratingSystem {
 		System.out.println("click x=" + click.x + " y=" + click.y);
 		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(LabelComponent.class).get());
 		for (Entity labelEntity : entities) {
+			BoundsComponent bounds = labelEntity.getComponent(BoundsComponent.class);
 			LabelComponent labelComponent = labelEntity.getComponent(LabelComponent.class);
-			if (click.x < labelComponent.x) {
-				labelComponent.font.setColor(Color.RED);
-			} else if (click.y > labelComponent.y) {
-				labelComponent.font.setColor(Color.GREEN);
+			// FIXME: Bounds is actually the center...
+			float labelY = labelComponent.label.getY() + CharBuilder.Y_OFFSET;
+			System.out.println("  label x=" + labelComponent.label.getX() + " y=" + labelY);
+			System.out.println("Bounds: " + bounds);
+			if (bounds.bounds.contains(click.x, click.y)) {
+				labelComponent.label.setColor(Color.YELLOW);
+			}
+			if (click.x < labelComponent.label.getX()) {
+				labelComponent.label.setColor(Color.RED);
+			} else if (click.y < labelY) {
+				labelComponent.label.setColor(Color.GREEN);
 			}
 		}
 		getEngine().removeEntity(entity);

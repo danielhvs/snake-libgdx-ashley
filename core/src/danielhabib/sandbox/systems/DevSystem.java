@@ -3,7 +3,7 @@ package danielhabib.sandbox.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import danielhabib.sandbox.components.LabelComponent;
 
@@ -19,11 +19,11 @@ public class DevSystem extends IteratingSystem {
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		LabelComponent label = entity.getComponent(LabelComponent.class);
-		label.x = (int) (label.x + x);
-		label.y = (int) (label.y + y);
-		BitmapFontData data = label.font.getData();
-		data.setScale(data.scaleX * sclX, data.scaleY * sclX);
+		Label label = entity.getComponent(LabelComponent.class).label;
+		label.setX(label.getX() + x);
+		label.setY(label.getY() + y);
+		label.setFontScaleX(label.getFontScaleX() * sclX);
+		label.setFontScaleY(label.getFontScaleY() * sclX);
 		this.x = 0f;
 		this.y = 0f;
 		this.sclX = 1f;

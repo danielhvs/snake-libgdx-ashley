@@ -61,8 +61,8 @@ public class GameScreen extends AbstractScreen {
 			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 			Entity entity = engine.createEntity();
 			ClickComponent click = engine.createComponent(ClickComponent.class);
-			click.x = x;
-			click.y = y;
+			click.x = x * RenderingSystem.PIXELS_TO_METER;
+			click.y = y * RenderingSystem.PIXELS_TO_METER;
 			entity.add(click);
 			engine.addEntity(entity);
 		}
