@@ -24,7 +24,7 @@ public class MainMenu extends AbstractScreen {
 		Table table = UIFactory.newMenu("OMG! Crazy Words!", playButton,
 				levelButton, configButton, quitButton);
 
-		table.add(new Label("DEV: W A S D X Z Click", new LabelStyle(Assets.font, Color.YELLOW)));
+		table.add(new Label("DEV: Q W A S D X Z Click", new LabelStyle(Assets.font, Color.YELLOW)));
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton
