@@ -1,8 +1,11 @@
 package danielhabib.sandbox;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -20,6 +23,8 @@ public class MainMenu extends AbstractScreen {
 
 		Table table = UIFactory.newMenu("OMG! Crazy Words!", playButton,
 				levelButton, configButton, quitButton);
+
+		table.add(new Label("DEV: W A S D X Z Click", new LabelStyle(Assets.font, Color.YELLOW)));
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton
