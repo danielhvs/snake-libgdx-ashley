@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ArrayMap;
 
 import danielhabib.factory.AEntityBuilder;
@@ -20,6 +23,8 @@ import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.TemporarySpeedSystem;
 import danielhabib.sandbox.systems.TimeoutSystem;
+import danielhabib.sandbox.ui.ButtonFactory;
+import danielhabib.sandbox.ui.UIFactory;
 
 public class GameScreen extends AbstractScreen {
 
@@ -90,6 +95,22 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new TemporarySpeedSystem());
 		engine.addSystem(new DevSystem());
 		world.create();
+
+		Table table = new Table();
+		Label label = UIFactory.newLabel();
+		label.setText("Level " + level);
+		table.setBounds(0, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 10, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight() / 10);
+		table.debug();
+		table.left();
+		TextButton backButton = ButtonFactory.newButton(" < ");
+		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		table.add(backButton).expandX();
+		table.add(label).expandX();
+		TextButton levelButton = ButtonFactory.newButton(" [ ] ");
+		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
+		table.add(levelButton).expandX();
+		addActor(table);
 	}
 
 }
