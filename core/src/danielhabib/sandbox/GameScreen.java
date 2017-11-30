@@ -58,6 +58,10 @@ public class GameScreen extends AbstractScreen {
 				engine.getSystem(DevSystem.class).incSclX(offsetScl);
 			} else if (Gdx.input.isKeyJustPressed(Keys.Z)) {
 				engine.getSystem(DevSystem.class).incSclX(offsetScl2);
+			} else if (Gdx.input.isKeyJustPressed(Keys.P)) {
+				engine.getSystem(DevSystem.class).zoomIn();
+			} else if (Gdx.input.isKeyJustPressed(Keys.L)) {
+				engine.getSystem(DevSystem.class).zoomOut();
 			}
 		}
 
@@ -66,8 +70,8 @@ public class GameScreen extends AbstractScreen {
 			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 			Entity entity = engine.createEntity();
 			ClickComponent click = engine.createComponent(ClickComponent.class);
-			click.x = x * RenderingSystem.PIXELS_TO_METER;
-			click.y = y * RenderingSystem.PIXELS_TO_METER;
+			click.x = x;
+			click.y = y;
 			entity.add(click);
 			engine.addEntity(entity);
 		}
@@ -87,7 +91,7 @@ public class GameScreen extends AbstractScreen {
 		gameBatch = new SpriteBatch();
 
 		engine.addSystem(new MovementSystem());
-		engine.addSystem(new RenderingSystem(gameBatch));
+		engine.addSystem(new RenderingSystem(gameBatch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new RotationSystem());
 		engine.addSystem(new CharSelectSystem());

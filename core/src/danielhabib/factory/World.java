@@ -22,8 +22,8 @@ public class World {
 	public void create() {
 		TiledMap map = new TmxMapLoader().load(mapName);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-		entities = new ArrayMap<String,Array<Entity>>();
-		
+		entities = new ArrayMap<String, Array<Entity>>();
+
 		for (int x = 0; x < layer.getWidth(); x++) {
 			for (int y = 0; y < layer.getHeight(); y++) {
 				Cell cell = layer.getCell(x, y);
@@ -34,7 +34,7 @@ public class World {
 					if (!entities.containsKey(key)) {
 						entities.put(key, new Array<Entity>());
 					}
-					Entity entity = builders.get(key).build(x, y, tile);
+					Entity entity = builders.get(key).build(x - layer.getWidth() / 2, y - layer.getHeight() / 2, tile);
 					entities.get(key).add(entity);
 				}
 			}

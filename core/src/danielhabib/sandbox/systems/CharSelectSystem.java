@@ -5,9 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
-import danielhabib.factory.CharBuilder;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.components.LabelComponent;
@@ -24,16 +24,18 @@ public class CharSelectSystem extends IteratingSystem {
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
 		ClickComponent click = cm.get(entity);
-		System.out.println("click x=" + click.x + " y=" + click.y);
+		float clickX = click.x - Gdx.graphics.getWidth() / 2; // transalacao da camera
+		float clickY = click.y - Gdx.graphics.getHeight() / 2;
+
+		clickX *= RenderingSystem.PIXELS_TO_METER; // transormacao de unidade de medida para metros
+		clickY *= RenderingSystem.PIXELS_TO_METER;
+
 		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(LabelComponent.class).get());
 		for (Entity labelEntity : entities) {
 			BoundsComponent bounds = labelEntity.getComponent(BoundsComponent.class);
 			LabelComponent labelComponent = labelEntity.getComponent(LabelComponent.class);
 			// FIXME: Bounds is actually the center...
-			float labelY = labelComponent.label.getY() + CharBuilder.Y_OFFSET;
-			System.out.println("  label x=" + labelComponent.label.getX() + " y=" + labelY);
-			System.out.println("Bounds: " + bounds);
-			if (bounds.bounds.contains(click.x, click.y)) {
+			if (bounds.bounds.contains(clickX, clickY)) {
 				labelComponent.label.setColor(Color.YELLOW);
 			}
 		}

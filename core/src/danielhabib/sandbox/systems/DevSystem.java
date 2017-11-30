@@ -41,4 +41,12 @@ public class DevSystem extends IteratingSystem {
 		this.sclX = offsetScl;
 	}
 
+	public void zoomIn() {
+		getEngine().getSystem(RenderingSystem.class).zoomIn();
+	}
+
+	public void zoomOut() {
+		getEngine().getSystem(RenderingSystem.class).zoomOut();
+	}
+
 }

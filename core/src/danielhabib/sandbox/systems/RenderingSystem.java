@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -31,7 +30,7 @@ public class RenderingSystem extends IteratingSystem {
 	private ComponentMapper<TransformComponent> transformM;
 	private ComponentMapper<LabelComponent> labelM;
 
-	public RenderingSystem(SpriteBatch batch) {
+	public RenderingSystem(SpriteBatch batch, float gameWidth, float gameHeight) {
 		super(Family.all(TransformComponent.class, TextureComponent.class, LabelComponent.class).get());
 
 		textureM = ComponentMapper.getFor(TextureComponent.class);
@@ -48,11 +47,11 @@ public class RenderingSystem extends IteratingSystem {
 		};
 
 		this.batch = batch;
-		float w = Gdx.graphics.getWidth() / PIXELS_PER_METER;
-		float h = Gdx.graphics.getHeight() / PIXELS_PER_METER;
+		float w = gameWidth / PIXELS_PER_METER;
+		float h = gameHeight / PIXELS_PER_METER;
 
 		cam = new OrthographicCamera(w, h);
-		cam.position.set(w / 2, h / 2, 0);
+		cam.position.set(0, 0, 0);
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class RenderingSystem extends IteratingSystem {
 			float y = t.pos.y - originY;
 			batch.draw(tex.region, x, y, originX, originY, width, height, t.scale.x * PIXELS_TO_METER,
 					t.scale.y * PIXELS_TO_METER, MathUtils.radiansToDegrees * t.rotation);
-
+			
 			Label label = labelM.get(entity).label;
 			label.draw(batch, 1f);
 		}
