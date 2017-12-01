@@ -1,15 +1,15 @@
 package danielhabib.sandbox.tween;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import aurelienribon.tweenengine.TweenAccessor;
 
-public class ButtonAcessor implements TweenAccessor<Button> {
+public class ActorAcessor implements TweenAccessor<Actor> {
 
 	public static final int ALPHA = 0;
 
 	@Override
-	public int getValues(Button target, int tweenType, float[] returnValues) {
+	public int getValues(Actor target, int tweenType, float[] returnValues) {
 		switch (tweenType) {
 		case ALPHA:
 			returnValues[0] = target.getColor().a;
@@ -20,7 +20,7 @@ public class ButtonAcessor implements TweenAccessor<Button> {
 	}
 
 	@Override
-	public void setValues(Button target, int tweenType, float[] newValues) {
+	public void setValues(Actor target, int tweenType, float[] newValues) {
 		switch (tweenType) {
 		case ALPHA:
 			target.setColor(target.getColor().r, target.getColor().g, target.getColor().b, newValues[0]);

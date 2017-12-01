@@ -2,16 +2,16 @@ package danielhabib.sandbox;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import aurelienribon.tweenengine.Tween;
-import danielhabib.sandbox.tween.ButtonAcessor;
+import danielhabib.sandbox.tween.ActorAcessor;
 import danielhabib.sandbox.tween.GameTweens;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
@@ -47,8 +47,8 @@ public class MainMenu extends AbstractScreen {
 		addActor(table);
 		Assets.loop(Assets.menuSound);
 
-		Tween.registerAccessor(Button.class, new ButtonAcessor());
-		
+		Tween.registerAccessor(Actor.class, new ActorAcessor());
+		GameTweens.fadeIn(title, tweenManager);
 		GameTweens.fadeIn(playButton, tweenManager);
 		GameTweens.fadeIn(levelButton, tweenManager);
 		GameTweens.fadeIn(configButton, tweenManager);
