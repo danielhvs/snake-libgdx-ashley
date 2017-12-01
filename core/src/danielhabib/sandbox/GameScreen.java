@@ -1,20 +1,25 @@
 package danielhabib.sandbox;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ArrayMap;
 
+import aurelienribon.tweenengine.Tween;
 import danielhabib.factory.AEntityBuilder;
 import danielhabib.factory.CharBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.ClickComponent;
+import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CharSelectSystem;
 import danielhabib.sandbox.systems.DevSystem;
@@ -23,6 +28,8 @@ import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
 import danielhabib.sandbox.systems.TemporarySpeedSystem;
 import danielhabib.sandbox.systems.TimeoutSystem;
+import danielhabib.sandbox.tween.ActorAcessor;
+import danielhabib.sandbox.tween.GameTweens;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
 
@@ -115,6 +122,13 @@ public class GameScreen extends AbstractScreen {
 		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		table.add(levelButton).expandX();
 		addActor(table);
+
+		Tween.registerAccessor(Actor.class, new ActorAcessor());
+		GameTweens.fadeIn(table, tweenManager);
+		ImmutableArray<Entity> labelEntities = engine.getEntitiesFor(Family.all(LabelComponent.class).get());
+		for (Entity labelEntity : labelEntities) {
+			GameTweens.fadeIn(labelEntity.getComponent(LabelComponent.class).label, tweenManager);
+		}
 	}
 
 }
