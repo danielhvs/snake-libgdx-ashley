@@ -14,8 +14,8 @@ public class ConfigScreen extends AbstractScreen {
 		TextButton musicButton = ButtonFactory.newButton("Music");
 		TextButton backButton = ButtonFactory.newButton("<-- Back");
 
-		Table table = UIFactory.newMenu("Let's change some stuff...",
-				soundButton, musicButton, backButton);
+		Table table = UIFactory.newMenu(UIFactory.newLabel("Let's change some stuff..."), soundButton, musicButton,
+				backButton);
 
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 

@@ -65,9 +65,8 @@ public class UIFactory {
 		table.getCell(title).spaceBottom(spaceBottom);
 	}
 
-	public static Table newMenu(String titleText, Button... buttons) {
+	public static Table newMenu(Label title, Button... buttons) {
 		Table table = new Table();
-		Label title = new Label(titleText, labelStyle());
 		UIFactory.setTitle(title, table);
 
 		for (Button button : buttons) {
@@ -77,11 +76,14 @@ public class UIFactory {
 		return table;
 	}
 
-	public static Table newLevelsMenu(String titleText, TextButton backButton,
+	public static Label newLabel(String titleText) {
+		return new Label(titleText, new LabelStyle(Assets.font, Color.YELLOW));
+	}
+
+	public static Table newLevelsMenu(Label title, TextButton backButton,
 			Array<Array<Button>> buttons) {
 
 		Table table = new Table();
-		Label title = new Label(titleText, labelStyle());
 		UIFactory.setTitle(title, table);
 
 		int width = Gdx.graphics.getWidth() / 4;
@@ -104,10 +106,6 @@ public class UIFactory {
 		table.getCell(backButton).spaceBottom(spaceBottom);
 
 		return table;
-	}
-
-	private static LabelStyle labelStyle() {
-		return new LabelStyle(Assets.font, Color.YELLOW);
 	}
 
 }

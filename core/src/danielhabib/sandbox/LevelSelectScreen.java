@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
+import danielhabib.sandbox.tween.GameTweens;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
 
@@ -26,10 +27,17 @@ public class LevelSelectScreen extends AbstractScreen {
 		}
 
 		TextButton backButton = ButtonFactory.newButton("<-- Back");
-		Table table = UIFactory.newLevelsMenu("OMG! Levels Selection!", backButton,
+		Table table = UIFactory.newLevelsMenu(UIFactory.newLabel("OMG! Levels Selection!"), backButton,
 				buttons);
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
 		addActor(table);
+		
+		for (Array<Button> buttonArray : buttons) {
+			for (Button button : buttonArray) {
+				GameTweens.fadeIn(button, tweenManager);
+			}
+		}
+		GameTweens.fadeIn(backButton, tweenManager);
 	}
 
 }

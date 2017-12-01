@@ -1,19 +1,18 @@
 package danielhabib.sandbox;
 
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Timeline;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+import aurelienribon.tweenengine.Tween;
+import danielhabib.sandbox.tween.ButtonAcessor;
+import danielhabib.sandbox.tween.GameTweens;
 import danielhabib.sandbox.ui.ButtonFactory;
 import danielhabib.sandbox.ui.UIFactory;
 
@@ -26,8 +25,9 @@ public class MainMenu extends AbstractScreen {
 		TextButton configButton = ButtonFactory.newButton("Change stuff...");
 		TextButton quitButton = ButtonFactory.newButton("I'm out!");
 
-		Table table = UIFactory.newMenu("OMG! Crazy Words!", playButton,
-				levelButton, configButton, quitButton);
+		Label title = UIFactory.newLabel("OMG! Crazy Words!");
+		Table table = UIFactory.newMenu(title,
+				playButton, levelButton, configButton, quitButton);
 
 		table.add(new Label("DEV: Q W A S D X Z Click", new LabelStyle(Assets.font, Color.YELLOW)));
 
@@ -46,6 +46,13 @@ public class MainMenu extends AbstractScreen {
 
 		addActor(table);
 		Assets.loop(Assets.menuSound);
+
+		Tween.registerAccessor(Button.class, new ButtonAcessor());
+		
+		GameTweens.fadeIn(playButton, tweenManager);
+		GameTweens.fadeIn(levelButton, tweenManager);
+		GameTweens.fadeIn(configButton, tweenManager);
+		GameTweens.fadeIn(quitButton, tweenManager);
 	}
 
 	@Override

@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public abstract class AbstractScreen extends Stage implements Screen {
+import aurelienribon.tweenengine.TweenManager;
 
+public abstract class AbstractScreen extends Stage implements Screen {
+	protected TweenManager tweenManager = new TweenManager();
 	protected AbstractScreen() {
 		super(new ScreenViewport(new OrthographicCamera()), new SpriteBatch());
 	}
@@ -23,6 +25,7 @@ public abstract class AbstractScreen extends Stage implements Screen {
 		getBatch().setProjectionMatrix(getCamera().combined);
 
 		draw();
+		tweenManager.update(delta);
 	}
 
 	@Override
