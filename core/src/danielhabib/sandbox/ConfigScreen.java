@@ -28,10 +28,7 @@ public class ConfigScreen extends AbstractScreen {
 		addActor(table);
 
 		Tween.registerAccessor(Actor.class, new ActorAcessor());
-		GameTweens.fadeIn(title, tweenManager);
-		GameTweens.fadeIn(soundButton, tweenManager);
-		GameTweens.fadeIn(musicButton, tweenManager);
-		GameTweens.fadeIn(backButton, tweenManager);
+		GameTweens.fadeIn(table, tweenManager);
 	}
 
 }

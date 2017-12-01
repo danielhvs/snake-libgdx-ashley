@@ -38,13 +38,7 @@ public class LevelSelectScreen extends AbstractScreen {
 		addActor(table);
 
 		Tween.registerAccessor(Actor.class, new ActorAcessor());
-		GameTweens.fadeIn(title, tweenManager);
-		for (Array<Button> buttonArray : buttons) {
-			for (Button button : buttonArray) {
-				GameTweens.fadeIn(button, tweenManager);
-			}
-		}
-		GameTweens.fadeIn(backButton, tweenManager);
+		GameTweens.fadeIn(table, tweenManager);
 	}
 
 }

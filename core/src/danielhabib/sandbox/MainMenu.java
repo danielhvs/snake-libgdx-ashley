@@ -48,11 +48,7 @@ public class MainMenu extends AbstractScreen {
 		Assets.loop(Assets.menuSound);
 
 		Tween.registerAccessor(Actor.class, new ActorAcessor());
-		GameTweens.fadeIn(title, tweenManager);
-		GameTweens.fadeIn(playButton, tweenManager);
-		GameTweens.fadeIn(levelButton, tweenManager);
-		GameTweens.fadeIn(configButton, tweenManager);
-		GameTweens.fadeIn(quitButton, tweenManager);
+		GameTweens.fadeIn(table, tweenManager);
 	}
 
 	@Override

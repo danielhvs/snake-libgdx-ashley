@@ -112,7 +112,6 @@ public class GameScreen extends AbstractScreen {
 		label.setText("Level " + level);
 		table.setBounds(0, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 10, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight() / 10);
-		table.debug();
 		table.left();
 		TextButton backButton = ButtonFactory.newButton(" < ");
 		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
