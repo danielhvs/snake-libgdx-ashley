@@ -39,6 +39,7 @@ public class GameScreen extends AbstractScreen {
 	private SpriteBatch gameBatch;
 	private World world;
 	private int level;
+	private Entity clickEntity;
 
 	public GameScreen(Integer[] params) {
 		this.level = params[0];
@@ -72,16 +73,6 @@ public class GameScreen extends AbstractScreen {
 			}
 		}
 
-		if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			float x = Gdx.input.getX();
-			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
-			Entity entity = engine.createEntity();
-			ClickComponent click = engine.createComponent(ClickComponent.class);
-			click.x = x;
-			click.y = y;
-			entity.add(click);
-			engine.addEntity(entity);
-		}
 		engine.update(delta);
 		super.render(delta);
 	}
@@ -128,6 +119,34 @@ public class GameScreen extends AbstractScreen {
 		for (Entity labelEntity : labelEntities) {
 			GameTweens.fadeIn(labelEntity.getComponent(LabelComponent.class).label, tweenManager);
 		}
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (button == Input.Buttons.LEFT) {
+			float x = Gdx.input.getX();
+			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			clickEntity = engine.createEntity();
+			ClickComponent click = engine.createComponent(ClickComponent.class);
+			click.x = x;
+			click.y = y;
+			clickEntity.add(click);
+			engine.addEntity(clickEntity);
+		}
+		return super.touchDown(screenX, screenY, pointer, button);
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		float x = Gdx.input.getX();
+		float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+		clickEntity = engine.createEntity();
+		ClickComponent click = engine.createComponent(ClickComponent.class);
+		click.x = x;
+		click.y = y;
+		clickEntity.add(click);
+		engine.addEntity(clickEntity);
+		return super.touchDragged(screenX, screenY, pointer);
 	}
 
 }
