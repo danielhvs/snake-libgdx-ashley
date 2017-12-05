@@ -74,7 +74,7 @@ public class CharSelectSystem extends IteratingSystem {
 			Rectangle labelBounds = labelEntity.getComponent(BoundsComponent.class).bounds;
 			Label label = labelEntity.getComponent(LabelComponent.class).label;
 			if (first) {
-				if (labelBounds.contains(clickX, clickY)) {
+				if (clickInside(clickX, clickY, labelBounds)) {
 					label.setColor(Color.YELLOW);
 					updateNeighbors(labelEntity.getComponent(BoundsComponent.class));
 					this.lastLabelBounds = labelBounds;
@@ -82,7 +82,7 @@ public class CharSelectSystem extends IteratingSystem {
 					// second?
 				}
 			} else {
-				if (labelBounds.contains(clickX, clickY)) {
+				if (clickInside(clickX, clickY, labelBounds)) {
 					if (neighbors.contains(labelBounds, false)) {
 						int x = (int) (lastLabelBounds.x - labelBounds.x);
 						int y = (int) (lastLabelBounds.y - labelBounds.y);
@@ -108,13 +108,13 @@ public class CharSelectSystem extends IteratingSystem {
 
 						// falta colocar tolerancia para diagnoal...
 						if (x == 1 && y == 0 && direction == Direction.RIGHT
-								|| x == -1 && y == 0 && direction == Direction.LEFT
-								|| x == 0 && y == 1 && direction == Direction.UP
-								|| x == 0 && y == -1 && direction == Direction.DOWN
-								|| x == -1 && y == 1 && direction == Direction.UP_LEFT
-								|| x == 1 && y == 1 && direction == Direction.UP_RIGHT
-								|| x == -1 && y == -1 && direction == Direction.DOWN_LEFT
-								|| x == 1 && y == -1 && direction == Direction.DOWN_RIGHT) {
+						 || x == -1 && y == 0 && direction == Direction.LEFT
+						 || x == 0 && y == 1 && direction == Direction.UP
+						 || x == 0 && y == -1 && direction == Direction.DOWN
+						 || x == -1 && y == 1 && direction == Direction.UP_LEFT
+						 || x == 1 && y == 1 && direction == Direction.UP_RIGHT
+						 || x == -1 && y == -1 && direction == Direction.DOWN_LEFT
+						 || x == 1 && y == -1 && direction == Direction.DOWN_RIGHT) {
 							label.setColor(Color.YELLOW);
 							updateNeighbors(labelEntity.getComponent(BoundsComponent.class));
 							this.lastLabelBounds = labelBounds;
@@ -126,6 +126,15 @@ public class CharSelectSystem extends IteratingSystem {
 			}
 		}
 		getEngine().removeEntity(entity);
+	}
+
+	private boolean clickInside(float clickX, float clickY, Rectangle labelBounds) {
+		Rectangle insideBound = new Rectangle(labelBounds);
+		insideBound.height *= .5f;
+		insideBound.width *= .5f;
+		insideBound.x += (labelBounds.height - insideBound.height) / 2f;
+		insideBound.y += (labelBounds.width - insideBound.width) / 2f;
+		return insideBound.contains(clickX, clickY);
 	}
 
 	private void updateNeighbors(BoundsComponent labelBounds) {
