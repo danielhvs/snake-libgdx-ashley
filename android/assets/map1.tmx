@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
  <properties>
-  <property name="text">Why did the gum cross the road?
+  <property name="text">Why did the gum cross the road?\n
 [RED]Because[] it was stuck to the chicken's [RED]foot[].</property>
  </properties>
  <tileset firstgid="1" name="transparent" tilewidth="32" tileheight="32" tilecount="1" columns="1">

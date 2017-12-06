@@ -114,17 +114,13 @@ public class GameScreen extends AbstractScreen {
 
 	private Table inGameText(String text) {
 		Table table = new Table();
+		int height = Gdx.graphics.getHeight() / 5;
 		Label textLabel = UIFactory.newLabel();
-		textLabel.setText(text);
-		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 10);
-		table.left();
-		TextButton backButton = ButtonFactory.newButton(" < ");
-		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
-		table.add(backButton).expandX();
-		table.add(textLabel).expandX();
-		TextButton levelButton = ButtonFactory.newButton(" [ ] ");
-		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
-		table.add(levelButton).expandX();
+		textLabel.setText(text.replace("\\n", "\n"));
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), height);
+		table.center();
+		Assets.font.getData().setLineHeight(Assets.font.getData().capHeight);
+		table.add(textLabel).expand();
 		return table;
 	}
 
