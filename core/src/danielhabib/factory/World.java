@@ -13,6 +13,7 @@ public class World {
 	private String mapName;
 	public ArrayMap<String, Array<Entity>> entities;
 	public ArrayMap<String, AEntityBuilder> builders;
+	private String text;
 
 	public World(ArrayMap<String, AEntityBuilder> builders, String mapName) {
 		this.builders = builders;
@@ -22,6 +23,7 @@ public class World {
 	public void create() {
 		TiledMap map = new TmxMapLoader().load(mapName);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
+		text = map.getProperties().get("text").toString();
 		entities = new ArrayMap<String, Array<Entity>>();
 
 		for (int x = 0; x < layer.getWidth(); x++) {
@@ -39,6 +41,10 @@ public class World {
 				}
 			}
 		}
+	}
+
+	public String getText() {
+		return text;
 	}
 
 }

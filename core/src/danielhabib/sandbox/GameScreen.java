@@ -98,6 +98,37 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new DevSystem());
 		world.create();
 
+		Table inGameMenu = inGameMenu();
+		addActor(inGameMenu);
+		Table inGameText = inGameText(world.getText());
+		addActor(inGameText);
+
+		Tween.registerAccessor(Actor.class, new ActorAcessor());
+		GameTweens.fadeIn(inGameMenu, tweenManager);
+		GameTweens.fadeIn(inGameText, tweenManager);
+		ImmutableArray<Entity> labelEntities = engine.getEntitiesFor(Family.all(LabelComponent.class).get());
+		for (Entity labelEntity : labelEntities) {
+			GameTweens.fadeIn(labelEntity.getComponent(LabelComponent.class).label, tweenManager);
+		}
+	}
+
+	private Table inGameText(String text) {
+		Table table = new Table();
+		Label textLabel = UIFactory.newLabel();
+		textLabel.setText(text);
+		table.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 10);
+		table.left();
+		TextButton backButton = ButtonFactory.newButton(" < ");
+		backButton.addListener(UIFactory.createListener(ScreenEnum.MAIN_MENU));
+		table.add(backButton).expandX();
+		table.add(textLabel).expandX();
+		TextButton levelButton = ButtonFactory.newButton(" [ ] ");
+		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
+		table.add(levelButton).expandX();
+		return table;
+	}
+
+	private Table inGameMenu() {
 		Table table = new Table();
 		Label label = UIFactory.newLabel();
 		label.setText("Level " + level);
@@ -111,14 +142,7 @@ public class GameScreen extends AbstractScreen {
 		TextButton levelButton = ButtonFactory.newButton(" [ ] ");
 		levelButton.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		table.add(levelButton).expandX();
-		addActor(table);
-
-		Tween.registerAccessor(Actor.class, new ActorAcessor());
-		GameTweens.fadeIn(table, tweenManager);
-		ImmutableArray<Entity> labelEntities = engine.getEntitiesFor(Family.all(LabelComponent.class).get());
-		for (Entity labelEntity : labelEntities) {
-			GameTweens.fadeIn(labelEntity.getComponent(LabelComponent.class).label, tweenManager);
-		}
+		return table;
 	}
 
 	@Override

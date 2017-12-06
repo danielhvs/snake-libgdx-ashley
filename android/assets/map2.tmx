@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
+ <properties>
+  <property name="text" value="Yo' [RED]mama[] so fat, when she was a baby, she [RED]took[] a bath with a [RED]rubber[] albatross."/>
+ </properties>
  <tileset firstgid="1" name="transparent" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="transparent.png" trans="ff00ff" width="32" height="32"/>
   <tile id="0">

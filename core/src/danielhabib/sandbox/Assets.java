@@ -77,6 +77,8 @@ public class Assets {
 		// skin.load(Gdx.files.internal("uiskin.json"));
 		font = skin.get("default-font", BitmapFont.class);
 		blockFont = ttfFont("baby-blocks.ttf", 16);
+
+		font.getData().markupEnabled = true;
 	}
 
 	public static void playSound(Sound sound) {
