@@ -24,7 +24,7 @@ public class CharBuilder extends AEntityBuilder {
 
 	@Override
 	protected Entity buildInternal(int x, int y, TiledMapTile tile) {
-		Entity entity = createEntity(x, y, 0, 0);
+		Entity entity = createEntity(x, y);
 		LabelComponent labelComponent = engine.createComponent(LabelComponent.class);
 		LabelStyle labelStyle = new LabelStyle(Assets.blockFont, Color.WHITE);
 		Label label = new Label(alphabet[MathUtils.random(25)], labelStyle);

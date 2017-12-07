@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 
 import danielhabib.sandbox.components.BoundsComponent;
-import danielhabib.sandbox.components.MovementComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.RenderingSystem;
@@ -27,18 +26,15 @@ public abstract class AEntityBuilder {
 		return buildInternal(x, y, tile);
 	}
 
-	public Entity createEntity(float xPos, float yPos, float xVel, float yVel) {
+	public Entity createEntity(float xPos, float yPos) {
 		Entity entity = engine.createEntity();
 		TransformComponent transform = engine.createComponent(TransformComponent.class);
-		MovementComponent movement = engine.createComponent(MovementComponent.class);
 		TextureComponent textureComponent = engine.createComponent(TextureComponent.class);
 		BoundsComponent bounds = engine.createComponent(BoundsComponent.class);
 
 		textureComponent.region = new TextureRegion(texture);
 		transform.pos.x = xPos;
 		transform.pos.y = yPos;
-		movement.velocity.x = xVel;
-		movement.velocity.y = yVel;
 
 		bounds.bounds.width = textureComponent.region.getRegionWidth() * RenderingSystem.PIXELS_TO_METER;
 		bounds.bounds.height = textureComponent.region.getRegionHeight() * RenderingSystem.PIXELS_TO_METER;
@@ -46,7 +42,6 @@ public abstract class AEntityBuilder {
 		bounds.bounds.y = transform.pos.y;
 
 		entity.add(transform);
-		entity.add(movement);
 		entity.add(textureComponent);
 		entity.add(bounds);
 		return entity;

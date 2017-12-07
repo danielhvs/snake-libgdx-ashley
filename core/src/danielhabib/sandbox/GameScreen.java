@@ -23,10 +23,8 @@ import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CharSelectSystem;
 import danielhabib.sandbox.systems.DevSystem;
-import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
-import danielhabib.sandbox.systems.TemporarySpeedSystem;
 import danielhabib.sandbox.systems.TimeoutSystem;
 import danielhabib.sandbox.tween.ActorAcessor;
 import danielhabib.sandbox.tween.GameTweens;
@@ -88,13 +86,11 @@ public class GameScreen extends AbstractScreen {
 		world = new World(builders, "map" + level + ".tmx");
 		gameBatch = new SpriteBatch();
 
-		engine.addSystem(new MovementSystem());
 		engine.addSystem(new RenderingSystem(gameBatch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new RotationSystem());
 		engine.addSystem(new CharSelectSystem());
 		engine.addSystem(new TimeoutSystem());
-		engine.addSystem(new TemporarySpeedSystem());
 		engine.addSystem(new DevSystem());
 		world.create();
 
