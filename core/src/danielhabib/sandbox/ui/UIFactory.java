@@ -1,6 +1,7 @@
 package danielhabib.sandbox.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -28,12 +30,10 @@ public class UIFactory {
 
 	public static InputListener createListener(final ScreenEnum dstScreen,
 			final Integer... params) {
-		return new InputListener() {
+		return new ClickListener(Buttons.LEFT) {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				ScreenManager.getInstance().showScreen(dstScreen, params);
-				return false;
 			}
 		};
 	}

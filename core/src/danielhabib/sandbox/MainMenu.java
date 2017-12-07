@@ -1,14 +1,15 @@
 package danielhabib.sandbox;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import aurelienribon.tweenengine.Tween;
 import danielhabib.sandbox.tween.ActorAcessor;
@@ -35,12 +36,10 @@ public class MainMenu extends AbstractScreen {
 		levelButton
 				.addListener(UIFactory.createListener(ScreenEnum.LEVEL_SELECT));
 		configButton.addListener(UIFactory.createListener(ScreenEnum.CONFIG));
-		quitButton.addListener(new InputListener() {
+		quitButton.addListener(new ClickListener(Buttons.LEFT) {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+			public void clicked(InputEvent event, float x, float y) {
 				Gdx.app.exit();
-				return true;
 			}
 		});
 
