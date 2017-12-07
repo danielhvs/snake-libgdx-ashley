@@ -19,14 +19,15 @@ import danielhabib.factory.AEntityBuilder;
 import danielhabib.factory.CharBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.ClickComponent;
+import danielhabib.sandbox.components.GeneralCallback;
 import danielhabib.sandbox.components.LabelComponent;
+import danielhabib.sandbox.components.TimeoutComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CharSelectSystem;
 import danielhabib.sandbox.systems.DevSystem;
 import danielhabib.sandbox.systems.MovementSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
-import danielhabib.sandbox.systems.TemporarySpeedSystem;
 import danielhabib.sandbox.systems.TimeoutSystem;
 import danielhabib.sandbox.tween.ActorAcessor;
 import danielhabib.sandbox.tween.GameTweens;
@@ -39,6 +40,7 @@ public class GameScreen extends AbstractScreen {
 	private SpriteBatch gameBatch;
 	private World world;
 	private int level;
+	private boolean running;
 	private Entity clickEntity;
 
 	public GameScreen(Integer[] params) {
@@ -94,7 +96,6 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new RotationSystem());
 		engine.addSystem(new CharSelectSystem());
 		engine.addSystem(new TimeoutSystem());
-		engine.addSystem(new TemporarySpeedSystem());
 		engine.addSystem(new DevSystem());
 		world.create();
 
@@ -110,6 +111,15 @@ public class GameScreen extends AbstractScreen {
 		for (Entity labelEntity : labelEntities) {
 			GameTweens.fadeIn(labelEntity.getComponent(LabelComponent.class).label, tweenManager);
 		}
+
+		Entity timeoutEntity = engine.createEntity();
+		timeoutEntity.add(new TimeoutComponent(1f, new GeneralCallback() {
+			@Override
+			public void execute() {
+				running = true;
+			}
+		}));
+		engine.addEntity(timeoutEntity);
 	}
 
 	private Table inGameText(String text) {
@@ -143,7 +153,24 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (button == Input.Buttons.LEFT) {
+		if (running) {
+			if (button == Input.Buttons.LEFT) {
+				float x = Gdx.input.getX();
+				float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+				clickEntity = engine.createEntity();
+				ClickComponent click = engine.createComponent(ClickComponent.class);
+				click.x = x;
+				click.y = y;
+				clickEntity.add(click);
+				engine.addEntity(clickEntity);
+			}
+		}
+		return super.touchDown(screenX, screenY, pointer, button);
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if (running) {
 			float x = Gdx.input.getX();
 			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 			clickEntity = engine.createEntity();
@@ -153,19 +180,6 @@ public class GameScreen extends AbstractScreen {
 			clickEntity.add(click);
 			engine.addEntity(clickEntity);
 		}
-		return super.touchDown(screenX, screenY, pointer, button);
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		float x = Gdx.input.getX();
-		float y = Gdx.graphics.getHeight() - Gdx.input.getY();
-		clickEntity = engine.createEntity();
-		ClickComponent click = engine.createComponent(ClickComponent.class);
-		click.x = x;
-		click.y = y;
-		clickEntity.add(click);
-		engine.addEntity(clickEntity);
 		return super.touchDragged(screenX, screenY, pointer);
 	}
 

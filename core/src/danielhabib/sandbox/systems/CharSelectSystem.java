@@ -138,7 +138,6 @@ public class CharSelectSystem extends IteratingSystem {
 	}
 
 	private void updateNeighbors(BoundsComponent labelBounds) {
-		System.out.print("neigbors: ");
 		neighbors.clear();
 		for (Integer[] offset : offsets) {
 			BoundsComponent neighbor = new BoundsComponent();
@@ -146,7 +145,6 @@ public class CharSelectSystem extends IteratingSystem {
 			neighbor.bounds.height = labelBounds.bounds.height;
 			neighbor.bounds.x = labelBounds.bounds.x + offset[0];
 			neighbor.bounds.y = labelBounds.bounds.y + offset[1];
-			System.out.println(neighbor.bounds);
 			neighbors.add(neighbor.bounds);
 		}
 	}
