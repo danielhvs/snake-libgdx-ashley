@@ -6,7 +6,7 @@ public class ClickComponent implements Component {
 	public float x;
 	public float y;
 	public enum Event {
-		UP, DOWN
+		UP, DOWN, DRAG
 	};
 	public Event event;
 

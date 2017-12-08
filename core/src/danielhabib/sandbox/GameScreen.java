@@ -178,6 +178,7 @@ public class GameScreen extends AbstractScreen {
 		ClickComponent click = engine.createComponent(ClickComponent.class);
 		click.x = x;
 		click.y = y;
+		click.event = Event.DRAG;
 		clickEntity.add(click);
 		engine.addEntity(clickEntity);
 		return super.touchDragged(screenX, screenY, pointer);

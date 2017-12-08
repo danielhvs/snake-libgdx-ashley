@@ -101,7 +101,6 @@ public class CharSelectSystem extends IteratingSystem {
 						this.firstLabelRect = labelRect;
 						first = false;
 						second = true;
-						System.out.println(firstLabelRect);
 					}
 				} else if (second) {
 					if (clickInside(clickX, clickY, labelRect)) {
@@ -128,7 +127,6 @@ public class CharSelectSystem extends IteratingSystem {
 
 							if (direction != null) {
 								this.secondLabelRect = labelRect;
-								System.out.println(secondLabelRect);
 								second = false;
 							}
 						}
