@@ -26,6 +26,7 @@ public class CharSelectSystem extends IteratingSystem {
 	private static final Family family = Family.all(ClickComponent.class).get();
 	private ComponentMapper<ClickComponent> cm;
 	private boolean first = true;
+	private boolean second = false;
 	private Direction direction = null;
 	private Array<Integer[]> offsets = new Array<Integer[]>();
 	private Array<Integer[]> offsetsUp = new Array<Integer[]>();
@@ -41,6 +42,8 @@ public class CharSelectSystem extends IteratingSystem {
 	private float firstClickX;
 	private float firstClickY;
 	private Label firstLabel;
+	private Rectangle firstLabelRect;
+	private Rectangle secondLabelRect;
 
 	public CharSelectSystem() {
 		super(family);
@@ -74,22 +77,55 @@ public class CharSelectSystem extends IteratingSystem {
 
 		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(LabelComponent.class).get());
 		for (Entity labelEntity : entities) {
-			Rectangle labelBounds = labelEntity.getComponent(BoundsComponent.class).bounds;
+			Rectangle labelRect = labelEntity.getComponent(BoundsComponent.class).bounds;
 			Label label = labelEntity.getComponent(LabelComponent.class).label;
 			if (first) {
-				if (clickInside(clickX, clickY, labelBounds)) {
+				if (clickInside(clickX, clickY, labelRect)) {
 					firstClickX = toXInMeters(click);
 					firstClickY = toYInMeters(click);
 					label.setColor(Color.YELLOW);
 					this.firstLabel = label;
+					this.firstLabelRect = labelRect;
 					first = false;
+					second = true;
+					System.out.println(firstLabelRect);
+				}
+			} else if (second) {
+				if (clickInside(clickX, clickY, labelRect)) {
+					if (direction == null) {
+						int x = (int) (labelRect.x - firstLabelRect.x);
+						int y = (int) (labelRect.y - firstLabelRect.y);
+						if (x == 1 && y == 0) {
+							direction = Direction.RIGHT;
+						} else if (x == -1 && y == 0) {
+							direction = Direction.LEFT;
+						} else if (x == 0 && y == 1) {
+							direction = Direction.UP;
+						} else if (x == 0 && y == -1) {
+							direction = Direction.DOWN;
+						} else if (x == -1 && y == 1) {
+							direction = Direction.UP_LEFT;
+						} else if (x == 1 && y == 1) {
+							direction = Direction.UP_RIGHT;
+						} else if (x == -1 && y == -1) {
+							direction = Direction.DOWN_LEFT;
+						} else if (x == 1 && y == -1) {
+							direction = Direction.DOWN_RIGHT;
+						}
+
+						if (direction != null) {
+							this.secondLabelRect = labelRect;
+							System.out.println(secondLabelRect);
+							second = false;
+						}
+					}
 				}
 			} else {
+				Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
 				if (label != firstLabel) {
 					label.setColor(Color.WHITE);
-					Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
-					// FIXME: add direction rule
-					if (intersect(firstClickX, firstClickY, clickX, clickY, rect)) {
+					if (intersectInDirection(firstClickX, firstClickY, clickX, clickY, rect)) {
+						// FIXME: add direction rule
 						label.setColor(Color.YELLOW);
 					}
 				}
@@ -98,14 +134,19 @@ public class CharSelectSystem extends IteratingSystem {
 		getEngine().removeEntity(entity);
 	}
 
-	private boolean intersect(float firstClickX, float firstClickY, float clickX, float clickY, Rectangle rect) {
-		return Intersector.intersectSegmentPolygon(new Vector2(firstClickX, firstClickY), new Vector2(clickX, clickY),
-				rectangleToPolygon(rect));
-	}
-
-	public static Polygon rectangleToPolygon(Rectangle rect) {
-		return new Polygon(new float[] { rect.x, rect.y, rect.x, rect.y + rect.height, rect.x + rect.width, rect.y,
-				rect.x + rect.width, rect.y + +rect.height });
+	private boolean intersectInDirection(float firstClickX, float firstClickY, float clickX, float clickY, Rectangle rect) {
+		boolean clickRangeIntersects = Intersector.intersectSegmentPolygon(new Vector2(firstClickX, firstClickY),
+				new Vector2(clickX, clickY),
+				new Polygon(new float[] { rect.x, rect.y, rect.x, rect.y + rect.height, rect.x + rect.width, rect.y,
+						rect.x + rect.width, rect.y + +rect.height }));
+		
+		Vector2 p1 = new Vector2(firstLabelRect.x + firstLabelRect.width / 2, firstLabelRect.y + firstLabelRect.height / 2);
+		Vector2 p2 = new Vector2(secondLabelRect.x + secondLabelRect.width / 2,
+				secondLabelRect.y + secondLabelRect.height / 2);
+		float distance = Intersector.distanceLinePoint(
+				p1.x, p1.y, p2.x, p2.y, rect.x + rect.width / 2, rect.y + rect.height / 2);
+		
+		return clickRangeIntersects && distance < 0.0001f;
 	}
 
 	private float toXInMeters(ClickComponent click) {
