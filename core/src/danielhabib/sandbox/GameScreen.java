@@ -19,6 +19,7 @@ import danielhabib.factory.AEntityBuilder;
 import danielhabib.factory.CharBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.ClickComponent;
+import danielhabib.sandbox.components.ClickComponent.Event;
 import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CharSelectSystem;
@@ -146,10 +147,27 @@ public class GameScreen extends AbstractScreen {
 			ClickComponent click = engine.createComponent(ClickComponent.class);
 			click.x = x;
 			click.y = y;
+			click.event = Event.DOWN;
 			clickEntity.add(click);
 			engine.addEntity(clickEntity);
 		}
 		return super.touchDown(screenX, screenY, pointer, button);
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		if (button == Input.Buttons.LEFT) {
+			float x = Gdx.input.getX();
+			float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			clickEntity = engine.createEntity();
+			ClickComponent click = engine.createComponent(ClickComponent.class);
+			click.x = x;
+			click.y = y;
+			click.event = Event.UP;
+			clickEntity.add(click);
+			engine.addEntity(clickEntity);
+		}
+		return super.touchUp(screenX, screenY, pointer, button);
 	}
 
 	@Override
