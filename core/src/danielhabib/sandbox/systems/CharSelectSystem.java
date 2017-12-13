@@ -12,12 +12,12 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Array;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.components.ClickComponent.Event;
 import danielhabib.sandbox.components.LabelComponent;
+import danielhabib.sandbox.components.SelectedLabelsComponent;
 
 public class CharSelectSystem extends IteratingSystem {
 	private enum Direction {
@@ -29,17 +29,6 @@ public class CharSelectSystem extends IteratingSystem {
 	private boolean first = true;
 	private boolean second = false;
 	private Direction direction = null;
-	private Array<Integer[]> offsets = new Array<Integer[]>();
-	private Array<Integer[]> offsetsUp = new Array<Integer[]>();
-	private Array<Integer[]> offsetsDown = new Array<Integer[]>();
-	private Array<Integer[]> offsetsLeft = new Array<Integer[]>();
-	private Array<Integer[]> offsetsRight = new Array<Integer[]>();
-
-	private Array<Integer[]> offsetsUpLeft = new Array<Integer[]>();
-	private Array<Integer[]> offsetsDownLeft = new Array<Integer[]>();
-	private Array<Integer[]> offsetsUpRight = new Array<Integer[]>();
-	private Array<Integer[]> offsetsDownRight = new Array<Integer[]>();
-	private ClickComponent firstClick;
 	private float firstClickX;
 	private float firstClickY;
 	private Label firstLabel;
@@ -49,25 +38,6 @@ public class CharSelectSystem extends IteratingSystem {
 	public CharSelectSystem() {
 		super(family);
 		cm = ComponentMapper.getFor(ClickComponent.class);
-		offsets.add(new Integer[] { 1, 0 });
-		offsets.add(new Integer[] { 1, 1 });
-		offsets.add(new Integer[] { 1, -1 });
-		offsets.add(new Integer[] { 0, 1 });
-		offsets.add(new Integer[] { -1, 1 });
-		offsets.add(new Integer[] { -1, 0 });
-		offsets.add(new Integer[] { -1, -1 });
-		offsets.add(new Integer[] { 0, -1 });
-
-		offsetsRight.add(new Integer[] { 1, 0 });
-		offsetsLeft.add(new Integer[] { -1, 0 });
-		offsetsUp.add(new Integer[] { 0, 1 });
-		offsetsDown.add(new Integer[] { 0, -1 });
-
-		offsetsUpLeft.add(new Integer[] { -1, 1 });
-		offsetsUpRight.add(new Integer[] { 1, 1 });
-		offsetsDownLeft.add(new Integer[] { -1, -1 });
-		offsetsDownRight.add(new Integer[] { 1, -1 });
-
 	}
 
 	@Override
@@ -79,14 +49,21 @@ public class CharSelectSystem extends IteratingSystem {
 		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(LabelComponent.class).get());
 
 		if (click.event == Event.UP) {
+			SelectedLabelsComponent selectedLabelsComponent = new SelectedLabelsComponent();
 			for (Entity labelEntity : entities) {
-				Label label = labelEntity.getComponent(LabelComponent.class).label;
+				LabelComponent labelComponent = labelEntity.getComponent(LabelComponent.class);
+				Label label = labelComponent.label;
 				if (Color.YELLOW.equals(label.getColor())) {
-					label.setColor(Color.GREEN);
+					selectedLabelsComponent.labelComponents.add(labelComponent);
 					first = true;
 					second = false;
 					direction = null;
 				}
+			}
+			if (selectedLabelsComponent.labelComponents.size > 0) {
+				Entity selectedLabelsEntity = new Entity();
+				selectedLabelsEntity.add(selectedLabelsComponent);
+				getEngine().addEntity(selectedLabelsEntity);
 			}
 		} else {
 			for (Entity labelEntity : entities) {

@@ -26,6 +26,7 @@ import danielhabib.sandbox.systems.CharSelectSystem;
 import danielhabib.sandbox.systems.DevSystem;
 import danielhabib.sandbox.systems.RenderingSystem;
 import danielhabib.sandbox.systems.RotationSystem;
+import danielhabib.sandbox.systems.SelectedLabelSystem;
 import danielhabib.sandbox.systems.TimeoutSystem;
 import danielhabib.sandbox.tween.ActorAcessor;
 import danielhabib.sandbox.tween.GameTweens;
@@ -91,6 +92,7 @@ public class GameScreen extends AbstractScreen {
 		engine.addSystem(new BoundsSystem());
 		engine.addSystem(new RotationSystem());
 		engine.addSystem(new CharSelectSystem());
+		engine.addSystem(new SelectedLabelSystem());
 		engine.addSystem(new TimeoutSystem());
 		engine.addSystem(new DevSystem());
 		world.create();
