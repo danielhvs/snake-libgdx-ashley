@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,6 +22,7 @@ import danielhabib.factory.CharBuilder;
 import danielhabib.factory.World;
 import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.components.ClickComponent.Event;
+import danielhabib.sandbox.components.GameTextComponent;
 import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.systems.BoundsSystem;
 import danielhabib.sandbox.systems.CharSelectSystem;
@@ -81,11 +84,13 @@ public class GameScreen extends AbstractScreen {
 	public void buildStage() {
 		engine = new PooledEngine();
 
+		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
+		String text = map.getProperties().get("text").toString();
 		ArrayMap<String, AEntityBuilder> builders;
 		builders = new ArrayMap<String, AEntityBuilder>();
-		builders.put("transparent", new CharBuilder(engine));
+		builders.put("transparent", new CharBuilder(engine, text));
 
-		world = new World(builders, "map" + level + ".tmx");
+		world = new World(builders, map);
 		gameBatch = new SpriteBatch();
 
 		engine.addSystem(new RenderingSystem(gameBatch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
@@ -99,7 +104,7 @@ public class GameScreen extends AbstractScreen {
 
 		Table inGameMenu = inGameMenu();
 		addActor(inGameMenu);
-		Table inGameText = inGameText(world.getText());
+		Table inGameText = inGameText(text);
 		addActor(inGameText);
 
 		Tween.registerAccessor(Actor.class, new ActorAcessor());
@@ -120,6 +125,11 @@ public class GameScreen extends AbstractScreen {
 		table.center();
 		Assets.font.getData().setLineHeight(Assets.font.getData().capHeight);
 		table.add(textLabel).expand();
+		Entity entity = engine.createEntity();
+		GameTextComponent gameTextComponent = new GameTextComponent();
+		gameTextComponent.label = textLabel;
+		entity.add(gameTextComponent);
+		engine.addEntity(entity);
 		return table;
 	}
 

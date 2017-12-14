@@ -7,33 +7,45 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.StringBuilder;
 
+import danielhabib.sandbox.components.GameTextComponent;
 import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.components.SelectedLabelsComponent;
 
 public class SelectedLabelSystem extends IteratingSystem {
-	private static final Family family = Family.all(SelectedLabelsComponent.class).get();
-	private ComponentMapper<SelectedLabelsComponent> sm;
+	private static final Family family = Family.all(SelectedLabelsComponent.class, GameTextComponent.class).get();
+	private ComponentMapper<SelectedLabelsComponent> selectLabelsComponent;
+	private ComponentMapper<GameTextComponent> gameTextMapper;
 
 	public SelectedLabelSystem() {
 		super(family);
-		sm = ComponentMapper.getFor(SelectedLabelsComponent.class);
+		selectLabelsComponent = ComponentMapper.getFor(SelectedLabelsComponent.class);
+		gameTextMapper = ComponentMapper.getFor(GameTextComponent.class);
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime) {
-		SelectedLabelsComponent selectedLabelsComponent = sm.get(entity);
+		SelectedLabelsComponent selectedLabelsComponent = selectLabelsComponent.get(entity);
 		Array<LabelComponent> labelComponents = selectedLabelsComponent.labelComponents;
-		StringBuilder s = new StringBuilder(256);
+		StringBuilder selectedText = new StringBuilder(256);
 		for (LabelComponent labelComponent : labelComponents) {
 			Label label = labelComponent.label;
+			System.out.println("green!");
 			label.setColor(Color.GREEN);
-			s.append(label.getText());
+			selectedText.append(label.getText());
 		}
 
-		System.out.println(s.toString());
-		System.out.println(s.reverse().toString());
+		System.out.println(selectedText.toString());
+		System.out.println(selectedText.reverse().toString());
 
-		getEngine().removeEntity(entity);
+		GameTextComponent gameTextComponent = gameTextMapper.get(entity);
+		Label gameTextLabel = gameTextComponent.label;
+		String gameText = gameTextLabel.getText().toString();
+		if (gameText.contains(selectedText.toString()) || gameText.contains(selectedText.reverse().toString())) {
+			gameTextLabel.setText(gameText.replace("[RED]", "[GREEN]"));
+		}
+
+		entity.remove(SelectedLabelsComponent.class);
 	}
 }

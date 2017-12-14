@@ -1,6 +1,7 @@
 package danielhabib.sandbox.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.ClickComponent;
 import danielhabib.sandbox.components.ClickComponent.Event;
+import danielhabib.sandbox.components.GameTextComponent;
 import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.components.SelectedLabelsComponent;
 
@@ -46,7 +48,8 @@ public class CharSelectSystem extends IteratingSystem {
 		float clickX = toXInMeters(click);
 		float clickY = toYInMeters(click);
 
-		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(LabelComponent.class).get());
+		Engine engine = getEngine();
+		ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(LabelComponent.class).get());
 
 		if (click.event == Event.UP) {
 			SelectedLabelsComponent selectedLabelsComponent = new SelectedLabelsComponent();
@@ -61,9 +64,11 @@ public class CharSelectSystem extends IteratingSystem {
 				}
 			}
 			if (selectedLabelsComponent.labelComponents.size > 0) {
-				Entity selectedLabelsEntity = new Entity();
-				selectedLabelsEntity.add(selectedLabelsComponent);
-				getEngine().addEntity(selectedLabelsEntity);
+				ImmutableArray<Entity> gameTextEntities = engine
+						.getEntitiesFor(Family.all(GameTextComponent.class).get());
+				for (Entity gameTextEntity : gameTextEntities) {
+					gameTextEntity.add(selectedLabelsComponent);
+				}
 			}
 		} else {
 			for (Entity labelEntity : entities) {
@@ -121,7 +126,7 @@ public class CharSelectSystem extends IteratingSystem {
 				}
 			}
 		}
-		getEngine().removeEntity(entity);
+		engine.removeEntity(entity);
 	}
 
 	private boolean intersectInDirection(float firstClickX, float firstClickY, float clickX, float clickY,

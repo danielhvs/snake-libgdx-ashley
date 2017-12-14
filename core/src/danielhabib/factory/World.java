@@ -5,25 +5,21 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 
 public class World {
-	private String mapName;
 	public ArrayMap<String, Array<Entity>> entities;
 	public ArrayMap<String, AEntityBuilder> builders;
-	private String text;
+	private TiledMap map;
 
-	public World(ArrayMap<String, AEntityBuilder> builders, String mapName) {
+	public World(ArrayMap<String, AEntityBuilder> builders, TiledMap map) {
 		this.builders = builders;
-		this.mapName = mapName;
+		this.map = map;
 	}
 
 	public void create() {
-		TiledMap map = new TmxMapLoader().load(mapName);
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
-		text = map.getProperties().get("text").toString();
 		entities = new ArrayMap<String, Array<Entity>>();
 
 		for (int x = 0; x < layer.getWidth(); x++) {
@@ -41,10 +37,6 @@ public class World {
 				}
 			}
 		}
-	}
-
-	public String getText() {
-		return text;
 	}
 
 }

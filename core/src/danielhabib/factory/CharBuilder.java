@@ -18,8 +18,12 @@ public class CharBuilder extends AEntityBuilder {
 	String[] alphabet = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P",
 			"Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
 
-	public CharBuilder(PooledEngine engine) {
+	// FIXME: Maybe this is the wrong abstraction
+	private String text;
+
+	public CharBuilder(PooledEngine engine, String text) {
 		super(engine);
+		this.text = text;
 	}
 
 	@Override
