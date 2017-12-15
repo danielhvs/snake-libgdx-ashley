@@ -2,11 +2,9 @@ package danielhabib.sandbox;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -27,10 +25,10 @@ public class MainMenu extends AbstractScreen {
 		TextButton quitButton = ButtonFactory.newButton("I'm out!");
 
 		Label title = UIFactory.newLabel("OMG! Crazy Words!");
-		Table table = UIFactory.newMenu(title,
-				playButton, levelButton, configButton, quitButton);
+		Table table = UIFactory.newMenu(title, levelButton, quitButton);
 
-		table.add(new Label("DEV: Q W A S D X Z Click", new LabelStyle(Assets.font, Color.YELLOW)));
+		// table.add(new Label("DEV: Q W A S D X Z Click", new LabelStyle(Assets.font,
+		// Color.YELLOW)));
 
 		playButton.addListener(UIFactory.createListener(ScreenEnum.GAME, 1));
 		levelButton
