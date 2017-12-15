@@ -4,14 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 
 import danielhabib.sandbox.components.BoundsComponent;
 import danielhabib.sandbox.components.TextureComponent;
 import danielhabib.sandbox.components.TransformComponent;
 import danielhabib.sandbox.systems.RenderingSystem;
 
-public abstract class AEntityBuilder {
+public abstract class AEntityBuilder<T> {
 	protected PooledEngine engine;
 	protected Texture texture;
 
@@ -19,11 +18,11 @@ public abstract class AEntityBuilder {
 		this.engine = engine;
 	}
 
-	protected abstract Entity buildInternal(int x, int y, TiledMapTile tile);
+	protected abstract Entity buildInternal(int x, int y, Texture texture, T args);
 
-	public Entity build(int x, int y, TiledMapTile tile) {
-		texture = tile.getTextureRegion().getTexture();
-		return buildInternal(x, y, tile);
+	public Entity build(int x, int y, Texture texture, T args) {
+		this.texture = texture;
+		return buildInternal(x, y, texture, args);
 	}
 
 	public Entity createEntity(float xPos, float yPos) {

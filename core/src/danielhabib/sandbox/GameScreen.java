@@ -85,10 +85,10 @@ public class GameScreen extends AbstractScreen {
 		engine = new PooledEngine();
 
 		TiledMap map = new TmxMapLoader().load("map" + level + ".tmx");
-		String text = map.getProperties().get("text").toString();
+		String levelText = map.getProperties().get("text").toString();
 		ArrayMap<String, AEntityBuilder> builders;
 		builders = new ArrayMap<String, AEntityBuilder>();
-		builders.put("transparent", new CharBuilder(engine, text));
+		builders.put("transparent", new CharBuilder(engine));
 
 		world = new World(builders, map);
 		gameBatch = new SpriteBatch();
@@ -104,7 +104,7 @@ public class GameScreen extends AbstractScreen {
 
 		Table inGameMenu = inGameMenu();
 		addActor(inGameMenu);
-		Table inGameText = inGameText(text);
+		Table inGameText = inGameText(levelText);
 		addActor(inGameText);
 
 		Tween.registerAccessor(Actor.class, new ActorAcessor());

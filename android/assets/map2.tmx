@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="6">
  <properties>
-  <property name="text" value="Yo' [RED]mama[] so fat, when she was a baby,\nshe [RED]took[] a bath with a [RED]rubber[] albatross."/>
+  <property name="text" value="Yo' [RED]mama[] so fat, when she was a baby,\nshe took a bath with an albatross."/>
  </properties>
  <tileset firstgid="1" name="transparent" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="transparent.png" trans="ff00ff" width="32" height="32"/>
@@ -11,7 +11,7 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Camada de Tiles 1" width="4" height="4">
+ <layer name="tiles-layer" width="4" height="4">
   <data encoding="csv">
 1,1,1,1,
 1,1,1,1,
@@ -19,4 +19,10 @@
 1,1,1,1
 </data>
  </layer>
+ <objectgroup name="chars-layer">
+  <object id="1" name="M" x="32" y="0" width="32" height="32"/>
+  <object id="3" name="A" x="32" y="32" width="32" height="32"/>
+  <object id="4" name="M" x="32" y="64" width="32" height="32"/>
+  <object id="5" name="A" x="32" y="96" width="32" height="32"/>
+ </objectgroup>
 </map>

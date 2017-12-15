@@ -31,21 +31,33 @@ public class SelectedLabelSystem extends IteratingSystem {
 		StringBuilder selectedText = new StringBuilder(256);
 		for (LabelComponent labelComponent : labelComponents) {
 			Label label = labelComponent.label;
-			System.out.println("green!");
-			label.setColor(Color.GREEN);
 			selectedText.append(label.getText());
 		}
 
-		System.out.println(selectedText.toString());
-		System.out.println(selectedText.reverse().toString());
-
 		GameTextComponent gameTextComponent = gameTextMapper.get(entity);
 		Label gameTextLabel = gameTextComponent.label;
-		String gameText = gameTextLabel.getText().toString();
-		if (gameText.contains(selectedText.toString()) || gameText.contains(selectedText.reverse().toString())) {
-			gameTextLabel.setText(gameText.replace("[RED]", "[GREEN]"));
-		}
+		String gameTextOriginal = gameTextLabel.getText().toString();
 
+		// FIXME: Many words
+		String solutionWord = solutionWord(gameTextOriginal.toUpperCase());
+
+		boolean found = false;
+		if (solutionWord.equals(selectedText.toString().toUpperCase())
+				|| solutionWord.equals(selectedText.reverse().toString().toUpperCase())) {
+			gameTextLabel.setText(gameTextOriginal.replace("[RED]", "[GREEN]"));
+			found=true;
+		}
+		
+		if(found) {
+			for (LabelComponent labelComponent : labelComponents) {
+				Label label = labelComponent.label;
+				label.setColor(Color.GREEN);
+			}
+		}
 		entity.remove(SelectedLabelsComponent.class);
+	}
+
+	private String solutionWord(String gameTextOriginal) {
+		return gameTextOriginal.substring(1 + gameTextOriginal.indexOf("]"), gameTextOriginal.indexOf("[]"));
 	}
 }

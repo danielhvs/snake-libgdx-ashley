@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="7">
  <properties>
   <property name="text">Why did the gum cross the road?\n
-[RED]Because[] it was stuck to the chicken's [RED]foot[].</property>
+Because it was stuck to the chicken's [RED]foot[].</property>
  </properties>
  <tileset firstgid="1" name="transparent" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="transparent.png" trans="ff00ff" width="32" height="32"/>
@@ -12,10 +12,18 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Camada de Tiles 1" width="2" height="2">
+ <layer name="tiles-layer" width="4" height="4">
   <data encoding="csv">
-1,1,
-1,1
+1,1,1,1,
+1,1,1,1,
+1,1,1,1,
+1,1,1,1
 </data>
  </layer>
+ <objectgroup name="chars-layer">
+  <object id="1" name="F" x="0" y="0" width="32" height="32"/>
+  <object id="4" name="O" x="32" y="32" width="32" height="32"/>
+  <object id="5" name="T" x="96" y="96" width="32" height="32"/>
+  <object id="6" name="O" x="64" y="64" width="32" height="32"/>
+ </objectgroup>
 </map>
