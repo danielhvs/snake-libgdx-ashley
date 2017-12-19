@@ -23,7 +23,7 @@ import danielhabib.sandbox.components.SelectedLabelsComponent;
 
 public class CharSelectSystem extends IteratingSystem {
 	private enum Direction {
-		UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT;
+		VERTICAL, HORIZONTAL, DIAGONAL;
 	}
 
 	private static final Family family = Family.all(ClickComponent.class).get();
@@ -89,29 +89,21 @@ public class CharSelectSystem extends IteratingSystem {
 						if (direction == null) {
 							int x = (int) (labelRect.x - firstLabelRect.x);
 							int y = (int) (labelRect.y - firstLabelRect.y);
-							if (x == 1 && y == 0) {
-								direction = Direction.RIGHT;
-							} else if (x == -1 && y == 0) {
-								direction = Direction.LEFT;
-							} else if (x == 0 && y == 1) {
-								direction = Direction.UP;
-							} else if (x == 0 && y == -1) {
-								direction = Direction.DOWN;
-							} else if (x == -1 && y == 1) {
-								direction = Direction.UP_LEFT;
-							} else if (x == 1 && y == 1) {
-								direction = Direction.UP_RIGHT;
-							} else if (x == -1 && y == -1) {
-								direction = Direction.DOWN_LEFT;
-							} else if (x == 1 && y == -1) {
-								direction = Direction.DOWN_RIGHT;
+							if (x == 0) {
+								direction = Direction.VERTICAL;
+							} else if (y == 0) {
+								direction = Direction.HORIZONTAL;
+							} else if (x == y || x == -y) {
+								direction = Direction.DIAGONAL;
 							}
 
 							if (direction != null) {
 								this.secondLabelRect = labelRect;
 								second = false;
 							}
+							System.out.println(direction);
 						}
+
 					}
 				} else {
 					Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
@@ -131,18 +123,46 @@ public class CharSelectSystem extends IteratingSystem {
 
 	private boolean intersectInDirection(float firstClickX, float firstClickY, float clickX, float clickY,
 			Rectangle rect) {
-		boolean clickRangeIntersects = Intersector.intersectSegmentPolygon(new Vector2(firstClickX, firstClickY),
-				new Vector2(clickX, clickY), new Polygon(new float[] { rect.x, rect.y, rect.x, rect.y + rect.height,
-						rect.x + rect.width, rect.y, rect.x + rect.width, rect.y + +rect.height }));
+		boolean clickRangeIntersects = intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, rect);
 
-		Vector2 p1 = new Vector2(firstLabelRect.x + firstLabelRect.width / 2,
-				firstLabelRect.y + firstLabelRect.height / 2);
-		Vector2 p2 = new Vector2(secondLabelRect.x + secondLabelRect.width / 2,
-				secondLabelRect.y + secondLabelRect.height / 2);
-		float distance = Intersector.distanceLinePoint(p1.x, p1.y, p2.x, p2.y, rect.x + rect.width / 2,
-				rect.y + rect.height / 2);
+		Rectangle labelUp = new Rectangle(firstLabelRect.x, firstLabelRect.y + 1, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelDown = new Rectangle(firstLabelRect.x, firstLabelRect.y - 1, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y, firstLabelRect.width,
+				firstLabelRect.height);
 
-		return clickRangeIntersects && distance < 0.0001f;
+		Rectangle labelUpLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y + 1, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelUpRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y + 1, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelDownLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y - 1, firstLabelRect.width,
+				firstLabelRect.height);
+		Rectangle labelDownRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y - 1, firstLabelRect.width,
+				firstLabelRect.height);
+
+		boolean rightDirection = false;
+		int x = (int) (rect.x - firstLabelRect.x);
+		int y = (int) (rect.y - firstLabelRect.y);
+		if (x == 0) {
+			rightDirection = direction == Direction.VERTICAL;
+		} else if (y == 0) {
+			rightDirection = direction == Direction.HORIZONTAL;
+		} else if (x == y || x == -y) {
+			rightDirection = direction == Direction.DIAGONAL;
+		}
+
+		return clickRangeIntersects && rightDirection;
+	}
+
+	private boolean intersectSegmentPolygon(float firstClickX, float firstClickY, float clickX, float clickY,
+			Rectangle labelLeft) {
+		return Intersector.intersectSegmentPolygon(new Vector2(firstClickX, firstClickY), new Vector2(clickX, clickY),
+				new Polygon(new float[] { labelLeft.x, labelLeft.y, labelLeft.x, labelLeft.y + labelLeft.height,
+						labelLeft.x + labelLeft.width, labelLeft.y, labelLeft.x + labelLeft.width,
+						labelLeft.y + +labelLeft.height }));
 	}
 
 	private float toXInMeters(ClickComponent click) {
