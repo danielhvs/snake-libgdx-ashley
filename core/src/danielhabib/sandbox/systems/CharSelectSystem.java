@@ -29,13 +29,19 @@ public class CharSelectSystem extends IteratingSystem {
 	private static final Family family = Family.all(ClickComponent.class).get();
 	private ComponentMapper<ClickComponent> cm;
 	private boolean first = true;
-	private boolean second = false;
 	private Direction direction = null;
 	private float firstClickX;
 	private float firstClickY;
 	private Label firstLabel;
 	private Rectangle firstLabelRect;
-	private Rectangle secondLabelRect;
+	private Rectangle labelUp;
+	private Rectangle labelDown;
+	private Rectangle labelLeft;
+	private Rectangle labelRight;
+	private Rectangle labelUpLeft;
+	private Rectangle labelUpRight;
+	private Rectangle labelDownLeft;
+	private Rectangle labelDownRight;
 
 	public CharSelectSystem() {
 		super(family);
@@ -59,7 +65,6 @@ public class CharSelectSystem extends IteratingSystem {
 				if (Color.YELLOW.equals(label.getColor())) {
 					selectedLabelsComponent.labelComponents.add(labelComponent);
 					first = true;
-					second = false;
 					direction = null;
 				}
 			}
@@ -82,30 +87,27 @@ public class CharSelectSystem extends IteratingSystem {
 						this.firstLabel = label;
 						this.firstLabelRect = labelRect;
 						first = false;
-						second = true;
-					}
-				} else if (second) {
-					if (clickInside(clickX, clickY, labelRect)) {
-						if (direction == null) {
-							int x = (int) (labelRect.x - firstLabelRect.x);
-							int y = (int) (labelRect.y - firstLabelRect.y);
-							if (x == 0) {
-								direction = Direction.VERTICAL;
-							} else if (y == 0) {
-								direction = Direction.HORIZONTAL;
-							} else if (x == y || x == -y) {
-								direction = Direction.DIAGONAL;
-							}
-
-							if (direction != null) {
-								this.secondLabelRect = labelRect;
-								second = false;
-							}
-							System.out.println(direction);
-						}
+						labelUp = new Rectangle(firstLabelRect.x, firstLabelRect.y + 1, firstLabelRect.width,
+								firstLabelRect.height);
+						labelDown = new Rectangle(firstLabelRect.x, firstLabelRect.y - 1, firstLabelRect.width,
+								firstLabelRect.height);
+						labelLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y, firstLabelRect.width,
+								firstLabelRect.height);
+						labelRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y, firstLabelRect.width,
+								firstLabelRect.height);
+						labelUpLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y + 1, firstLabelRect.width,
+								firstLabelRect.height);
+						labelUpRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y + 1, firstLabelRect.width,
+								firstLabelRect.height);
+						labelDownLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y - 1, firstLabelRect.width,
+								firstLabelRect.height);
+						labelDownRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y - 1, firstLabelRect.width,
+								firstLabelRect.height);
 
 					}
 				} else {
+					direction = calculateDirection(clickX, clickY);
+					System.out.println(direction);
 					Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
 					if (label != firstLabel) {
 						if (!Color.GREEN.equals(label.getColor())) {
@@ -121,27 +123,30 @@ public class CharSelectSystem extends IteratingSystem {
 		engine.removeEntity(entity);
 	}
 
+	private Direction calculateDirection(float clickX, float clickY) {
+		if (intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelUpLeft)
+				|| intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelUpRight)
+				|| intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelDownLeft)
+				|| intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelDownRight)
+
+		) {
+			return Direction.DIAGONAL;
+		} else if (intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelUp)
+				|| intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelDown)) {
+			return Direction.VERTICAL;
+		} else
+
+		if (intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelLeft)
+				|| intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, labelRight)) {
+			return Direction.HORIZONTAL;
+		} else {
+			return null;
+		}
+	}
+
 	private boolean intersectInDirection(float firstClickX, float firstClickY, float clickX, float clickY,
 			Rectangle rect) {
 		boolean clickRangeIntersects = intersectSegmentPolygon(firstClickX, firstClickY, clickX, clickY, rect);
-
-		Rectangle labelUp = new Rectangle(firstLabelRect.x, firstLabelRect.y + 1, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelDown = new Rectangle(firstLabelRect.x, firstLabelRect.y - 1, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y, firstLabelRect.width,
-				firstLabelRect.height);
-
-		Rectangle labelUpLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y + 1, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelUpRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y + 1, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelDownLeft = new Rectangle(firstLabelRect.x - 1, firstLabelRect.y - 1, firstLabelRect.width,
-				firstLabelRect.height);
-		Rectangle labelDownRight = new Rectangle(firstLabelRect.x + 1, firstLabelRect.y - 1, firstLabelRect.width,
-				firstLabelRect.height);
 
 		boolean rightDirection = false;
 		int x = (int) (rect.x - firstLabelRect.x);
