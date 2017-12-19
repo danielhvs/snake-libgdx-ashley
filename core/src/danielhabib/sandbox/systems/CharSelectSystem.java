@@ -107,7 +107,6 @@ public class CharSelectSystem extends IteratingSystem {
 					}
 				} else {
 					direction = calculateDirection(clickX, clickY);
-					System.out.println(direction);
 					Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
 					if (label != firstLabel) {
 						if (!Color.GREEN.equals(label.getColor())) {
