@@ -39,7 +39,6 @@ public class SelectedLabelSystem extends IteratingSystem {
 		Label gameTextLabel = gameTextComponent.label;
 		String gameTextOriginal = gameTextLabel.getText().toString();
 
-
 		String iterText = gameTextOriginal;
 		Array<String> solutionWords = new Array<String>();
 		String solutionWord = solutionWord(iterText);
@@ -64,8 +63,17 @@ public class SelectedLabelSystem extends IteratingSystem {
 			for (LabelComponent labelComponent : labelComponents) {
 				Label label = labelComponent.label;
 				label.setColor(Color.GREEN);
+				labelComponent.isSolution = true;
 			}
 		} else {
+			for (LabelComponent labelComponent : labelComponents) {
+				Label label = labelComponent.label;
+				if (!labelComponent.isSolution) {
+					label.setColor(Color.WHITE);
+				} else {
+					label.setColor(Color.GREEN);
+				}
+			}
 			Assets.playSound(Assets.poisonSound);
 		}
 		entity.remove(SelectedLabelsComponent.class);

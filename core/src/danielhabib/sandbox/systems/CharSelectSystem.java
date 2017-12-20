@@ -78,7 +78,8 @@ public class CharSelectSystem extends IteratingSystem {
 		} else {
 			for (Entity labelEntity : entities) {
 				Rectangle labelRect = labelEntity.getComponent(BoundsComponent.class).bounds;
-				Label label = labelEntity.getComponent(LabelComponent.class).label;
+				LabelComponent labelComponent = labelEntity.getComponent(LabelComponent.class);
+				Label label = labelComponent.label;
 				if (first) {
 					if (clickInside(clickX, clickY, labelRect)) {
 						firstClickX = toXInMeters(click);
@@ -109,7 +110,9 @@ public class CharSelectSystem extends IteratingSystem {
 					direction = calculateDirection(clickX, clickY);
 					Rectangle rect = labelEntity.getComponent(BoundsComponent.class).bounds;
 					if (label != firstLabel) {
-						if (!Color.GREEN.equals(label.getColor())) {
+						if (labelComponent.isSolution) {
+							label.setColor(Color.GREEN);
+						} else {
 							label.setColor(Color.WHITE);
 						}
 						if (intersectInDirection(firstClickX, firstClickY, clickX, clickY, rect)) {
