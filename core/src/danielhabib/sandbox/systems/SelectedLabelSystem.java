@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 
+import danielhabib.sandbox.Assets;
 import danielhabib.sandbox.components.GameTextComponent;
 import danielhabib.sandbox.components.LabelComponent;
 import danielhabib.sandbox.components.SelectedLabelsComponent;
@@ -59,10 +60,13 @@ public class SelectedLabelSystem extends IteratingSystem {
 		}
 		
 		if(found) {
+			Assets.playSound(Assets.hitSound);
 			for (LabelComponent labelComponent : labelComponents) {
 				Label label = labelComponent.label;
 				label.setColor(Color.GREEN);
 			}
+		} else {
+			Assets.playSound(Assets.poisonSound);
 		}
 		entity.remove(SelectedLabelsComponent.class);
 	}
