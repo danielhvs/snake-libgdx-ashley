@@ -38,14 +38,24 @@ public class SelectedLabelSystem extends IteratingSystem {
 		Label gameTextLabel = gameTextComponent.label;
 		String gameTextOriginal = gameTextLabel.getText().toString();
 
-		// FIXME: Many words
-		String solutionWord = solutionWord(gameTextOriginal.toUpperCase());
+
+		String iterText = gameTextOriginal;
+		Array<String> solutionWords = new Array<String>();
+		String solutionWord = solutionWord(iterText);
+		while (!solutionWord.isEmpty()) {
+			solutionWords.add(solutionWord);
+			iterText = nextText(solutionWord, iterText);
+			solutionWord = solutionWord(iterText);
+		}
 
 		boolean found = false;
-		if (solutionWord.equals(selectedText.toString().toUpperCase())
-				|| solutionWord.equals(selectedText.reverse().toString().toUpperCase())) {
-			gameTextLabel.setText(gameTextOriginal.replace("[RED]", "[GREEN]"));
-			found=true;
+		for (String solution : solutionWords) {
+			if (solution.equalsIgnoreCase(selectedText.toString())
+					|| solution.equalsIgnoreCase(selectedText.reverse().toString())) {
+				gameTextLabel.setText(gameTextOriginal.replace("[RED]" + solution, "[GREEN]" + solution));
+				found = true;
+				break;
+			}
 		}
 		
 		if(found) {
@@ -57,7 +67,19 @@ public class SelectedLabelSystem extends IteratingSystem {
 		entity.remove(SelectedLabelsComponent.class);
 	}
 
-	private String solutionWord(String gameTextOriginal) {
-		return gameTextOriginal.substring(1 + gameTextOriginal.indexOf("]"), gameTextOriginal.indexOf("[]"));
+	private String nextText(String key, String iterText) {
+		int indexOfKey = iterText.indexOf("[]");
+		if (indexOfKey == -1) {
+			return "";
+		}
+		return iterText.substring(2 + indexOfKey);
+	}
+
+	private String solutionWord(String text) {
+		int indexOfKey = text.indexOf("]");
+		if (indexOfKey == -1) {
+			return "";
+		}
+		return text.substring(1 + indexOfKey, text.indexOf("[]"));
 	}
 }

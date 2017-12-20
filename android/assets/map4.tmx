@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="32" tileheight="32" nextobjectid="26">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="32" tileheight="32" nextobjectid="29">
  <properties>
-  <property name="text" value="A [RED]little[] text"/>
+  <property name="text">A [RED]little[] text.
+[RED]And[] another one.</property>
  </properties>
  <tileset firstgid="1" name="transparent" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="transparent.png" trans="ff00ff" width="32" height="32"/>
@@ -30,5 +31,8 @@
   <object id="22" name="L" x="160" y="64" width="32" height="32"/>
   <object id="23" name="T" x="96" y="64" width="32" height="32"/>
   <object id="25" name="E" x="192" y="64" width="32" height="32"/>
+  <object id="26" name="A" x="64" y="128" width="32" height="32"/>
+  <object id="27" name="N" x="64" y="160" width="32" height="32"/>
+  <object id="28" name="D" x="64" y="192" width="32" height="32"/>
  </objectgroup>
 </map>
